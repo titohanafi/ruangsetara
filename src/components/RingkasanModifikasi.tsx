@@ -105,9 +105,12 @@ export function RingkasanModifikasi({ jawaban, denah }: { jawaban: PetaJawaban; 
         <p className="mt-2 text-kecil text-redup">{T.legenda}</p>
         {ZONA_LANTAI.some((id) => ringkas.digambar.some((p) => p.id === id)) && <p className="mt-1 text-kecil text-redup">{T.zonaMati}</p>}
         {diperluas && (
-          <p className="mt-1 text-kecil text-redup">
-            {isi(T.ruangDiperluas, { lebar: String(ruang.lebar).replace(".", ","), dalam: String(ruang.dalam).replace(".", ",") })}
-          </p>
+          <>
+            <p className="mt-1 text-kecil text-redup">
+              {isi(T.ruangDiperluas, { lebar: String(ruang.lebar).replace(".", ","), dalam: String(ruang.dalam).replace(".", ",") })}
+            </p>
+            <p className="mt-1 rounded-tombol bg-draf-muda p-2 text-kecil text-draf">{T.ruangDiperluasCatatan}</p>
+          </>
         )}
         {dariSudut.length > 0 && <p className="mt-1 text-kecil text-redup">{isi(T.tersembunyiSudut, { daftar: daftarNama(dariSudut) })}</p>}
         {ringkas.bendaTakTerlihat.length > 0 && (

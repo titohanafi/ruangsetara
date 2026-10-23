@@ -156,6 +156,7 @@
     "ringkasanIsi": "Nomor di gambar sama dengan nomor kartu di atas. Nyalakan atau matikan tiap nomor untuk melihatnya satu per satu.",
     "nomorJudul": "Modifikasi yang digambar",
     "zonaMati": "Zona lantai (ruang putar, area bebas, keramik) dimatikan dulu supaya gambar tidak penuh; nyalakan lewat nomornya.",
-    "ruangDiperluas": "Ruang digambar lebih luas ({lebar} × {dalam} cm) supaya ruang putar dan area shower tidak tumpang tindih. Itu ukuran ideal, bukan ukuran ruang Anda."
+    "ruangDiperluas": "Ruang digambar lebih luas ({lebar} × {dalam} cm) supaya ruang putar dan area shower tidak tumpang tindih. Itu ukuran ideal, bukan ukuran ruang Anda.",
+    "ruangDiperluasCatatan": "Untuk ditanyakan ke peneliti: belum dipastikan apakah ruang putar boleh tumpang tindih dengan area shower tanpa undakan. Ukuran ini penafsiran dari dua angka tabel, belum acuan resmi."
   }
 }

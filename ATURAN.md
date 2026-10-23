@@ -178,5 +178,6 @@ Sumber: `CLAUDE.md`.
 3. Angka yang dicatat di `riset/koreksi-untuk-tim-riset.md` perlu dikoreksi di sheet.
 4. Apakah gambar tiap modifikasi (pegangan di belakang dan samping kloset, kursi lipat, area shower rata dengan saluran, ruang putar, area bebas) sudah mewakili teks Modifikasi di sheet?
 5. Perlu foto uji kamar mandi yang nyata dan beragam (baru ada tiga foto, dua di antaranya buatan AI).
+7. **Ruang diperluas di gambar ringkasan:** bila area shower tanpa undakan (M-08) ikut digambar, ruang digambar selebar 152,5 + 76 = 228,5 cm supaya ruang putar tidak tumpang tindih dengan area shower. Itu penjumlahan dua angka tabel, bukan acuan resmi, dan kami belum tahu apakah ruang putar memang tidak boleh tumpang tindih dengan area shower. Catatan "Untuk ditanyakan ke peneliti" tampil di aplikasi di bawah gambar ringkasan. Mohon dikonfirmasi, dan bila boleh tumpang tindih, perluasan itu bisa dihapus.
 6. Mobilitas, dapur, dan kamar tidur **belum pernah diuji** dengan foto. Aturan fotonya hanya turunan dari sheet.
 

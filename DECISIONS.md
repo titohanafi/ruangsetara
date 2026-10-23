@@ -53,3 +53,6 @@ Saat menggeneralisasi, field `kamar_mandi` diganti `ruang_sesuai` (prompt lain t
 - Belum diuji dengan beberapa foto sekaligus (2–6), dan belum diuji di Vercel (hanya lokal).
 - Aturan foto per pertanyaan (butir 6) belum ditinjau peneliti.
 - Tinggi sink, ruang manuver, dan transfer memang tidak terbaca dari foto; sengaja dibiarkan pengguna menjawab.
+
+## 13. Rute dev `#/dev/hasil` dan foto contoh
+`VITE_PINDAI_MOCK=true npm run dev` kini punya rute `#/dev/hasil` yang langsung membuka halaman hasil kamar mandi dengan foto contoh dan jawaban tiruan (`src/screens/DevHasil.tsx`). Rute hanya terpasang saat `import.meta.env.DEV` dan mock aktif; di build produksi kodenya terbuang (dicek: `dist` tidak memuat rute itu). Foto contoh dibaca dari `dev/mock-foto.jpg`, dikecilkan browser seperti jalur biasa. Folder `dev/` ada di `.gitignore`: foto itu buatan Dreamina AI dan masih berlogo, jadi tidak ikut repo publik. Dev lain harus menaruh foto sendiri di jalur itu.

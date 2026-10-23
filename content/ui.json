@@ -116,5 +116,10 @@
   "galat": {
     "judul": "Terjadi kesalahan",
     "isi": "Halaman tidak bisa ditampilkan. Muat ulang atau mulai ulang asesmen."
+  },
+  "dev": {
+    "memuat": "Menyiapkan contoh hasil…",
+    "fotoHilang": "Foto contoh tidak ditemukan. Taruh foto di dev/mock-foto.jpg lalu muat ulang.",
+    "gagal": "Contoh hasil gagal disiapkan."
   }
 }

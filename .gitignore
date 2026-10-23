@@ -6,3 +6,6 @@ dist
 
 # Data mentah tim riset, tetap lokal
 riset/*.xlsx
+
+# Foto contoh untuk rute dev (#/dev/hasil); hasil buatan Dreamina AI, tidak ikut repo
+dev/

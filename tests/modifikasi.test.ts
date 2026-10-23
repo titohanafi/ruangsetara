@@ -2,7 +2,14 @@ import { describe, expect, it } from "vitest";
 import { OBJEK_DENAH, POSISI_BAWAAN, type HasilDenah, type LetakDenah, type ObjekDenah } from "../src/domain/denahPindai";
 import { titikDinding } from "../src/domain/denahGeometri";
 import { DIM } from "../src/domain/dimensiGambar";
-import { BERGAMBAR, dindingSamping, gambarModifikasi, PENGGANTI, type KonteksModifikasi } from "../src/domain/gambarModifikasi";
+import {
+  ANGKA_DITINJAU,
+  BERGAMBAR,
+  dindingSamping,
+  gambarModifikasi,
+  PENGGANTI,
+  type KonteksModifikasi,
+} from "../src/domain/gambarModifikasi";
 import type { Dinding, Kerangka, Primitif, Titik } from "../src/domain/gambarShower";
 import { PERTANYAAN } from "../src/domain/konten";
 import { ringkasModifikasi } from "../src/domain/modifikasi";
@@ -20,12 +27,13 @@ const kerangka = (dinding: Dinding): Kerangka => ({ dinding, sepanjang: 0, bidan
 function konteks(
   dindingTergambar: Dinding[] = ["belakang", "kanan"],
   letak: (id: ObjekDenah) => LetakDenah = (id) => POSISI_BAWAAN[id],
+  tampilkanUkuran = true,
 ): KonteksModifikasi {
-  return { kerangka, proyeksi, letak, posisi: posisiSepanjang(letak), dindingTergambar };
+  return { kerangka, proyeksi, letak, posisi: posisiSepanjang(letak), dindingTergambar, tampilkanUkuran };
 }
 
 function semuaTitik(daftar: Primitif[]): Titik[] {
-  return daftar.flatMap((p) => ("titik" in p ? p.titik : "dari" in p ? [p.dari, p.ke] : []));
+  return daftar.flatMap((p) => ("titik" in p ? p.titik : "dari" in p ? [p.dari, p.ke] : "x" in p ? [[p.x, p.y] as Titik] : []));
 }
 
 describe("dinding samping terdekat", () => {
@@ -39,11 +47,14 @@ describe("dinding samping terdekat", () => {
 });
 
 describe("gambar modifikasi", () => {
-  // M-01 dan M-04 menggambar hanya lewat penggantian benda (pintu, kloset), tanpa bagian tambahan.
+  // M-01 dan M-04 menggambar lewat penggantian benda (pintu, kloset): bagian tambahannya hanya label ukuran.
   const soloPengganti = ["M-01", "M-04"];
 
   it("setiap gambar menghasilkan titik berhingga", () => {
-    for (const id of soloPengganti) expect(gambarModifikasi(id, konteks()), id).toEqual([]);
+    for (const id of soloPengganti) {
+      expect(gambarModifikasi(id, konteks(undefined, undefined, false)), id).toEqual([]);
+      expect(gambarModifikasi(id, konteks()).length, id).toBeGreaterThan(0);
+    }
     for (const id of Object.keys(BERGAMBAR).filter((i) => !soloPengganti.includes(i))) {
       const bagian = gambarModifikasi(id, konteks());
       expect(bagian.length, id).toBeGreaterThan(0);
@@ -52,7 +63,7 @@ describe("gambar modifikasi", () => {
   });
 
   it("pertanyaan yang gambarnya bukan bagian tambahan menghasilkan daftar kosong", () => {
-    expect(gambarModifikasi("M-07", konteks())).toEqual([]); // hand shower: lewat mode gambar shower
+    expect(gambarModifikasi("M-07", konteks(undefined, undefined, false))).toEqual([]); // hand shower: lewat mode gambar shower; label hanya bila ukuran aktif
     expect(gambarModifikasi("tidak-ada", konteks())).toEqual([]);
   });
 
@@ -176,5 +187,43 @@ describe("ringkasModifikasi", () => {
     const r = ringkasModifikasi(daftar, tidak("M-02", "M-03", "M-04", "M-05"), denah({}, ["kloset"]));
     expect(id(r.digambar)).toEqual(["M-02"]);
     expect(id(r.bendaTakTerlihat)).toEqual(["M-03", "M-04", "M-05"]);
+  });
+});
+
+describe("ukuran di gambar per pertanyaan", () => {
+  const teksUkur = (id: string, ukuran = true): string[] =>
+    gambarModifikasi(id, konteks(undefined, undefined, ukuran)).flatMap((b) =>
+      b.daftar.flatMap((p) => (p.jenis === "ukur" || p.jenis === "label" ? [p.teks] : [])),
+    );
+
+  it("tanpa tampilkanUkuran tidak ada satu pun teks (gambar ringkasan)", () => {
+    for (const id of Object.keys(BERGAMBAR)) expect(teksUkur(id, false), id).toEqual([]);
+  });
+
+  it("angka yang tampil sama dengan teks Modifikasi di sheet atau tabel", () => {
+    expect(teksUkur("M-01")).toEqual(["min. 90 cm"]);
+    expect(teksUkur("M-02")).toEqual(["ø 152,5 cm"]);
+    expect(teksUkur("M-03")).toEqual(["152,5 cm*"]);
+    expect(teksUkur("M-04")).toEqual(["45–50 cm*"]);
+    expect(teksUkur("M-05").sort()).toEqual(["106,5 cm", "84–91,5 cm*", "91,5 cm"].sort());
+    expect(teksUkur("M-06")).toEqual(["maks. 101,5 cm"]);
+    expect(teksUkur("M-07")).toEqual(["38–122 cm*"]);
+    expect(teksUkur("M-08")).toEqual(["76 × 152,5 cm"]);
+    expect(teksUkur("M-10")).toEqual(["43–48,5 cm"]);
+    expect(teksUkur("M-11")).toEqual(["38–122 cm*"]);
+  });
+
+  it("angka yang masih ditinjau peneliti diberi tanda *, dan daftarnya cocok dengan ANGKA_DITINJAU", () => {
+    for (const id of Object.keys(BERGAMBAR)) {
+      const ada = teksUkur(id).some((t) => t.includes("*"));
+      expect(ANGKA_DITINJAU.has(id), id).toBe(ada);
+    }
+  });
+
+  it("angka 142 cm (M-03) dan 1,8 m (M-02) yang belum terverifikasi tidak ditampilkan", () => {
+    const semua = Object.keys(BERGAMBAR)
+      .flatMap((id) => teksUkur(id))
+      .join(" ");
+    expect(semua).not.toMatch(/142|1,8|180/);
   });
 });

@@ -2,11 +2,14 @@ import { lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
 import { butirHasil, ringkas, type Butir } from "../domain/asesmen";
+import type { HasilDenah } from "../domain/denahPindai";
+import { ringkasModifikasi } from "../domain/modifikasi";
 import { cariArea, HASIL, isi, PERTANYAAN, UI } from "../domain/konten";
 import { useStore } from "../state/store";
 
 const T = UI.hasil;
 // Dimuat hanya bila ada hasil baca denah: gambar dan tabel ukurannya tidak ikut dimuat di halaman lain.
+const GambarModifikasiKartu = lazy(() => import("../components/GambarModifikasiKartu").then((m) => ({ default: m.GambarModifikasiKartu })));
 const RuangAnda = lazy(() => import("../components/RuangAnda").then((m) => ({ default: m.RuangAnda })));
 const KATEGORI_D = HASIL.kategori.find((k) => k.nilai === "D");
 
@@ -20,7 +23,19 @@ function Teks({ judul, teks }: { judul: string; teks: string | null }) {
   );
 }
 
-function KartuButir({ b, nomor, catatan, temuan }: { b: Butir; nomor: number; catatan?: string; temuan?: string }) {
+function KartuButir({
+  b,
+  nomor,
+  catatan,
+  temuan,
+  denah,
+}: {
+  b: Butir;
+  nomor: number;
+  catatan?: string;
+  temuan?: string;
+  denah?: HasilDenah;
+}) {
   const { pertanyaan: p } = b;
   const belum = b.status === "belum";
   return (
@@ -68,6 +83,11 @@ function KartuButir({ b, nomor, catatan, temuan }: { b: Butir; nomor: number; ca
         <>
           <Teks judul={T.praktis} teks={p.hack} />
           <Teks judul={T.modifikasi} teks={p.modifikasi} />
+          {denah && (
+            <Suspense fallback={null}>
+              <GambarModifikasiKartu id={p.id} denah={denah} />
+            </Suspense>
+          )}
           {p.referensi_rekomendasi.length > 0 && (
             <div className="mt-3">
               <h4 className="label-mikro">{T.rujukan}</h4>
@@ -93,6 +113,12 @@ export function HasilScreen() {
   const r = ringkas(daftar, state.jawaban);
   const semua = butirHasil(daftar, state.jawaban);
   const perlu = semua.filter((b) => b.status !== "sesuai");
+  // Gambar per pertanyaan hanya untuk kamar mandi yang tata letaknya terbaca dan pertanyaan yang dijawab Tidak.
+  const digambar = new Set(
+    area.id === "kamar-mandi" && state.denah?.kamarMandi
+      ? ringkasModifikasi(daftar, state.jawaban, state.denah).digambar.map((p) => p.id)
+      : [],
+  );
 
   const ubah = (id: string) => {
     kirim({ jenis: "ke_pertanyaan", indeks: daftar.findIndex((p) => p.id === id) });
@@ -152,6 +178,7 @@ export function HasilScreen() {
               nomor={i + 1}
               catatan={state.catatanFoto[b.pertanyaan.id]}
               temuan={state.temuan[b.pertanyaan.id]}
+              denah={digambar.has(b.pertanyaan.id) ? (state.denah ?? undefined) : undefined}
             />
           ))}
         </ol>

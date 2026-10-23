@@ -75,6 +75,7 @@ export const DIM = {
   // Pegangan rambat (grab bar): semua dari tabel, dipakai hanya untuk proporsi gambar.
   pegangan: {
     diameter: dariTabel("pegangan-diameter", "nilai_cm"),
+    tinggiMin: dariTabel("pegangan-tinggi-horizontal", "min_cm"),
     tinggiMaks: dariTabel("pegangan-tinggi-horizontal", "maks_cm"),
     jarakDinding: dariTabel("pegangan-jarak-ke-dinding", "nilai_cm"),
     panjangSamping: dariTabel("pegangan-panjang-samping", "min_cm"),
@@ -87,10 +88,15 @@ export const DIM = {
   },
   /** Rentang jangkauan dari posisi duduk untuk keran, holder, dan rak. */
   jangkauan: { bawah: dariTabel("jangkauan-zona-perlengkapan", "min_cm"), atas: dariTabel("jangkauan-zona-perlengkapan", "maks_cm") },
+  /** Tinggi tempat duduk di pancuran: rentang ADA 43 sampai 48,5 cm (sama dengan teks Modifikasi M-10). */
+  kursiMandi: {
+    min: dariRujukan("pancuran-tempat-duduk", "ada_2010", "min_cm"),
+    maks: dariRujukan("pancuran-tempat-duduk", "ada_2010", "maks_cm"),
+  },
   /** Diameter ruang putar kursi roda (PerMen, ADA sama). */
   ruangPutar: dariTabel("ruang-putar-kursi-roda", "min_cm"),
-  /** Panjang area shower tanpa undakan (roll-in); ADA, PerMen tidak mengatur. Lebarnya memakai bilik pancuran PerMen (`akses.lebarBilik`). */
-  rollIn: { panjang: dariTabel("pancuran-roll-in-ukuran", "panjang_cm") },
+  /** Ukuran area shower tanpa undakan (roll-in): 76 x 152,5 cm, sama dengan teks Modifikasi M-08 di sheet (ADA; PerMen tidak mengatur ukuran ini). */
+  rollIn: { lebar: dariTabel("pancuran-roll-in-ukuran", "lebar_cm"), panjang: dariTabel("pancuran-roll-in-ukuran", "panjang_cm") },
   shower: {
     zonaBawah: dariTabel("jangkauan-zona-perlengkapan", "min_cm"),
     zonaAtas: dariTabel("pancuran-tinggi-kran", "maks_cm"),

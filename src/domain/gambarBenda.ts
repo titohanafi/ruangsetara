@@ -241,7 +241,7 @@ export function susunBenda(jenis: JenisBenda, sisi: SisiDinding, opsi: { latar?:
   return [...(opsi.latar === false ? [] : latarPanel(k)), ...gambarBenda(jenis, k)];
 }
 
-function titikPrimitif(p: Primitif): Titik[] {
+export function titikPrimitif(p: Primitif): Titik[] {
   switch (p.jenis) {
     case "poligon":
     case "jalur":
@@ -267,6 +267,10 @@ function titikPrimitif(p: Primitif): Titik[] {
     case "baut":
       return [[p.cx, p.cy]];
     case "tanda":
+      return [[p.x, p.y]];
+    case "ukur":
+      return [p.dari, p.ke];
+    case "label":
       return [[p.x, p.y]];
   }
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { titikDinding } from "../domain/denahGeometri";
 import { DIM } from "../domain/dimensiGambar";
-import { bukaanDinding, gambarBenda, type JenisBenda } from "../domain/gambarBenda";
+import { bukaanDinding, gambarBenda, titikPrimitif, type JenisBenda } from "../domain/gambarBenda";
 import { gambarModifikasi, type BagianModifikasi, type KonteksModifikasi } from "../domain/gambarModifikasi";
 import {
   garisUbin,
@@ -101,6 +101,8 @@ export function PratinjauRuangIso3D({
   varianShower = "tidak_jelas",
   modeShower = "kondisi",
   modifikasi = [],
+  tampilkanUkuran = false,
+  fokus = false,
   jenisKloset = "tidak_jelas",
   varianPintu = "tidak_jelas",
   tampilkanSemua = false,
@@ -114,6 +116,10 @@ export function PratinjauRuangIso3D({
   modeShower?: ModeGambar;
   /** Pertanyaan yang gambar modifikasinya ditampilkan (hijau). Kosong = kondisi sekarang. M-04 mengganti kloset dengan kloset duduk. */
   modifikasi?: readonly string[];
+  /** Tulis ukuran dan nama pada gambar modifikasi (gambar per pertanyaan). */
+  tampilkanUkuran?: boolean;
+  /** Perbesar ke bagian yang dimodifikasi (dan benda yang diganti), supaya terbaca di gambar kecil. */
+  fokus?: boolean;
   /** Jenis kloset dan cara pintu membuka (hasil pindai); "tidak_jelas" menggambar penanda netral. */
   jenisKloset?: JenisKloset;
   varianPintu?: VarianPintu;
@@ -243,13 +249,15 @@ export function PratinjauRuangIso3D({
       letak,
       posisi,
       dindingTergambar: ["belakang", sudutAktif.x],
+      tampilkanUkuran,
     };
     const bagian: BagianModifikasi[] = modifikasi.flatMap((id) => gambarModifikasi(id, ctx));
     const susunMod = bagian
       .filter((b) => b.objek === null || (!tersembunyi.includes(b.objek) && !tidakTerlihat.includes(b.objek)))
       .map((b, i) => ({
         id: `mod-${i}`,
-        daftar: b.daftar,
+        // Garis ukur dan teks digambar terpisah di lapisan paling atas (lihat `anotasi`), jadi tidak tertutup benda lain.
+        daftar: b.daftar.filter((p) => p.jenis !== "ukur" && p.jenis !== "label"),
         // Lantai: isian lebih dulu, garis putus-putus di atasnya supaya tidak tertutup isian zona lain.
         kedalaman:
           b.pijak === "lantai"
@@ -257,10 +265,52 @@ export function PratinjauRuangIso3D({
             : proyeksi(b.pijak[0], b.pijak[1], 0)[1],
       }));
     const susunan = [...susunBenda, ...susunMod].sort((a, b) => a.kedalaman - b.kedalaman);
+    const anotasi = bagian
+      .filter((b) => b.objek === null || (!tersembunyi.includes(b.objek) && !tidakTerlihat.includes(b.objek)))
+      .flatMap((b) => b.daftar.filter((p) => p.jenis === "ukur" || p.jenis === "label"));
+
+    // Fokus: kotak pembatas (piksel kanvas) dari bagian modifikasi dan benda yang diganti, diberi ruang, dengan rasio kanvas.
+    let tampak = { x: 0, y: 0, w: ukuran.lebar, h: ukuran.tinggi };
+    if (fokus && susunMod.length > 0) {
+      const diganti = [
+        modifikasi.includes("M-04") ? "kloset" : null,
+        modifikasi.includes("M-01") || modifikasi.includes("M-12") ? "pintu" : null,
+        modifikasi.includes("M-06") ? "wastafel" : null,
+        modifikasi.includes("M-07") ? "area_mandi" : null,
+      ];
+      // Cakram (kepala shower) dihitung dari ukuran sebenarnya di layar; titikPrimitif memakai perkiraan untuk panel yang jauh lebih besar.
+      const titikBentuk = (p: Primitif): Titik[] =>
+        p.jenis === "cakram"
+          ? (() => {
+              const jari = p.r * Math.max(Math.hypot(...p.sumbuA), Math.hypot(...p.sumbuU));
+              return [
+                [p.cx - jari, p.cy - jari],
+                [p.cx + jari, p.cy + jari],
+              ];
+            })()
+          : titikPrimitif(p);
+      const titikFokus = [
+        ...susunMod.flatMap((b) => b.daftar),
+        ...anotasi,
+        ...susunBenda.filter((b) => diganti.includes(b.id)).flatMap((b) => b.daftar),
+      ].flatMap(titikBentuk);
+      if (titikFokus.length > 0) {
+        const xs = titikFokus.map((t) => t[0]);
+        const ys = titikFokus.map((t) => t[1]);
+        const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+        const sisa = Math.max(60, 0.45 * Math.max(x1 - x0, y1 - y0));
+        let [w, h] = [x1 - x0 + 2 * sisa, y1 - y0 + 2 * sisa];
+        const rasio = ukuran.lebar / ukuran.tinggi;
+        if (w / h < rasio) w = h * rasio;
+        else h = w / rasio;
+        // Bagian yang lebar (lantai, ruang putar) tidak perlu diperbesar: pakai kanvas penuh.
+        if (w < ukuran.lebar && h < ukuran.tinggi) tampak = { x: (x0 + x1) / 2 - w / 2, y: (y0 + y1) / 2 - h / 2, w, h };
+      }
+    }
 
     gambar = (
       <svg
-        viewBox={`0 0 ${ukuran.lebar} ${ukuran.tinggi}`}
+        viewBox={`${tampak.x} ${tampak.y} ${tampak.w} ${tampak.h}`}
         className="pointer-events-none absolute inset-0 h-full w-full"
         aria-hidden="true"
         focusable="false"
@@ -269,9 +319,10 @@ export function PratinjauRuangIso3D({
           <LapisPrimitif daftar={[lantai, ...ubinLantai, ...dinding, ...bukaan]} garisDasar={1.6} />
           {susunan.map((b) => (
             <g key={b.id}>
-              <LapisPrimitif daftar={b.daftar} tebal={0.75} garisDasar={1.6} />
+              <LapisPrimitif daftar={b.daftar} tebal={0.75} garisDasar={1.6} skalaTeks={tampak.w / ukuran.lebar} />
             </g>
           ))}
+          <LapisPrimitif daftar={anotasi} tebal={0.75} garisDasar={1.6} skalaTeks={tampak.w / ukuran.lebar} />
         </g>
       </svg>
     );

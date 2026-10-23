@@ -76,7 +76,7 @@ function kePath(pts: readonly Titik[]): string {
   return d;
 }
 
-function Bentuk({ s, penanda, m, w }: { s: Primitif; penanda: string; m: number; w: number }) {
+function Bentuk({ s, penanda, m, w, t }: { s: Primitif; penanda: string; m: number; w: number; t: number }) {
   switch (s.jenis) {
     case "poligon": {
       if (s.muka === "zona") {
@@ -178,6 +178,53 @@ function Bentuk({ s, penanda, m, w }: { s: Primitif; penanda: string; m: number;
           {s.teks}
         </text>
       );
+    case "ukur": {
+      const [x1, y1] = s.dari;
+      const [x2, y2] = s.ke;
+      const panjang = Math.hypot(x2 - x1, y2 - y1) || 1;
+      // Penanda ujung tegak lurus garis, panjang tetap dalam piksel layar.
+      const px = ((y2 - y1) / panjang) * 4 * t;
+      const py = (-(x2 - x1) / panjang) * 4 * t;
+      const tegak = Math.abs(y2 - y1) >= Math.abs(x2 - x1);
+      const mx = (x1 + x2) / 2;
+      const my = (y1 + y2) / 2;
+      return (
+        <g className="stroke-tinta" strokeWidth={1 * t} fill="none">
+          <line x1={x1} y1={y1} x2={x2} y2={y2} />
+          <line x1={x1 - px} y1={y1 - py} x2={x1 + px} y2={y1 + py} />
+          <line x1={x2 - px} y1={y2 - py} x2={x2 + px} y2={y2 + py} />
+          <text
+            x={tegak && s.teksDi !== "atas" ? mx + 6 * t : mx}
+            y={tegak ? (s.teksDi === "atas" ? Math.min(y1, y2) - 8 * t : my + 3 * t) : my - 6 * t}
+            textAnchor={tegak && s.teksDi !== "atas" ? "start" : "middle"}
+            fontSize={10 * t}
+            fontWeight={700}
+            className="fill-tinta"
+            stroke="white"
+            strokeWidth={3 * t}
+            paintOrder="stroke"
+          >
+            {s.teks}
+          </text>
+        </g>
+      );
+    }
+    case "label":
+      return (
+        <text
+          x={s.x}
+          y={s.y}
+          textAnchor="middle"
+          fontSize={10 * t}
+          fontWeight={700}
+          className="fill-tinta"
+          stroke="white"
+          strokeWidth={3 * t}
+          paintOrder="stroke"
+        >
+          {s.teks}
+        </text>
+      );
   }
 }
 
@@ -187,17 +234,20 @@ export function LapisPrimitif({
   penanda = "",
   tebal = 1,
   garisDasar = 2.2,
+  skalaTeks = 1,
 }: {
   daftar: Primitif[];
   penanda?: string;
   tebal?: number;
+  /** Pengali ukuran teks dan penanda garis ukur; < 1 saat gambar diperbesar (zoom) supaya teks tetap sebesar di layar. */
+  skalaTeks?: number;
   /** Tebal garis dasar pada <g> pembungkus; dipakai untuk menurunkan tebal garis tepi dan garis tipis. */
   garisDasar?: number;
 }) {
   return (
     <>
       {daftar.map((s, i) => (
-        <Bentuk key={i} s={s} penanda={penanda} m={tebal} w={garisDasar} />
+        <Bentuk key={i} s={s} penanda={penanda} m={tebal} w={garisDasar} t={skalaTeks} />
       ))}
     </>
   );

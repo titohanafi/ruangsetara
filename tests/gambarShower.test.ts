@@ -52,6 +52,10 @@ function semuaTitik(p: Primitif): Titik[] {
       return [[p.cx, p.cy]];
     case "tanda":
       return [[p.x, p.y]];
+    case "ukur":
+      return [p.dari, p.ke];
+    case "label":
+      return [[p.x, p.y]];
   }
 }
 
@@ -195,6 +199,10 @@ function cerminkanUji(daftar: Primitif[]): Primitif[] {
       case "baut":
         return { ...s, cx: x(s.cx) };
       case "tanda":
+        return { ...s, x: x(s.x) };
+      case "ukur":
+        return { ...s, dari: p(s.dari), ke: p(s.ke) };
+      case "label":
         return { ...s, x: x(s.x) };
     }
   });

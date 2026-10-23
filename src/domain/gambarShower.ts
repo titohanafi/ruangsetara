@@ -47,7 +47,11 @@ export type Primitif =
   | { jenis: "garis"; dari: Titik; ke: Titik; gaya: "tegas" | "putus" | "air" | "silang" | "panah" | "ubin" | "ubinLantai"; peran: Peran }
   | { jenis: "jalur"; titik: Titik[]; gaya: "selang" | "gagang" | "lengkung"; peran: Peran }
   | { jenis: "baut"; cx: number; cy: number; peran: Peran }
-  | { jenis: "tanda"; x: number; y: number; teks: string };
+  | { jenis: "tanda"; x: number; y: number; teks: string }
+  /** Garis ukur dengan penanda di kedua ujung dan teks ukuran (mis. "min. 90 cm"). Teks hanya angka dari sheet atau tabel. */
+  | { jenis: "ukur"; dari: Titik; ke: Titik; teks: string; teksDi?: "atas" }
+  /** Teks pendek di titik layar (nama benda atau ukuran tanpa garis ukur). */
+  | { jenis: "label"; x: number; y: number; teks: string };
 
 export const LEBAR_KANVAS = 380;
 export const TINGGI_KANVAS = 500;

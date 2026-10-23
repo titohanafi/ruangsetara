@@ -80,6 +80,14 @@ export function PertanyaanScreen() {
           </div>
         )}
 
+        {j?.sumber !== "foto" && state.catatanFoto[p.id] && (
+          <div className="mt-4 rounded-kartu border border-garis bg-putih p-3 text-kecil text-info" role="status">
+            <p className="font-semibold">✦ {T.catatanFoto}</p>
+            <p className="mt-1">{state.catatanFoto[p.id]}</p>
+            <p className="mt-1 text-redup">{T.catatanFotoBatas}</p>
+          </div>
+        )}
+
         <div className="mt-5 space-y-2">
           <details className="rounded-tombol border border-garis p-3">
             <summary className="font-semibold">{T.cara}</summary>

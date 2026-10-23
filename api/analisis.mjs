@@ -20595,7 +20595,7 @@ function aturanFoto(areaId) {
 // src/domain/pindai.ts
 var NILAI_FOTO = ["ya", "tidak", "tidak_jelas"];
 var MAKS_FOTO = 6;
-var MAKS_ALASAN = 140;
+var MAKS_ALASAN = 160;
 var SkemaHasilFoto = external_exports.object({
   ruang_sesuai: external_exports.boolean(),
   jawaban: external_exports.array(external_exports.object({ id: external_exports.string(), nilai: external_exports.enum(NILAI_FOTO), alasan: external_exports.string().optional() }))
@@ -20653,8 +20653,10 @@ function bangunPrompt(areaId, daftar, aturan) {
    would be is clearly in view. If that place is cut off or hidden, answer "tidak_jelas". A photo shows only part of a room, so in
    "alasan" write "tidak terlihat ..." instead of "tidak ada ..." for missing items.
 ${JANGKAUAN[areaId] ?? JANGKAUAN_UMUM}
-3. For every answer give "alasan": at most 12 words, in Indonesian, saying what you actually see (for example "Pegangan terlihat di
-   dinding samping kloset"). For "tidak_jelas" say why it is unclear.
+3. For every answer give "alasan": at most 16 words, in Indonesian, saying what you actually see (for example "Pegangan terlihat di
+   dinding samping kloset"). For "tidak_jelas" say what you can see that relates to the question and why that is still not
+   enough to answer (for example "Lantai tampak halus; kelicinan tidak bisa dinilai dari foto"). Never state a conclusion you
+   are not sure of, and never write "ya" or "tidak" as a verdict inside an "alasan" of a "tidak_jelas" answer.
 
 Questions:
 ${daftar.map((p) => baris(p, aturan[p.id])).join("\n")}`;

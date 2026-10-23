@@ -64,4 +64,20 @@ describe("reducer", () => {
     expect(reducer(AWAL, { jenis: "gagal_baca", sering: true }).baca.status).toBe("sering");
     expect(reducer(AWAL, { jenis: "gagal_baca", sering: false }).baca.status).toBe("gagal");
   });
+
+  it("catatan AI disimpan saat baca selesai, dan dibuang saat foto atau area berubah", () => {
+    let s: State = reducer(AWAL, { jenis: "pilih_area", areaId: "kamar-mandi" });
+    s = reducer(s, {
+      jenis: "selesai_baca",
+      jawaban: {},
+      terisi: 0,
+      total: 12,
+      bukanRuangan: false,
+      catatan: { "M-09": "Lantai tampak halus" },
+    });
+    expect(s.catatanFoto).toEqual({ "M-09": "Lantai tampak halus" });
+    expect(reducer(s, { jenis: "tambah_foto", foto: { id: "a", url: "data:" } }).catatanFoto).toEqual({});
+    expect(reducer(s, { jenis: "hapus_foto", id: "a" }).catatanFoto).toEqual({});
+    expect(reducer(s, { jenis: "pilih_area", areaId: "dapur" }).catatanFoto).toEqual({});
+  });
 });

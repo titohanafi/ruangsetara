@@ -5,7 +5,7 @@ import type { PetaJawaban } from "./asesmen";
 
 export const NILAI_FOTO = ["ya", "tidak", "tidak_jelas"] as const;
 export const MAKS_FOTO = 6;
-export const MAKS_ALASAN = 140;
+export const MAKS_ALASAN = 160;
 
 export const SkemaHasilFoto = z.object({
   ruang_sesuai: z.boolean(),
@@ -22,6 +22,11 @@ export function bacaHasilFoto(mentah: unknown): HasilFoto | null {
 export interface IsiFoto {
   jawaban: PetaJawaban;
   terisi: number;
+  /**
+   * Catatan AI untuk pertanyaan yang jawabannya TIDAK terisi dari foto (tidak jelas, atau "Ya" yang tidak boleh dari foto):
+   * apa yang terlihat dan kenapa belum cukup. Bukan jawaban; hanya bantuan membaca.
+   */
+  catatan: Record<string, string>;
 }
 
 /**
@@ -33,19 +38,29 @@ export interface IsiFoto {
  */
 export function isiDariFoto(daftar: Pertanyaan[], aturan: Record<string, AturanFoto>, hasil: HasilFoto, sudah: PetaJawaban): IsiFoto {
   const jawaban: PetaJawaban = { ...sudah };
+  const catatan: Record<string, string> = {};
   let terisi = 0;
-  if (!hasil.ruang_sesuai) return { jawaban, terisi };
+  if (!hasil.ruang_sesuai) return { jawaban, terisi, catatan };
   const dari = new Map(hasil.jawaban.map((j) => [j.id, j]));
   for (const p of daftar) {
     const a = aturan[p.id];
     const h = dari.get(p.id);
-    if (!a || a === "tidak" || !h || h.nilai === "tidak_jelas") continue;
+    if (!a || a === "tidak" || !h) continue;
+    const catat = () => {
+      const t = h.alasan?.trim().slice(0, MAKS_ALASAN);
+      if (t) catatan[p.id] = t;
+    };
+    // "Ya" yang tidak boleh dari foto dibuang tanpa catatan: kalimatnya ditulis AI sebagai kesimpulan, jadi bisa terbaca seperti jawaban.
     if (a === "sebagian" && h.nilai === "ya") continue;
+    if (h.nilai === "tidak_jelas") {
+      catat();
+      continue;
+    }
     if (jawaban[p.id]?.sumber === "pengguna") continue;
     jawaban[p.id] = { nilai: h.nilai, sumber: "foto", alasan: h.alasan?.trim().slice(0, MAKS_ALASAN) || undefined };
     terisi += 1;
   }
-  return { jawaban, terisi };
+  return { jawaban, terisi, catatan };
 }
 
 /** Pertanyaan yang boleh ditanyakan ke AI untuk satu area (aturan bukan "tidak"). */

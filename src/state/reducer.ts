@@ -23,6 +23,8 @@ export interface State {
   baca: HasilBaca;
   /** Tata letak kamar mandi hasil baca foto pertama; null bila belum dibaca, gagal, atau bukan kamar mandi. */
   denah: HasilDenah | null;
+  /** Catatan AI per pertanyaan yang tidak terisi dari foto (apa yang terlihat dan kenapa belum cukup). Bukan jawaban. */
+  catatanFoto: Record<string, string>;
   profil: Record<string, string>;
   aktivitas: string | null;
   jawaban: PetaJawaban;
@@ -31,14 +33,24 @@ export interface State {
 
 export const BACA_AWAL: HasilBaca = { status: "belum", terisi: 0, total: 0, bukanRuangan: false };
 
-export const AWAL: State = { areaId: null, fotos: [], baca: BACA_AWAL, denah: null, profil: {}, aktivitas: null, jawaban: {}, indeks: 0 };
+export const AWAL: State = {
+  areaId: null,
+  fotos: [],
+  baca: BACA_AWAL,
+  denah: null,
+  catatanFoto: {},
+  profil: {},
+  aktivitas: null,
+  jawaban: {},
+  indeks: 0,
+};
 
 export type Aksi =
   | { jenis: "pilih_area"; areaId: string }
   | { jenis: "tambah_foto"; foto: Foto }
   | { jenis: "hapus_foto"; id: string }
   | { jenis: "mulai_baca" }
-  | { jenis: "selesai_baca"; jawaban: PetaJawaban; terisi: number; total: number; bukanRuangan: boolean }
+  | { jenis: "selesai_baca"; jawaban: PetaJawaban; terisi: number; total: number; bukanRuangan: boolean; catatan?: Record<string, string> }
   | { jenis: "gagal_baca"; sering: boolean }
   | { jenis: "selesai_denah"; denah: HasilDenah | null }
   | { jenis: "isi_profil"; id: string; nilai: string }
@@ -58,17 +70,25 @@ export function reducer(s: State, a: Aksi): State {
     case "pilih_area":
       if (s.areaId === a.areaId) return s;
       // Ganti area: pertanyaan, prioritas, dan hasil baca foto milik area lama tidak berlaku lagi. Foto dan profil tetap.
-      return { ...s, areaId: a.areaId, baca: BACA_AWAL, denah: null, aktivitas: null, jawaban: {}, indeks: 0 };
+      return { ...s, areaId: a.areaId, baca: BACA_AWAL, denah: null, catatanFoto: {}, aktivitas: null, jawaban: {}, indeks: 0 };
     case "tambah_foto":
-      return { ...s, fotos: [...s.fotos, a.foto], baca: BACA_AWAL, denah: null, jawaban: tanpaJawabanFoto(s.jawaban) };
+      return { ...s, fotos: [...s.fotos, a.foto], baca: BACA_AWAL, denah: null, catatanFoto: {}, jawaban: tanpaJawabanFoto(s.jawaban) };
     case "hapus_foto":
-      return { ...s, fotos: s.fotos.filter((f) => f.id !== a.id), baca: BACA_AWAL, denah: null, jawaban: tanpaJawabanFoto(s.jawaban) };
+      return {
+        ...s,
+        fotos: s.fotos.filter((f) => f.id !== a.id),
+        baca: BACA_AWAL,
+        denah: null,
+        catatanFoto: {},
+        jawaban: tanpaJawabanFoto(s.jawaban),
+      };
     case "mulai_baca":
       return { ...s, baca: { ...BACA_AWAL, status: "membaca" } };
     case "selesai_baca":
       return {
         ...s,
         jawaban: a.jawaban,
+        catatanFoto: a.catatan ?? {},
         baca: { status: "selesai", terisi: a.terisi, total: a.total, bukanRuangan: a.bukanRuangan },
       };
     case "gagal_baca":

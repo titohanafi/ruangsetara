@@ -20,7 +20,7 @@ function Teks({ judul, teks }: { judul: string; teks: string | null }) {
   );
 }
 
-function KartuButir({ b, nomor }: { b: Butir; nomor: number }) {
+function KartuButir({ b, nomor, catatan }: { b: Butir; nomor: number; catatan?: string }) {
   const { pertanyaan: p } = b;
   const belum = b.status === "belum";
   return (
@@ -43,6 +43,12 @@ function KartuButir({ b, nomor }: { b: Butir; nomor: number }) {
         <p className="mt-1 text-kecil text-redup">
           {UI.tanya.alasanFoto}
           {b.jawaban.alasan}
+        </p>
+      )}
+      {belum && catatan && (
+        <p className="mt-1 text-kecil text-redup">
+          {UI.hasil.catatanFoto}
+          {catatan}
         </p>
       )}
       {belum ? (
@@ -134,7 +140,7 @@ export function HasilScreen() {
       ) : (
         <ol className="mt-6 space-y-4">
           {perlu.map((b, i) => (
-            <KartuButir key={b.pertanyaan.id} b={b} nomor={i + 1} />
+            <KartuButir key={b.pertanyaan.id} b={b} nomor={i + 1} catatan={state.catatanFoto[b.pertanyaan.id]} />
           ))}
         </ol>
       )}

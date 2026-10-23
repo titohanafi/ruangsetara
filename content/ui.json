@@ -85,7 +85,9 @@
     "ubah": "Ubah",
     "belumDijawab": "Belum dijawab",
     "pilihJawaban": "Pilih satu jawaban untuk lanjut.",
-    "belumTahuBantu": "Pilih \"Belum tahu\" bila Anda belum bisa memastikan. Hasilnya akan meminta pengukuran atau foto tambahan."
+    "belumTahuBantu": "Pilih \"Belum tahu\" bila Anda belum bisa memastikan. Hasilnya akan meminta pengukuran atau foto tambahan.",
+    "catatanFoto": "Catatan AI dari foto",
+    "catatanFotoBatas": "Ini bukan jawaban. Foto belum cukup untuk memastikan; periksa sendiri lalu pilih jawaban."
   },
   "hasil": {
     "label": "Rekomendasi",
@@ -111,7 +113,8 @@
     "draf": "Draf, belum ditinjau ahli. Angka pada rekomendasi mengikuti dokumen peneliti dan masih perlu diverifikasi terhadap standar resmi.",
     "cetak": "Cetak / simpan PDF",
     "areaLain": "Periksa area lain →",
-    "aturanFoto": "Sebagian jawaban terisi dari foto. Cek langsung bila ada yang tidak sesuai dengan kondisi sebenarnya."
+    "aturanFoto": "Sebagian jawaban terisi dari foto. Cek langsung bila ada yang tidak sesuai dengan kondisi sebenarnya.",
+    "catatanFoto": "Catatan AI dari foto: "
   },
   "galat": {
     "judul": "Terjadi kesalahan",

@@ -51,8 +51,8 @@ export function FotoScreen() {
       );
       kirim({ jenis: "selesai_denah", denah: await denah });
       const daftar = PERTANYAAN[area.id].pertanyaan;
-      const { jawaban, terisi } = isiDariFoto(daftar, aturanFoto(area.id), hasil, state.jawaban);
-      kirim({ jenis: "selesai_baca", jawaban, terisi, total: daftar.length, bukanRuangan: !hasil.ruang_sesuai });
+      const { jawaban, terisi, catatan } = isiDariFoto(daftar, aturanFoto(area.id), hasil, state.jawaban);
+      kirim({ jenis: "selesai_baca", jawaban, terisi, total: daftar.length, bukanRuangan: !hasil.ruang_sesuai, catatan });
     } catch (e) {
       kirim({ jenis: "gagal_baca", sering: e instanceof GalatAnalisis && e.kode === "sering" });
     }

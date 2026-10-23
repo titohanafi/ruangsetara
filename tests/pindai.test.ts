@@ -89,7 +89,42 @@ describe("isiDariFoto", () => {
 
   it("alasan dipotong dan dirapikan", () => {
     const r = isiDariFoto(daftar, aturan, hasil([{ id: "M-09", nilai: "ya", alasan: `  ${"a".repeat(300)}  ` }]), {});
-    expect(r.jawaban["M-09"]?.alasan?.length).toBe(140);
+    expect(r.jawaban["M-09"]?.alasan?.length).toBe(160);
+  });
+});
+
+describe("catatan AI untuk pertanyaan yang tidak terisi", () => {
+  it("'tidak jelas' menyimpan catatan (dipotong), tidak mengisi jawaban", () => {
+    const r = isiDariFoto(daftar, aturan, hasil([{ id: "M-05", nilai: "tidak_jelas", alasan: `  ${"a".repeat(300)}  ` }]), {});
+    expect(r.jawaban["M-05"]).toBeUndefined();
+    expect(r.terisi).toBe(0);
+    expect(r.catatan["M-05"]).toHaveLength(160);
+  });
+
+  it("jawaban yang terisi dari foto tidak punya catatan terpisah (alasannya ada di jawaban)", () => {
+    const r = isiDariFoto(daftar, aturan, hasil([{ id: "M-05", nilai: "tidak", alasan: "Pegangan tidak terlihat" }]), {});
+    expect(r.jawaban["M-05"]?.alasan).toBe("Pegangan tidak terlihat");
+    expect(r.catatan).toEqual({});
+  });
+
+  it("'Ya' yang tidak boleh dari foto dibuang tanpa catatan, karena kalimatnya terbaca seperti jawaban", () => {
+    const r = isiDariFoto(daftar, aturan, hasil([{ id: "M-05", nilai: "ya", alasan: "Pegangan tampak kokoh" }]), {});
+    expect(r.jawaban["M-05"]).toBeUndefined();
+    expect(r.catatan).toEqual({});
+  });
+
+  it("alasan kosong tidak membuat catatan; foto bukan ruangan tidak membuat apa pun; pertanyaan 'tidak' tidak dicatat", () => {
+    expect(isiDariFoto(daftar, aturan, hasil([{ id: "M-05", nilai: "tidak_jelas", alasan: "  " }]), {}).catatan).toEqual({});
+    expect(isiDariFoto(daftar, aturan, hasil([{ id: "M-05", nilai: "tidak_jelas", alasan: "x" }], false), {}).catatan).toEqual({});
+    expect(isiDariFoto(daftar, aturan, hasil([{ id: "M-12", nilai: "tidak_jelas", alasan: "x" }]), {}).catatan).toEqual({});
+  });
+
+  it("jawaban pengguna tetap tidak ditimpa, catatan tetap disimpan untuk dibaca", () => {
+    const r = isiDariFoto(daftar, aturan, hasil([{ id: "M-05", nilai: "tidak_jelas", alasan: "Tidak jelas" }]), {
+      "M-05": { nilai: "ya", sumber: "pengguna" },
+    });
+    expect(r.jawaban["M-05"]?.nilai).toBe("ya");
+    expect(r.catatan["M-05"]).toBe("Tidak jelas");
   });
 });
 

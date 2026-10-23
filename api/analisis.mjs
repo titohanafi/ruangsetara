@@ -140,30 +140,16 @@ var hasil_default = {
 
 // content/pindai.json
 var pindai_default = {
-  catatan: "ASUMSI tim produk, belum ditinjau peneliti dan belum diuji dengan foto asli (kecuali kamar mandi). 'bisa': jawaban Ya maupun Tidak boleh terisi dari foto. 'sebagian': hanya Tidak (hambatan yang jelas terlihat) yang boleh terisi dari foto, karena Ya butuh ukuran atau pengamatan langsung. 'tidak': tidak ditanyakan ke AI sama sekali.",
-  "kamar-mandi": {
-    "M-01": "sebagian",
-    "M-02": "sebagian",
-    "M-03": "sebagian",
-    "M-04": "sebagian",
-    "M-05": "sebagian",
-    "M-06": "sebagian",
-    "M-07": "bisa",
-    "M-08": "bisa",
-    "M-09": "bisa",
-    "M-10": "bisa",
-    "M-11": "bisa",
-    "M-12": "tidak"
-  },
+  catatan: "Diturunkan dari kolom 'Cara Verifikasi' di sheet peneliti oleh scripts/aturan_foto.py (jangan edit tangan). 'bisa': hanya observasi atau foto, jadi Ya maupun Tidak boleh terisi dari foto. 'sebagian': verifikasi butuh ukur, uji, konfirmasi pengguna, atau periksa kekokohan, jadi hanya Tidak (hambatan yang jelas terlihat) yang boleh terisi. 'tidak': verifikasi butuh wawancara, jadi tidak ditanyakan ke AI. Aturan ini belum ditinjau peneliti.",
   mobilitas: {
     "G-01": "sebagian",
     "G-02": "sebagian",
     "G-03": "sebagian",
     "G-04": "sebagian",
     "G-05": "bisa",
-    "G-06": "tidak",
-    "G-07": "bisa",
-    "G-08": "bisa",
+    "G-06": "sebagian",
+    "G-07": "sebagian",
+    "G-08": "sebagian",
     "G-09": "sebagian",
     "G-10": "tidak"
   },
@@ -172,10 +158,10 @@ var pindai_default = {
     "K-02": "sebagian",
     "K-03": "sebagian",
     "K-04": "sebagian",
-    "K-05": "bisa",
+    "K-05": "sebagian",
     "K-06": "sebagian",
     "K-07": "sebagian",
-    "K-08": "sebagian"
+    "K-08": "tidak"
   },
   "kamar-tidur": {
     "B-01": "sebagian",
@@ -183,11 +169,25 @@ var pindai_default = {
     "B-03": "sebagian",
     "B-04": "sebagian",
     "B-05": "sebagian",
-    "B-06": "bisa",
+    "B-06": "sebagian",
     "B-07": "sebagian",
-    "B-08": "bisa",
+    "B-08": "sebagian",
     "B-09": "tidak",
     "B-10": "sebagian"
+  },
+  "kamar-mandi": {
+    "M-01": "sebagian",
+    "M-02": "sebagian",
+    "M-03": "sebagian",
+    "M-04": "sebagian",
+    "M-05": "sebagian",
+    "M-06": "sebagian",
+    "M-07": "sebagian",
+    "M-08": "sebagian",
+    "M-09": "bisa",
+    "M-10": "sebagian",
+    "M-11": "sebagian",
+    "M-12": "tidak"
   }
 };
 

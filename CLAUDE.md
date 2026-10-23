@@ -18,7 +18,7 @@ Proyek ini menyatukan situs asesmen tim peneliti (isi pertanyaan dan rekomendasi
 
 ## Aturan baca foto (keras)
 - AI hanya mengisi bila jelas terlihat. Ragu = "tidak jelas" = dibiarkan kosong, bukan ditebak.
-- `content/pindai.json` menentukan per pertanyaan: `bisa` (Ya/Tidak boleh terisi), `sebagian` (hanya Tidak), `tidak` (tidak ditanyakan ke AI). Itu asumsi tim produk, belum ditinjau peneliti.
+- `content/pindai.json` menentukan per pertanyaan: `bisa` (Ya/Tidak boleh terisi), `sebagian` (hanya Tidak), `tidak` (tidak ditanyakan ke AI). Diturunkan dari kolom "Cara Verifikasi" di sheet peneliti oleh `python3 scripts/aturan_foto.py` (jangan edit tangan): ada wawancara = `tidak`, ada ukur/uji/simulasi/konfirmasi/kekokohan = `sebagian`, selain itu `bisa`. Aturan turunan ini belum ditinjau peneliti.
 - Jawaban dari foto selalu bertanda "Terisi dari foto" dan bisa diubah. Jawaban pengguna tidak pernah ditimpa pembacaan foto.
 - Foto hanya dikirim ke Gemini setelah pengguna menekan "Baca foto dengan AI" di bawah teks persetujuan. Foto tidak disimpan.
 - Setiap perubahan prompt atau skema (`server/analisis.ts`, `server/denah.ts`) wajib diuji ulang dengan semua foto uji lewat jalur aplikasi (foto dikecilkan browser), bukan foto asli. Bahkan mengganti **nama field** di skema (`kamar_mandi` → `ruang_sesuai`) mengubah hasil Gemini, jadi prompt kamar mandi dikunci persis seperti yang teruji (nama field per area ada di `FIELD_RUANG`).

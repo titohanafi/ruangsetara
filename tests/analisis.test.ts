@@ -56,19 +56,19 @@ describe("bersihkan", () => {
         kamar_mandi: true,
         jawaban: [
           { id: "M-01", nilai: "ya", alasan: "pintu lebar" },
-          { id: "M-07", nilai: "ya", alasan: "ada ruang" },
-          { id: "M-07", nilai: "tidak", alasan: "ganda" },
+          { id: "M-09", nilai: "ya", alasan: "ada ruang" },
+          { id: "M-09", nilai: "tidak", alasan: "ganda" },
           { id: "M-12", nilai: "ya", alasan: "bukan ditanya" },
           { id: "G-05", nilai: "ya", alasan: "id area lain" },
-          { id: "M-09", nilai: "ngawur", alasan: 5 },
+          { id: "M-10", nilai: "ngawur", alasan: 5 },
         ],
       },
       kamarMandi,
     );
     expect(r.jawaban).toEqual([
       { id: "M-01", nilai: "tidak_jelas", alasan: "pintu lebar" },
-      { id: "M-07", nilai: "ya", alasan: "ada ruang" },
-      { id: "M-09", nilai: "tidak_jelas", alasan: "" },
+      { id: "M-09", nilai: "ya", alasan: "ada ruang" },
+      { id: "M-10", nilai: "tidak_jelas", alasan: "" },
     ]);
   });
 

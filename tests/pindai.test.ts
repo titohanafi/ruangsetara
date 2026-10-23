@@ -21,14 +21,14 @@ describe("isiDariFoto", () => {
       daftar,
       aturan,
       hasil([
-        { id: "M-07", nilai: "ya", alasan: "ada ruang kaki" },
-        { id: "M-09", nilai: "tidak" },
+        { id: "M-09", nilai: "ya", alasan: "ada ruang kaki" },
+        { id: "M-05", nilai: "tidak" },
       ]),
       {},
     );
     expect(r.terisi).toBe(2);
-    expect(r.jawaban["M-07"]).toEqual({ nilai: "ya", sumber: "foto", alasan: "ada ruang kaki" });
-    expect(r.jawaban["M-09"]?.nilai).toBe("tidak");
+    expect(r.jawaban["M-09"]).toEqual({ nilai: "ya", sumber: "foto", alasan: "ada ruang kaki" });
+    expect(r.jawaban["M-05"]?.nilai).toBe("tidak");
   });
 
   it("pertanyaan 'sebagian': hanya Tidak yang terisi, Ya tidak pernah", () => {
@@ -70,25 +70,25 @@ describe("isiDariFoto", () => {
 
   it("tidak menimpa jawaban pengguna, tetapi boleh memperbarui jawaban foto sebelumnya", () => {
     const sudah = {
-      "M-07": { nilai: "tidak" as const, sumber: "pengguna" as const },
-      "M-09": { nilai: "ya" as const, sumber: "foto" as const },
+      "M-09": { nilai: "tidak" as const, sumber: "pengguna" as const },
+      "M-11": { nilai: "ya" as const, sumber: "foto" as const },
     };
     const r = isiDariFoto(
       daftar,
       aturan,
       hasil([
-        { id: "M-07", nilai: "ya" },
-        { id: "M-09", nilai: "tidak" },
+        { id: "M-09", nilai: "ya" },
+        { id: "M-11", nilai: "tidak" },
       ]),
       sudah,
     );
-    expect(r.jawaban["M-07"]?.nilai).toBe("tidak");
     expect(r.jawaban["M-09"]?.nilai).toBe("tidak");
+    expect(r.jawaban["M-11"]?.nilai).toBe("tidak");
   });
 
   it("alasan dipotong dan dirapikan", () => {
-    const r = isiDariFoto(daftar, aturan, hasil([{ id: "M-07", nilai: "ya", alasan: `  ${"a".repeat(300)}  ` }]), {});
-    expect(r.jawaban["M-07"]?.alasan?.length).toBe(140);
+    const r = isiDariFoto(daftar, aturan, hasil([{ id: "M-09", nilai: "ya", alasan: `  ${"a".repeat(300)}  ` }]), {});
+    expect(r.jawaban["M-09"]?.alasan?.length).toBe(140);
   });
 });
 

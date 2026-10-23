@@ -12,6 +12,7 @@ Proyek ini menyatukan situs asesmen tim peneliti (isi pertanyaan dan rekomendasi
 
 ## Aturan konten (keras)
 - **Jangan mengarang** ukuran, angka, rujukan, atau klaim medis. Bila tidak ada di sheet, isi `null` atau "menyusul" dan laporkan.
+- Gambar boleh menuliskan ukuran **hanya** bila angkanya ada di teks Modifikasi sheet atau di tabel ukuran (`content/ukuran-aksesibel.json`); angka yang masih ditinjau peneliti diberi tanda `*` dan keterangan. Angka yang belum terverifikasi (mis. 142 cm, 1,8 m) tidak ditulis di gambar.
 - Hasil asesmen bukan sertifikasi keselamatan. Nyeri, luka, dan protesis tidak dijawab; arahkan ke dokter rehabilitasi medik atau prostetis-ortotis.
 - Semua teks antarmuka ada di `content/ui.json`, bukan di komponen.
 - Bahasa Indonesia, sapaan "Anda", kalimat pendek. Pakai "penyandang disabilitas", "pengguna kursi roda", "caregiver". Hindari "cacat", "korban", "penderita", "kasihan".

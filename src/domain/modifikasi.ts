@@ -2,7 +2,7 @@
 // digambar karena bendanya tidak terbaca di foto. Fungsi murni.
 import { statusButir, type PetaJawaban } from "./asesmen";
 import type { HasilDenah, ObjekDenah } from "./denahPindai";
-import { BERGAMBAR } from "./gambarModifikasi";
+import { BERGAMBAR } from "./bergambar";
 import type { Pertanyaan } from "./konten";
 
 export type ModeRuang = "kondisi" | "modifikasi";

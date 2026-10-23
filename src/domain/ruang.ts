@@ -1,6 +1,6 @@
 // Gambar "Ruang Anda" di halaman hasil kamar mandi: logika murni, terpisah dari komponen.
 import { OBJEK_DENAH, type LetakDenah, type ObjekDenah } from "./denahPindai";
-import { BERGAMBAR } from "./gambarModifikasi";
+import { BERGAMBAR } from "./bergambar";
 
 export type SudutPandang = "kiri" | "kanan";
 

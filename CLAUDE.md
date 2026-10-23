@@ -1,7 +1,7 @@
 # Ruang Setara
 
 Asesmen aksesibilitas rumah untuk pengguna kursi roda dan caregiver. Alur: foto ruangan → profil → prioritas → pertanyaan → rekomendasi.
-Foto kamar mandi dibaca AI (Gemini) untuk mengisi sebagian jawaban otomatis; pengguna selalu bisa mengubahnya.
+Foto dibaca AI (Gemini) untuk mengisi sebagian jawaban otomatis; pengguna selalu bisa mengubahnya. Semua area (mobilitas, dapur, kamar tidur, kamar mandi) bisa dibaca, tetapi **hanya kamar mandi yang sudah diuji dengan foto asli**; area lain berstatus tahap uji (`foto_teruji: false` di `content/area.json`) dan menampilkan disclaimer.
 
 Proyek ini menyatukan situs asesmen tim peneliti (isi pertanyaan dan rekomendasi) dengan fitur baca foto yang dikembangkan di proyek Transisi (`../transisi`).
 
@@ -21,7 +21,7 @@ Proyek ini menyatukan situs asesmen tim peneliti (isi pertanyaan dan rekomendasi
 - `content/pindai.json` menentukan per pertanyaan: `bisa` (Ya/Tidak boleh terisi), `sebagian` (hanya Tidak), `tidak` (tidak ditanyakan ke AI). Itu asumsi tim produk, belum ditinjau peneliti.
 - Jawaban dari foto selalu bertanda "Terisi dari foto" dan bisa diubah. Jawaban pengguna tidak pernah ditimpa pembacaan foto.
 - Foto hanya dikirim ke Gemini setelah pengguna menekan "Baca foto dengan AI" di bawah teks persetujuan. Foto tidak disimpan.
-- Setiap perubahan prompt (`server/analisis.ts`) wajib diuji ulang dengan semua foto uji lewat jalur aplikasi (foto dikecilkan browser), bukan foto asli.
+- Setiap perubahan prompt atau skema (`server/analisis.ts`) wajib diuji ulang dengan semua foto uji lewat jalur aplikasi (foto dikecilkan browser), bukan foto asli. Bahkan mengganti **nama field** di skema (`kamar_mandi` → `ruang_sesuai`) mengubah hasil Gemini, jadi prompt kamar mandi dikunci persis seperti yang teruji (nama field per area ada di `FIELD_RUANG`).
 
 ## Aturan teknis
 - Vite + React 18 + TypeScript (strict) + Tailwind + React Router (HashRouter) + Zod + Vitest.

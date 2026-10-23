@@ -8,7 +8,7 @@ export const MAKS_FOTO = 6;
 export const MAKS_ALASAN = 140;
 
 export const SkemaHasilFoto = z.object({
-  kamar_mandi: z.boolean(),
+  ruang_sesuai: z.boolean(),
   jawaban: z.array(z.object({ id: z.string(), nilai: z.enum(NILAI_FOTO), alasan: z.string().optional() })),
 });
 export type HasilFoto = z.infer<typeof SkemaHasilFoto>;
@@ -26,7 +26,7 @@ export interface IsiFoto {
 
 /**
  * Mengisi jawaban dari hasil pembacaan foto. Aturannya sengaja berhati-hati:
- * - bukan kamar mandi → tidak mengisi apa pun;
+ * - foto bukan ruangan yang dipilih → tidak mengisi apa pun;
  * - "tidak_jelas" tidak pernah mengisi;
  * - pertanyaan berstatus "tidak" tidak diisi dari foto, dan "sebagian" hanya boleh terisi "Tidak" (hambatan yang jelas terlihat);
  * - jawaban yang sudah dipilih pengguna tidak ditimpa.
@@ -34,7 +34,7 @@ export interface IsiFoto {
 export function isiDariFoto(daftar: Pertanyaan[], aturan: Record<string, AturanFoto>, hasil: HasilFoto, sudah: PetaJawaban): IsiFoto {
   const jawaban: PetaJawaban = { ...sudah };
   let terisi = 0;
-  if (!hasil.kamar_mandi) return { jawaban, terisi };
+  if (!hasil.ruang_sesuai) return { jawaban, terisi };
   const dari = new Map(hasil.jawaban.map((j) => [j.id, j]));
   for (const p of daftar) {
     const a = aturan[p.id];

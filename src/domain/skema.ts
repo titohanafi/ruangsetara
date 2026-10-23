@@ -29,6 +29,7 @@ export const SkemaArea = z.object({
       deskripsi: z.string(),
       aktivitas: z.array(z.string()).min(1),
       bisa_dipindai: z.boolean(),
+      foto_teruji: z.boolean(),
     }),
   ),
 });

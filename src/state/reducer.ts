@@ -13,7 +13,7 @@ export interface HasilBaca {
   status: StatusBaca;
   terisi: number;
   total: number;
-  bukanKamarMandi: boolean;
+  bukanRuangan: boolean;
 }
 
 export interface State {
@@ -26,7 +26,7 @@ export interface State {
   indeks: number;
 }
 
-export const BACA_AWAL: HasilBaca = { status: "belum", terisi: 0, total: 0, bukanKamarMandi: false };
+export const BACA_AWAL: HasilBaca = { status: "belum", terisi: 0, total: 0, bukanRuangan: false };
 
 export const AWAL: State = { areaId: null, fotos: [], baca: BACA_AWAL, profil: {}, aktivitas: null, jawaban: {}, indeks: 0 };
 
@@ -35,7 +35,7 @@ export type Aksi =
   | { jenis: "tambah_foto"; foto: Foto }
   | { jenis: "hapus_foto"; id: string }
   | { jenis: "mulai_baca" }
-  | { jenis: "selesai_baca"; jawaban: PetaJawaban; terisi: number; total: number; bukanKamarMandi: boolean }
+  | { jenis: "selesai_baca"; jawaban: PetaJawaban; terisi: number; total: number; bukanRuangan: boolean }
   | { jenis: "gagal_baca"; sering: boolean }
   | { jenis: "isi_profil"; id: string; nilai: string }
   | { jenis: "pilih_aktivitas"; aktivitas: string }
@@ -65,7 +65,7 @@ export function reducer(s: State, a: Aksi): State {
       return {
         ...s,
         jawaban: a.jawaban,
-        baca: { status: "selesai", terisi: a.terisi, total: a.total, bukanKamarMandi: a.bukanKamarMandi },
+        baca: { status: "selesai", terisi: a.terisi, total: a.total, bukanRuangan: a.bukanRuangan },
       };
     case "gagal_baca":
       return { ...s, baca: { ...BACA_AWAL, status: a.sering ? "sering" : "gagal" } };

@@ -31,7 +31,7 @@ describe("reducer", () => {
       jawaban: { ...s.jawaban, "M-06": { nilai: "tidak", sumber: "foto" } },
       terisi: 1,
       total: 12,
-      bukanKamarMandi: false,
+      bukanRuangan: false,
     });
     expect(s.baca.status).toBe("selesai");
     s = reducer(s, { jenis: "tambah_foto", foto: foto("b") });
@@ -47,7 +47,7 @@ describe("reducer", () => {
       jawaban: { "M-06": { nilai: "tidak", sumber: "foto", alasan: "x" } },
       terisi: 1,
       total: 12,
-      bukanKamarMandi: false,
+      bukanRuangan: false,
     });
     s = reducer(s, { jenis: "jawab", id: "M-06", nilai: "ya" });
     expect(s.jawaban["M-06"]).toEqual({ nilai: "ya", sumber: "pengguna" });

@@ -7,8 +7,10 @@ Area dipilih di langkah foto karena pembacaan foto hanya ada untuk kamar mandi d
 ## 2. Foto opsional, bukan wajib
 Situs peneliti mewajibkan 1–6 foto. Di sini foto bisa dilewati ("Lewati, isi sendiri"). Alasan: foto tanpa pembacaan tidak menambah apa pun, dan caregiver sering lelah. Untuk area selain kamar mandi, foto hanya referensi visual.
 
-## 3. Pembacaan foto hanya untuk kamar mandi
-Pemilik meminta semua area dibangun, tetapi hanya kamar mandi yang bisa dipindai. Area lain menampilkan disclaimer. `area.json` punya `bisa_dipindai` per area.
+## 3. Pembacaan foto untuk semua area, hanya kamar mandi yang teruji
+Awalnya hanya kamar mandi yang dibaca. Atas permintaan pemilik ("buat dulu saja, nanti kita uji belakangan") semua area kini dibaca AI. Prompt dan skema dibangun per area dari pertanyaannya (`susun()` di `server/analisis.ts`); permintaan membawa `area`.
+`area.json`: `bisa_dipindai` (semua true) dan `foto_teruji` (hanya kamar mandi true). Area dengan `foto_teruji: false` menampilkan "Bisa dibaca AI (tahap uji)" dan disclaimer.
+Aturan foto untuk mobilitas, dapur, dan kamar tidur (28 pertanyaan) sangat konservatif dan **belum diuji dengan foto asli sama sekali**: `bisa` hanya G-05, G-07, G-08, K-05, B-06, B-08 (visual atau berbasis jangkauan); `tidak` G-06, G-10, B-09 (butuh wawancara atau seluruh rute); sisanya `sebagian`. Aturan jangkauan untuk area lain adalah versi umum (belum teruji), kamar mandi tetap memakai teks lama.
 
 ## 4. Pilihan jawaban "Belum tahu" ditambahkan
 Situs peneliti hanya Ya/Tidak. Sheet peneliti sendiri punya kategori D "Belum dapat dipastikan" dan aturan "jika bukti tidak memadai, jangan menyimpulkan tidak aksesibel". Kami menambahkan "Belum tahu" yang dipetakan ke kategori D (teks makna dan tindak lanjut diambil dari sheet).
@@ -43,8 +45,11 @@ Aktivitas prioritas hanya ditampilkan di halaman hasil; sheet tidak memetakan pe
 ## 11. Fungsi server memakai pola yang sama dengan Transisi
 `server/analisis.ts` dibundel esbuild menjadi `api/analisis.mjs` (bundel mandiri, di-commit, diuji `tests/apiBundel.test.ts`). Batas: 6 foto, 900.000 karakter per foto, 4.000.000 total (batas badan Vercel 4,5 MB). Model utama `gemini-3.1-flash-lite` dengan cadangan, suhu 0.
 
+## 12. Nama field di skema mempengaruhi hasil model
+Saat menggeneralisasi, field `kamar_mandi` diganti `ruang_sesuai` (prompt lain tidak berubah). Hasil foto yang sama berubah dan stabil di dua kali uji (M-06 jadi "Tidak: wastafel tidak terlihat", M-08 jadi "Ya"), sedangkan versi live dengan nama lama tetap memberi hasil lama. Solusi: nama field per area (`FIELD_RUANG`), kamar mandi tetap `kamar_mandi`, server memetakan ke `ruang_sesuai`. Prompt kamar mandi diverifikasi identik byte per byte dengan versi teruji, dan hasil lama terkonfirmasi kembali.
+
 ## Belum diverifikasi
-- Baru dua foto kamar mandi yang diuji dengan Gemini sungguhan (foto demo dan foto shower hujan hitam).
+- Baru dua foto kamar mandi yang diuji dengan Gemini sungguhan (foto demo dan foto shower hujan hitam). Area lain: tidak ada satu pun foto uji.
 - Belum diuji dengan beberapa foto sekaligus (2–6), dan belum diuji di Vercel (hanya lokal).
 - Aturan foto per pertanyaan (butir 6) belum ditinjau peneliti.
 - Tinggi sink, ruang manuver, dan transfer memang tidak terbaca dari foto; sengaja dibiarkan pengguna menjawab.

@@ -27,7 +27,6 @@
     "isi": "Foto membantu mengisi sebagian jawaban untuk Anda. Anda tetap bisa mengubah setiap jawaban nanti.",
     "areaTanya": "Foto ini untuk area mana?",
     "areaDipindai": "Bisa dibaca AI",
-    "areaManual": "Foto sebagai referensi",
     "tips": "Ambil 1–6 foto yang cukup terang: seluruh ruangan, jalur masuk, dan bagian yang terasa sulit digunakan. Hindari wajah dan informasi pribadi.",
     "unggah": "Unggah foto dari perangkat",
     "kamera": "Ambil foto dengan kamera",
@@ -41,14 +40,15 @@
     "lanjutTanpaBaca": "Lanjut tanpa membaca foto",
     "membaca": "Membaca foto…",
     "persetujuan": "Foto akan dikirim ke layanan AI (Google Gemini) untuk dibaca. Foto tidak disimpan oleh Ruang Setara dan hilang saat Anda menutup tab. Jangan sertakan wajah atau informasi pribadi.",
-    "disclaimerArea": "Pembacaan foto otomatis baru tersedia untuk kamar mandi. Untuk area ini foto hanya menjadi referensi visual dan semua pertanyaan Anda jawab sendiri.",
+    "disclaimerArea": "Pembacaan foto untuk area ini masih tahap uji dan belum diuji dengan banyak foto. Cek setiap jawaban yang terisi dari foto dengan kondisi sebenarnya.",
     "hasilJudul": "Hasil pembacaan foto",
     "hasilTerisi": "{n} dari {total} pertanyaan terisi dari foto.",
     "hasilSisa": "{n} pertanyaan masih perlu Anda jawab, karena belum terlihat jelas atau butuh pengukuran.",
-    "bukanKamarMandi": "Foto ini tampaknya bukan kamar mandi, jadi tidak ada jawaban yang diisi. Anda bisa mengganti foto atau menjawab sendiri.",
     "gagalAnalisis": "Foto belum bisa dibaca saat ini. Anda tetap bisa lanjut dan menjawab sendiri.",
     "terlaluSering": "Layanan pembaca foto sedang ramai. Coba lagi sebentar lagi, atau lanjut dan jawab sendiri.",
-    "wajibFotoArea": "Pilih area terlebih dulu."
+    "wajibFotoArea": "Pilih area terlebih dulu.",
+    "areaUji": "Bisa dibaca AI (tahap uji)",
+    "bukanRuangan": "Foto ini tampaknya bukan {area}, jadi tidak ada jawaban yang diisi. Anda bisa mengganti foto atau menjawab sendiri."
   },
   "profil": {
     "label": "Mengenal kebutuhan Anda",
@@ -113,5 +113,8 @@
     "areaLain": "Periksa area lain →",
     "aturanFoto": "Sebagian jawaban terisi dari foto. Cek langsung bila ada yang tidak sesuai dengan kondisi sebenarnya."
   },
-  "galat": { "judul": "Terjadi kesalahan", "isi": "Halaman tidak bisa ditampilkan. Muat ulang atau mulai ulang asesmen." }
+  "galat": {
+    "judul": "Terjadi kesalahan",
+    "isi": "Halaman tidak bisa ditampilkan. Muat ulang atau mulai ulang asesmen."
+  }
 }

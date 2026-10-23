@@ -14,16 +14,19 @@ const ALAMAT = (import.meta.env.VITE_ANALISIS_URL as string | undefined) ?? "/ap
 const MOCK = import.meta.env.VITE_PINDAI_MOCK === "true";
 
 /** Hasil tiruan untuk `VITE_PINDAI_MOCK=true npm run dev`: tanpa Gemini, tanpa kunci API, tanpa kuota. */
-function hasilTiruan(): HasilFoto {
-  const ids = pertanyaanUntukAI(PERTANYAAN["kamar-mandi"].pertanyaan, aturanFoto("kamar-mandi")).map((p) => p.id);
+function hasilTiruan(areaId: string): HasilFoto {
+  const daftar = pertanyaanUntukAI(PERTANYAAN[areaId].pertanyaan, aturanFoto(areaId));
+  const aturan = aturanFoto(areaId);
+  // Tiruan: pertanyaan ke-1 dan ke-3 dijawab "Tidak", pertanyaan 'bisa' pertama dijawab "Ya", sisanya tidak jelas.
+  const pertamaBisa = daftar.find((p) => aturan[p.id] === "bisa")?.id;
+  const ids = daftar.map((p) => p.id);
   const contoh: Record<string, { nilai: "ya" | "tidak" | "tidak_jelas"; alasan: string }> = {
-    "M-05": { nilai: "tidak", alasan: "Tidak terlihat pegangan di dekat kloset" },
-    "M-06": { nilai: "tidak", alasan: "Wastafel berkabinet, ruang kaki tertutup" },
-    "M-08": { nilai: "tidak", alasan: "Ada bibir di area mandi" },
-    "M-09": { nilai: "ya", alasan: "Lantai tampak bertekstur kasar" },
+    [ids[0]]: { nilai: "tidak", alasan: "Hambatan terlihat jelas (tiruan)" },
+    [ids[2]]: { nilai: "tidak", alasan: "Tidak terlihat (tiruan)" },
+    ...(pertamaBisa ? { [pertamaBisa]: { nilai: "ya", alasan: "Tampak sesuai (tiruan)" } } : {}),
   };
   return {
-    kamar_mandi: true,
+    ruang_sesuai: true,
     jawaban: ids.map((id) => ({ id, nilai: contoh[id]?.nilai ?? "tidak_jelas", alasan: contoh[id]?.alasan ?? "Belum terlihat jelas" })),
   };
 }
@@ -32,17 +35,17 @@ export function areaBisaDipindai(areaId: string | null): boolean {
   return DAFTAR_AREA.find((a) => a.id === areaId)?.bisa_dipindai === true;
 }
 
-export async function analisisFoto(dataUrls: string[]): Promise<HasilFoto> {
+export async function analisisFoto(dataUrls: string[], areaId: string): Promise<HasilFoto> {
   if (MOCK) {
     await new Promise((r) => setTimeout(r, 600));
-    return hasilTiruan();
+    return hasilTiruan(areaId);
   }
   let res: Response;
   try {
     res = await fetch(ALAMAT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ gambar: dataUrls.map(basis64) }),
+      body: JSON.stringify({ gambar: dataUrls.map(basis64), area: areaId }),
     });
   } catch {
     throw new GalatAnalisis("gagal");

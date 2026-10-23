@@ -5,12 +5,12 @@ import { bacaHasilFoto, isiDariFoto, pertanyaanUntukAI, type HasilFoto } from ".
 const daftar = PERTANYAAN["kamar-mandi"].pertanyaan;
 const aturan = aturanFoto("kamar-mandi");
 
-const hasil = (jawaban: HasilFoto["jawaban"], kamar_mandi = true): HasilFoto => ({ kamar_mandi, jawaban });
+const hasil = (jawaban: HasilFoto["jawaban"], ruang_sesuai = true): HasilFoto => ({ ruang_sesuai, jawaban });
 
 describe("bacaHasilFoto", () => {
   it("menerima bentuk yang benar dan menolak yang salah", () => {
-    expect(bacaHasilFoto({ kamar_mandi: true, jawaban: [{ id: "M-06", nilai: "ya", alasan: "a" }] })).not.toBeNull();
-    expect(bacaHasilFoto({ kamar_mandi: true, jawaban: [{ id: "M-06", nilai: "mungkin" }] })).toBeNull();
+    expect(bacaHasilFoto({ ruang_sesuai: true, jawaban: [{ id: "M-06", nilai: "ya", alasan: "a" }] })).not.toBeNull();
+    expect(bacaHasilFoto({ ruang_sesuai: true, jawaban: [{ id: "M-06", nilai: "mungkin" }] })).toBeNull();
     expect(bacaHasilFoto(null)).toBeNull();
   });
 });
@@ -64,7 +64,7 @@ describe("isiDariFoto", () => {
     expect(r.jawaban).toEqual({});
   });
 
-  it("bukan kamar mandi: tidak mengisi apa pun", () => {
+  it("foto bukan ruangan yang dipilih: tidak mengisi apa pun", () => {
     expect(isiDariFoto(daftar, aturan, hasil([{ id: "M-07", nilai: "ya" }], false), {}).terisi).toBe(0);
   });
 

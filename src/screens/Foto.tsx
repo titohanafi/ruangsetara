@@ -21,6 +21,7 @@ export function FotoScreen() {
   const kameraRef = useRef<HTMLInputElement>(null);
   const area = cariArea(state.areaId);
   const bisaDibaca = area?.bisa_dipindai === true;
+  const tahapUji = bisaDibaca && area?.foto_teruji === false;
   const penuh = state.fotos.length >= MAKS_FOTO;
   const membaca = state.baca.status === "membaca";
 
@@ -41,10 +42,13 @@ export function FotoScreen() {
     if (!area) return;
     kirim({ jenis: "mulai_baca" });
     try {
-      const hasil = await analisisFoto(state.fotos.map((f) => f.url));
+      const hasil = await analisisFoto(
+        state.fotos.map((f) => f.url),
+        area.id,
+      );
       const daftar = PERTANYAAN[area.id].pertanyaan;
       const { jawaban, terisi } = isiDariFoto(daftar, aturanFoto(area.id), hasil, state.jawaban);
-      kirim({ jenis: "selesai_baca", jawaban, terisi, total: daftar.length, bukanKamarMandi: !hasil.kamar_mandi });
+      kirim({ jenis: "selesai_baca", jawaban, terisi, total: daftar.length, bukanRuangan: !hasil.ruang_sesuai });
     } catch (e) {
       kirim({ jenis: "gagal_baca", sering: e instanceof GalatAnalisis && e.kode === "sering" });
     }
@@ -78,7 +82,7 @@ export function FotoScreen() {
                   <span aria-hidden>{a.ikon} </span>
                   {a.nama}
                 </span>
-                <span className="mt-0.5 block text-kecil text-redup">{a.bisa_dipindai ? T.areaDipindai : T.areaManual}</span>
+                <span className="mt-0.5 block text-kecil text-redup">{a.foto_teruji ? T.areaDipindai : T.areaUji}</span>
               </span>
             </label>
           ))}
@@ -138,7 +142,7 @@ export function FotoScreen() {
         )}
       </section>
 
-      {area && !bisaDibaca && <p className="mt-6 rounded-kartu bg-info-muda p-4 text-kecil text-info">{T.disclaimerArea}</p>}
+      {tahapUji && <p className="mt-6 rounded-kartu bg-info-muda p-4 text-kecil text-info">{T.disclaimerArea}</p>}
 
       {bisaDibaca && state.fotos.length > 0 && !selesai && (
         <p className="mt-6 rounded-kartu bg-info-muda p-4 text-kecil text-info">{T.persetujuan}</p>
@@ -151,8 +155,8 @@ export function FotoScreen() {
         {selesai && (
           <div className="kartu">
             <h2 className="text-subjudul">{T.hasilJudul}</h2>
-            {state.baca.bukanKamarMandi ? (
-              <p className="mt-2">{T.bukanKamarMandi}</p>
+            {state.baca.bukanRuangan ? (
+              <p className="mt-2">{isi(T.bukanRuangan, { area: area?.nama.toLowerCase() ?? "" })}</p>
             ) : (
               <>
                 <p className="mt-2 font-semibold">{isi(T.hasilTerisi, { n: state.baca.terisi, total: state.baca.total })}</p>

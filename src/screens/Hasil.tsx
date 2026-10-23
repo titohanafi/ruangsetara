@@ -20,7 +20,7 @@ function Teks({ judul, teks }: { judul: string; teks: string | null }) {
   );
 }
 
-function KartuButir({ b, nomor, catatan }: { b: Butir; nomor: number; catatan?: string }) {
+function KartuButir({ b, nomor, catatan, temuan }: { b: Butir; nomor: number; catatan?: string; temuan?: string }) {
   const { pertanyaan: p } = b;
   const belum = b.status === "belum";
   return (
@@ -43,6 +43,12 @@ function KartuButir({ b, nomor, catatan }: { b: Butir; nomor: number; catatan?: 
         <p className="mt-1 text-kecil text-redup">
           {UI.tanya.alasanFoto}
           {b.jawaban.alasan}
+        </p>
+      )}
+      {temuan?.trim() && (
+        <p className="mt-1 text-kecil">
+          <span className="font-semibold">{UI.hasil.temuanAnda}</span>
+          {temuan.trim()}
         </p>
       )}
       {belum && catatan && (
@@ -140,7 +146,13 @@ export function HasilScreen() {
       ) : (
         <ol className="mt-6 space-y-4">
           {perlu.map((b, i) => (
-            <KartuButir key={b.pertanyaan.id} b={b} nomor={i + 1} catatan={state.catatanFoto[b.pertanyaan.id]} />
+            <KartuButir
+              key={b.pertanyaan.id}
+              b={b}
+              nomor={i + 1}
+              catatan={state.catatanFoto[b.pertanyaan.id]}
+              temuan={state.temuan[b.pertanyaan.id]}
+            />
           ))}
         </ol>
       )}
@@ -155,6 +167,12 @@ export function HasilScreen() {
                 <span className="min-w-0 flex-1">
                   {p.pertanyaan} <strong>{j ? UI.tanya[j.nilai] : UI.tanya.belumDijawab}</strong>
                   {j?.sumber === "foto" && <span className="ml-1 text-kecil text-info">✦ {T.dariFoto}</span>}
+                  {state.temuan[p.id]?.trim() && (
+                    <span className="mt-1 block text-kecil text-redup">
+                      {T.temuanAnda}
+                      {state.temuan[p.id].trim()}
+                    </span>
+                  )}
                 </span>
                 <button
                   type="button"

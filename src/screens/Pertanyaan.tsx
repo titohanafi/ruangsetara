@@ -22,6 +22,37 @@ export function PertanyaanScreen() {
   const j = state.jawaban[p.id];
   const terakhir = i === daftar.length - 1;
   const { terjawab } = ringkas(daftar, state.jawaban);
+  // Catatan AI hanya ada bila AI menandai pertanyaan ini "Belum tahu" (belum bisa dipastikan dari foto).
+  const catatan = state.catatanFoto[p.id];
+  const tindakLanjut = catatan !== undefined;
+  const perluTinjau = j?.perluTinjau === true;
+  const pilihan = (
+    <fieldset className="mt-3" aria-labelledby="pertanyaan-id">
+      <div className="grid grid-cols-3 gap-3">
+        {PILIHAN.map((o) => {
+          const dipilih = j?.nilai === o.nilai && !perluTinjau;
+          return (
+            <label
+              key={o.nilai}
+              className={`flex min-h-sentuh cursor-pointer items-center justify-center rounded-tombol border px-2 py-2 text-center font-semibold ${
+                dipilih ? "border-utama bg-utama text-putih" : "border-garisKontrol bg-putih hover:bg-utama-muda"
+              }`}
+            >
+              <input
+                type="radio"
+                name={`jawab-${p.id}`}
+                className="sr-only"
+                checked={dipilih}
+                onChange={() => kirim({ jenis: "jawab", id: p.id, nilai: o.nilai })}
+              />
+              {o.nilai === "belum" && tindakLanjut ? T.tetapBelumTahu : o.label}
+            </label>
+          );
+        })}
+      </div>
+      {!tindakLanjut && <p className="mt-2 text-kecil text-redup">{T.belumTahuBantu}</p>}
+    </fieldset>
+  );
 
   const mundur = () => (i > 0 ? kirim({ jenis: "ke_pertanyaan", indeks: i - 1 }) : pindah("/prioritas"));
   const maju = () => (terakhir ? pindah("/hasil") : kirim({ jenis: "ke_pertanyaan", indeks: i + 1 }));
@@ -44,58 +75,50 @@ export function PertanyaanScreen() {
           {p.pertanyaan}
         </h2>
 
-        <fieldset className="mt-5" aria-labelledby="pertanyaan-id">
-          <div className="grid grid-cols-3 gap-3">
-            {PILIHAN.map((o) => (
-              <label
-                key={o.nilai}
-                className={`flex min-h-sentuh cursor-pointer items-center justify-center rounded-tombol border px-2 py-2 text-center font-semibold ${
-                  j?.nilai === o.nilai ? "border-utama bg-utama text-putih" : "border-garisKontrol bg-putih hover:bg-utama-muda"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name={`jawab-${p.id}`}
-                  className="sr-only"
-                  checked={j?.nilai === o.nilai}
-                  onChange={() => kirim({ jenis: "jawab", id: p.id, nilai: o.nilai })}
-                />
-                {o.label}
+        {tindakLanjut ? (
+          // AI belum bisa memastikan dari foto: jawaban AI "Belum tahu", pertanyaan lanjutan dari Cara Verifikasi di sheet,
+          // lalu pengguna menjawab sendiri. Tombol lanjut nonaktif sampai pengguna memilih jawaban akhir.
+          <>
+            <div className="mt-4 rounded-kartu border border-garis bg-putih p-3 text-kecil" role="status">
+              <p className="font-semibold text-info">✦ {T.aiBelumTahu}</p>
+              <p className="mt-1 text-info">{catatan || T.catatanKosong}</p>
+              <p className="mt-3 font-semibold">{T.periksaSendiri}</p>
+              <p className="mt-1 text-redup">{p.cara_verifikasi}</p>
+            </div>
+            <div className="mt-4">
+              <label htmlFor={`temuan-${p.id}`} className="font-semibold">
+                {T.temuanLabel}
               </label>
-            ))}
-          </div>
-          <p className="mt-2 text-kecil text-redup">{T.belumTahuBantu}</p>
-        </fieldset>
-
-        {j?.sumber === "foto" && (
-          <div className="mt-4 rounded-kartu bg-info-muda p-3 text-kecil text-info" role="status">
-            <p className="font-semibold">✦ {T.dariFoto}</p>
-            {j.alasan && (
-              <p className="mt-1">
-                {T.alasanFoto}
-                {j.alasan}
-              </p>
+              <textarea
+                id={`temuan-${p.id}`}
+                rows={2}
+                maxLength={300}
+                placeholder={T.temuanContoh}
+                value={state.temuan[p.id] ?? ""}
+                onChange={(e) => kirim({ jenis: "isi_temuan", id: p.id, teks: e.target.value })}
+                className="mt-2 w-full rounded-tombol border border-garisKontrol bg-putih p-3"
+              />
+            </div>
+            <p className="mt-4 font-semibold">{T.jawabanAkhir}</p>
+            {pilihan}
+            {perluTinjau && <p className="mt-2 text-kecil text-redup">{T.setelahPeriksa}</p>}
+          </>
+        ) : (
+          <>
+            {pilihan}
+            {j?.sumber === "foto" && (
+              <div className="mt-4 rounded-kartu bg-info-muda p-3 text-kecil text-info" role="status">
+                <p className="font-semibold">✦ {T.dariFoto}</p>
+                {j.alasan && (
+                  <p className="mt-1">
+                    {T.alasanFoto}
+                    {j.alasan}
+                  </p>
+                )}
+                <p className="mt-1">{T.dariFotoCatatan}</p>
+              </div>
             )}
-            <p className="mt-1">{T.dariFotoCatatan}</p>
-          </div>
-        )}
-
-        {j?.sumber !== "foto" && state.catatanFoto[p.id] && !j && (
-          // AI tidak bisa memastikan: tampil sebagai "Jawaban AI: Belum tahu" dengan langkah periksa sendiri (dari Cara Verifikasi di sheet).
-          // Tombol lanjut tetap nonaktif sampai pengguna memilih jawabannya sendiri.
-          <div className="mt-4 rounded-kartu border border-garis bg-putih p-3 text-kecil" role="status">
-            <p className="font-semibold text-info">✦ {T.aiBelumTahu}</p>
-            <p className="mt-1 text-info">{state.catatanFoto[p.id]}</p>
-            <p className="mt-3 font-semibold">{T.periksaSendiri}</p>
-            <p className="mt-1 text-redup">{p.cara_verifikasi}</p>
-            <p className="mt-3 text-redup">{T.setelahPeriksa}</p>
-          </div>
-        )}
-        {j?.sumber !== "foto" && state.catatanFoto[p.id] && j && (
-          <div className="mt-4 rounded-kartu border border-garis bg-putih p-3 text-kecil text-info" role="status">
-            <p className="font-semibold">✦ {T.catatanFoto}</p>
-            <p className="mt-1">{state.catatanFoto[p.id]}</p>
-          </div>
+          </>
         )}
 
         <div className="mt-5 space-y-2">
@@ -120,10 +143,10 @@ export function PertanyaanScreen() {
         <button type="button" className="tombol-tipis" onClick={mundur}>
           {UI.tombol.kembali}
         </button>
-        <button type="button" className="tombol-utama" disabled={!j} onClick={maju}>
+        <button type="button" className="tombol-utama" disabled={!j || perluTinjau} onClick={maju}>
           {terakhir ? UI.tombol.lihatHasil : UI.tombol.pertanyaanBerikut}
         </button>
-        {!j && <span className="text-kecil text-redup">{T.pilihJawaban}</span>}
+        {(!j || perluTinjau) && <span className="text-kecil text-redup">{T.pilihJawaban}</span>}
       </div>
     </Layout>
   );

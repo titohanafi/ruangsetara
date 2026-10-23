@@ -80,4 +80,14 @@ describe("reducer", () => {
     expect(reducer(s, { jenis: "hapus_foto", id: "a" }).catatanFoto).toEqual({});
     expect(reducer(s, { jenis: "pilih_area", areaId: "dapur" }).catatanFoto).toEqual({});
   });
+
+  it("teks hasil pemeriksaan pengguna disimpan per pertanyaan, dan dibuang saat area berganti", () => {
+    let s: State = reducer(AWAL, { jenis: "pilih_area", areaId: "kamar-mandi" });
+    s = reducer(s, { jenis: "isi_temuan", id: "M-01", teks: "lebar bukaan pintu 85 cm" });
+    expect(s.temuan).toEqual({ "M-01": "lebar bukaan pintu 85 cm" });
+    // Teks pengguna bertahan saat foto berubah (itu hasil pemeriksaan mereka sendiri, bukan hasil baca foto).
+    expect(reducer(s, { jenis: "tambah_foto", foto: { id: "a", url: "data:" } }).temuan).toEqual(s.temuan);
+    expect(reducer(s, { jenis: "pilih_area", areaId: "dapur" }).temuan).toEqual({});
+    expect(reducer(s, { jenis: "ulang" }).temuan).toEqual({});
+  });
 });

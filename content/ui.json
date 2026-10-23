@@ -87,10 +87,14 @@
     "belumDijawab": "Belum dijawab",
     "pilihJawaban": "Pilih satu jawaban untuk lanjut.",
     "belumTahuBantu": "Pilih \"Belum tahu\" bila Anda belum bisa memastikan. Hasilnya akan meminta pengukuran atau foto tambahan.",
-    "catatanFoto": "Catatan AI dari foto",
     "aiBelumTahu": "Jawaban AI: Belum tahu",
     "periksaSendiri": "Periksa sendiri (cara dari sheet peneliti):",
-    "setelahPeriksa": "Setelah memeriksa, pilih jawaban Anda di atas untuk lanjut. Pertanyaan berikutnya baru aktif setelah Anda memilih."
+    "setelahPeriksa": "Setelah memeriksa, pilih jawaban akhir Anda. Pertanyaan berikutnya baru aktif setelah Anda memilih.",
+    "catatanKosong": "AI belum bisa memastikan dari foto.",
+    "temuanLabel": "Hasil pemeriksaan Anda (boleh dikosongkan)",
+    "temuanContoh": "Tulis temuan Anda, misalnya angka hasil ukur: lebar bukaan pintu 85 cm",
+    "jawabanAkhir": "Jawaban akhir Anda",
+    "tetapBelumTahu": "Tetap belum tahu"
   },
   "hasil": {
     "label": "Rekomendasi",
@@ -117,7 +121,8 @@
     "cetak": "Cetak / simpan PDF",
     "areaLain": "Periksa area lain →",
     "aturanFoto": "Sebagian jawaban terisi dari foto. Cek langsung bila ada yang tidak sesuai dengan kondisi sebenarnya.",
-    "catatanFoto": "Catatan AI dari foto: "
+    "catatanFoto": "Catatan AI dari foto: ",
+    "temuanAnda": "Hasil pemeriksaan Anda: "
   },
   "galat": {
     "judul": "Terjadi kesalahan",

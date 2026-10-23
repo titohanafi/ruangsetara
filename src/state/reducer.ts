@@ -25,6 +25,8 @@ export interface State {
   denah: HasilDenah | null;
   /** Catatan AI per pertanyaan yang tidak terisi dari foto (apa yang terlihat dan kenapa belum cukup). Bukan jawaban. */
   catatanFoto: Record<string, string>;
+  /** Hasil pemeriksaan yang diketik pengguna per pertanyaan (teks bebas, mis. angka hasil ukur). Disimpan sebagai bukti; tidak dinilai sistem. */
+  temuan: Record<string, string>;
   profil: Record<string, string>;
   aktivitas: string | null;
   jawaban: PetaJawaban;
@@ -39,6 +41,7 @@ export const AWAL: State = {
   baca: BACA_AWAL,
   denah: null,
   catatanFoto: {},
+  temuan: {},
   profil: {},
   aktivitas: null,
   jawaban: {},
@@ -56,6 +59,7 @@ export type Aksi =
   | { jenis: "isi_profil"; id: string; nilai: string }
   | { jenis: "pilih_aktivitas"; aktivitas: string }
   | { jenis: "jawab"; id: string; nilai: Nilai }
+  | { jenis: "isi_temuan"; id: string; teks: string }
   | { jenis: "ke_pertanyaan"; indeks: number }
   | { jenis: "area_lain" }
   | { jenis: "ulang" };
@@ -70,7 +74,7 @@ export function reducer(s: State, a: Aksi): State {
     case "pilih_area":
       if (s.areaId === a.areaId) return s;
       // Ganti area: pertanyaan, prioritas, dan hasil baca foto milik area lama tidak berlaku lagi. Foto dan profil tetap.
-      return { ...s, areaId: a.areaId, baca: BACA_AWAL, denah: null, catatanFoto: {}, aktivitas: null, jawaban: {}, indeks: 0 };
+      return { ...s, areaId: a.areaId, baca: BACA_AWAL, denah: null, catatanFoto: {}, temuan: {}, aktivitas: null, jawaban: {}, indeks: 0 };
     case "tambah_foto":
       return { ...s, fotos: [...s.fotos, a.foto], baca: BACA_AWAL, denah: null, catatanFoto: {}, jawaban: tanpaJawabanFoto(s.jawaban) };
     case "hapus_foto":
@@ -99,6 +103,8 @@ export function reducer(s: State, a: Aksi): State {
       return { ...s, profil: { ...s.profil, [a.id]: a.nilai } };
     case "pilih_aktivitas":
       return { ...s, aktivitas: a.aktivitas };
+    case "isi_temuan":
+      return { ...s, temuan: { ...s.temuan, [a.id]: a.teks } };
     case "jawab":
       return { ...s, jawaban: { ...s.jawaban, [a.id]: { nilai: a.nilai, sumber: "pengguna" } } };
     case "ke_pertanyaan":

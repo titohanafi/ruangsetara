@@ -21,10 +21,11 @@ export function bacaHasilFoto(mentah: unknown): HasilFoto | null {
 
 export interface IsiFoto {
   jawaban: PetaJawaban;
+  /** Jumlah jawaban Ya atau Tidak yang terisi dari foto. */
   terisi: number;
   /**
-   * Catatan AI untuk pertanyaan yang jawabannya TIDAK terisi dari foto (tidak jelas, atau "Ya" yang tidak boleh dari foto):
-   * apa yang terlihat dan kenapa belum cukup. Bukan jawaban; hanya bantuan membaca.
+   * Catatan AI untuk pertanyaan yang belum bisa dipastikan dari foto (apa yang terlihat dan kenapa belum cukup); bisa kosong
+   * bila AI tidak menulis apa pun. Pertanyaan ini diisi "Belum tahu" (`perluTinjau`) dan menunggu pengguna.
    */
   catatan: Record<string, string>;
 }
@@ -32,8 +33,9 @@ export interface IsiFoto {
 /**
  * Mengisi jawaban dari hasil pembacaan foto. Aturannya sengaja berhati-hati:
  * - foto bukan ruangan yang dipilih → tidak mengisi apa pun;
- * - "tidak_jelas" tidak pernah mengisi;
+ * - "tidak_jelas" tidak mengisi Ya atau Tidak: diisi "Belum tahu" yang menunggu pengguna (`perluTinjau`), dengan catatan AI;
  * - pertanyaan berstatus "tidak" tidak diisi dari foto, dan "sebagian" hanya boleh terisi "Tidak" (hambatan yang jelas terlihat);
+ *   "Ya" yang tidak boleh diperlakukan seperti "tidak jelas" dan catatannya dibuang karena terbaca seperti kesimpulan;
  * - jawaban yang sudah dipilih pengguna tidak ditimpa.
  */
 export function isiDariFoto(daftar: Pertanyaan[], aturan: Record<string, AturanFoto>, hasil: HasilFoto, sudah: PetaJawaban): IsiFoto {
@@ -46,18 +48,18 @@ export function isiDariFoto(daftar: Pertanyaan[], aturan: Record<string, AturanF
     const a = aturan[p.id];
     const h = dari.get(p.id);
     if (!a || a === "tidak" || !h) continue;
-    const catat = () => {
-      const t = h.alasan?.trim().slice(0, MAKS_ALASAN);
-      if (t) catatan[p.id] = t;
-    };
-    // "Ya" yang tidak boleh dari foto dibuang tanpa catatan: kalimatnya ditulis AI sebagai kesimpulan, jadi bisa terbaca seperti jawaban.
-    if (a === "sebagian" && h.nilai === "ya") continue;
-    if (h.nilai === "tidak_jelas") {
-      catat();
+    const alasan = h.alasan?.trim().slice(0, MAKS_ALASAN) || undefined;
+    const belumPasti = h.nilai === "tidak_jelas" || (a === "sebagian" && h.nilai === "ya");
+    if (belumPasti) {
+      // Catatan "Ya" yang tidak boleh dibuang: kalimatnya ditulis AI sebagai kesimpulan, jadi bisa terbaca seperti jawaban.
+      catatan[p.id] = h.nilai === "tidak_jelas" ? (alasan ?? "") : "";
+      if (jawaban[p.id]?.sumber !== "pengguna")
+        jawaban[p.id] = { nilai: "belum", sumber: "foto", alasan: catatan[p.id] || undefined, perluTinjau: true };
       continue;
     }
     if (jawaban[p.id]?.sumber === "pengguna") continue;
-    jawaban[p.id] = { nilai: h.nilai, sumber: "foto", alasan: h.alasan?.trim().slice(0, MAKS_ALASAN) || undefined };
+    if (h.nilai === "tidak_jelas") continue; // sudah ditangani di atas; penyempit tipe
+    jawaban[p.id] = { nilai: h.nilai, sumber: "foto", alasan };
     terisi += 1;
   }
   return { jawaban, terisi, catatan };

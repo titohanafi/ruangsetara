@@ -8,6 +8,11 @@ export interface Jawaban {
   sumber: Sumber;
   /** Alasan singkat dari pembacaan foto; hanya ada bila sumber = "foto". */
   alasan?: string;
+  /**
+   * AI mengisi "Belum tahu" (belum bisa memastikan dari foto) dan menunggu pengguna memeriksa sendiri lalu memilih jawaban.
+   * Selama true, jawaban ini belum dihitung sebagai terjawab dan tombol lanjut tetap nonaktif.
+   */
+  perluTinjau?: boolean;
 }
 export type PetaJawaban = Record<string, Jawaban>;
 
@@ -55,7 +60,7 @@ export function ringkas(daftar: Pertanyaan[], jawaban: PetaJawaban): Ringkasan {
   for (const p of daftar) {
     const j = jawaban[p.id];
     const s = statusButir(j);
-    if (!j || !s) continue;
+    if (!j || !s || j.perluTinjau) continue;
     r.terjawab += 1;
     r[s] += 1;
     if (j.sumber === "foto") r.dariFoto += 1;

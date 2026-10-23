@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
 import { butirHasil, ringkas, type Butir } from "../domain/asesmen";
@@ -5,6 +6,10 @@ import { cariArea, HASIL, isi, PERTANYAAN, UI } from "../domain/konten";
 import { useStore } from "../state/store";
 
 const T = UI.hasil;
+// Sampai posisi benda dibaca dari foto (M3), gambar hanya tampil di mode pengembangan dengan foto tiruan.
+const TAMPILKAN_RUANG = import.meta.env.DEV && import.meta.env.VITE_PINDAI_MOCK === "true";
+// Impor malas hanya bila aktif: di build produksi kondisinya false, jadi gambar dan tabel ukurannya tidak ikut terbundel.
+const RuangAnda = TAMPILKAN_RUANG ? lazy(() => import("../components/RuangAnda").then((m) => ({ default: m.RuangAnda }))) : null;
 const KATEGORI_D = HASIL.kategori.find((k) => k.nilai === "D");
 
 function Teks({ judul, teks }: { judul: string; teks: string | null }) {
@@ -115,6 +120,12 @@ export function HasilScreen() {
           </ul>
           <p className="mt-2 text-kecil text-redup">{T.fotoCatatan}</p>
         </section>
+      )}
+
+      {RuangAnda && area.id === "kamar-mandi" && (
+        <Suspense fallback={null}>
+          <RuangAnda jawaban={state.jawaban} />
+        </Suspense>
       )}
 
       {perlu.length === 0 ? (

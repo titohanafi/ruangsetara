@@ -8,7 +8,7 @@ export default {
     extend: {
       colors: {
         tinta: "#183F37", // teks utama, hijau tua kontras tinggi
-        utama: { DEFAULT: "#245C4C", gelap: "#183F37", muda: "#E9F0EA" }, // hijau tenang: tombol dan penanda langkah
+        utama: { DEFAULT: "#245C4C", gelap: "#183F37", muda: "#E9F0EA", redup: "#C7DBD0" }, // hijau tenang: tombol dan penanda langkah
         limau: "#DDEBAF", // aksen muda
         kertas: "#FAFBF7", // latar halaman
         putih: "#FFFFFF",
@@ -18,6 +18,11 @@ export default {
         perhatian: { DEFAULT: "#8A3B0F", muda: "#FBEBDD" }, // hangat: butuh penyesuaian
         info: { DEFAULT: "#1D4E89", muda: "#E6F0FA" }, // biru: terisi dari foto
         draf: { DEFAULT: "#7A4B00", muda: "#FFF1CC" },
+        // Gambar denah (abu netral, sama dengan gaya Transisi): dari terang ke gelap putih (atas dan sisi terang benda),
+        // dinding belakang, dinding samping, lantai, sisi gelap benda, sisi tebal dinding.
+        benda: { DEFAULT: "#FFFFFF", atas: "#FFFFFF", kanan: "#FFFFFF", kiri: "#E6E6E6" },
+        dinding: { DEFAULT: "#F7F7F7", belakang: "#FFFFFF", tebal: "#DDDDDD" },
+        lantai: "#EBEBEB",
         bahaya: { DEFAULT: "#A32020", muda: "#FDEDED" },
       },
       fontFamily: { sans: ["system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"] },

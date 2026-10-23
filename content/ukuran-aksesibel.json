@@ -1,0 +1,511 @@
+{
+  "rujukan": [
+    {
+      "id": "permen_pupr_14_2017",
+      "nama": "Permen PUPR No. 14 Tahun 2017 tentang Persyaratan Kemudahan Bangunan Gedung",
+      "peran": "utama",
+      "tautan": "https://klinikkonstruksi.jogjaprov.go.id/storage/images/peraturan/PerMen%20PUPR%20No%2014%20Th%202017%20ttg%20Persyaratan%20Kemudahan%20BG.pdf"
+    },
+    {
+      "id": "ada_2010",
+      "nama": "2010 ADA Standards for Accessible Design (Amerika Serikat), bab 6",
+      "peran": "pembanding",
+      "tautan": "https://www.ada.gov/law-and-regs/design-standards/2010-stds/"
+    },
+    {
+      "id": "checklist_tim_riset",
+      "nama": "Checklist Physical Accessibility Audit (tim riset, berkas lokal di riset/)",
+      "peran": "pembanding",
+      "tautan": null
+    }
+  ],
+  "entri": [
+    {
+      "id": "pintu-toilet-lebar-bersih",
+      "objek": "pintu",
+      "nama": "Lebar bersih pintu toilet penyandang disabilitas",
+      "indikator": [
+        "M-01"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, bagian 5. Toilet, butir 10 (PDF mulai hlm. 127)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 90
+        },
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 404.2.3 Clear Width (32 inci, 815 mm; pintu umum, bukan khusus toilet)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 81.5
+        }
+      ],
+      "catatan": "Aturan untuk toilet umum di bangunan gedung, bukan rumah tinggal. Dipakai sebagai ukuran acuan.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "toilet-disabilitas-ruang-dalam",
+      "objek": "ruang_toilet",
+      "nama": "Ruang dalam toilet penyandang disabilitas",
+      "indikator": [
+        "M-02",
+        "M-03"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, bagian 5. Toilet, butir 8; Gambar 3.13 dan 3.17 (PDF hlm. 127, 131, 133)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "lebar_cm": 152.5,
+          "panjang_cm": 227.5
+        }
+      ],
+      "catatan": "Ukuran paling sedikit untuk toilet umum, dengan mempertimbangkan ruang gerak kursi roda. Kamar mandi di rumah pengguna bisa lebih kecil; ini acuan, bukan syarat untuk rumah.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "toilet-disabilitas-ruang-bebas-pintu-kloset",
+      "objek": "ruang_toilet",
+      "nama": "Ruang bebas antara pintu (membuka ke luar) dan permukaan terluar kloset",
+      "indikator": [
+        "M-01"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, bagian 5. Toilet, butir 11 (PDF mulai hlm. 127)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 152.5
+        }
+      ],
+      "catatan": null,
+      "status_validasi": "draf"
+    },
+    {
+      "id": "ruang-putar-kursi-roda",
+      "objek": "ruang_gerak",
+      "nama": "Diameter ruang putar pengguna kursi roda",
+      "indikator": [
+        "M-02"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran I, Gambar 1.14 Diameter manuver pengguna kursi roda (PDF hlm. 42)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": true,
+          "min_cm": 152.5
+        },
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 304.3.1 Circular Space (60 inci, 1525 mm)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 152.5
+        }
+      ],
+      "catatan": "Angka dibaca dari label gambar ('min 152,5 cm' pada kedua sisi), bukan dari teks pasal.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "kloset-tinggi-dudukan",
+      "objek": "kloset",
+      "nama": "Tinggi dudukan kloset dari lantai",
+      "indikator": [
+        "M-04"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, Gambar 3.13 potongan toilet penyandang disabilitas (PDF hlm. 131)",
+          "sifat": "saran",
+          "dibaca_dari_gambar": true,
+          "nilai_cm": 45
+        },
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 604.4 Seats (17 sampai 19 inci, 430 sampai 485 mm)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 43,
+          "maks_cm": 48.5
+        }
+      ],
+      "catatan": "Angka 45 cm dibaca dari label gambar; titik ukurnya (puncak dudukan) belum dikonfirmasi oleh peninjau. Teks pasal PerMen tidak menyebut tinggi kloset.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "pegangan-diameter",
+      "objek": "pegangan",
+      "nama": "Diameter pegangan rambat (grab bar)",
+      "indikator": [
+        "M-05"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, Gambar 3.13 (label 'diameter 3.5 cm', PDF hlm. 131)",
+          "sifat": "saran",
+          "dibaca_dari_gambar": true,
+          "nilai_cm": 3.5
+        },
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 609.2.1 Circular Cross Section (32 sampai 51 mm)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 3.2,
+          "maks_cm": 5.1
+        }
+      ],
+      "catatan": "Teks pasal PerMen hanya menyebut pegangan rambat harus ada (Lampiran III, 5. Toilet, butir 17); diameter hanya muncul di gambar contoh.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "pegangan-tinggi-horizontal",
+      "objek": "pegangan",
+      "nama": "Tinggi pegangan horizontal dari lantai",
+      "indikator": [
+        "M-05"
+      ],
+      "nilai": [
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 609.4 Position of Grab Bars (33 sampai 36 inci, 840 sampai 915 mm, diukur ke atas permukaan genggam)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 84,
+          "maks_cm": 91.5
+        }
+      ],
+      "catatan": "PerMen belum punya angka yang pasti: Gambar 3.13 (PDF hlm. 131) memuat label 70, 80, dan 140 cm di samping pegangan, tapi titik ukurnya tidak jelas dari gambar. Perlu dibaca oleh peninjau sebelum dipakai.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "pegangan-jarak-ke-dinding",
+      "objek": "pegangan",
+      "nama": "Jarak ruang antara pegangan dan dinding",
+      "indikator": [
+        "M-05"
+      ],
+      "nilai": [
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 609.3 Spacing (1,5 inci, 38 mm)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "nilai_cm": 3.8
+        }
+      ],
+      "catatan": "PerMen tidak mengatur angka ini.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "wastafel-ukuran-bak",
+      "objek": "wastafel",
+      "nama": "Ukuran bak cuci tangan",
+      "indikator": [
+        "M-06"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, bagian 6. Bak Cuci Tangan, butir 2 (PDF hlm. 137)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "lebar_cm": 45,
+          "panjang_cm": 60
+        }
+      ],
+      "catatan": "Tertulis 'setidaknya 45 cm x 60 cm'; arah lebar dan panjang tidak dijelaskan.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "wastafel-tinggi-pengguna-kursi-roda",
+      "objek": "wastafel",
+      "nama": "Tinggi bak cuci tangan untuk pengguna kursi roda",
+      "indikator": [
+        "M-06"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, bagian 6. Bak Cuci Tangan, butir 4 (PDF hlm. 137)",
+          "sifat": "saran",
+          "dibaca_dari_gambar": false,
+          "nilai_cm": 75
+        }
+      ],
+      "catatan": "Angka ADA untuk wastafel (sec. 606) belum dibaca dan belum dibandingkan.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "wastafel-tinggi-dewasa",
+      "objek": "wastafel",
+      "nama": "Tinggi bak cuci tangan untuk orang dewasa",
+      "indikator": [
+        "M-06"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, bagian 6. Bak Cuci Tangan, butir 3 (PDF hlm. 137)",
+          "sifat": "saran",
+          "dibaca_dari_gambar": false,
+          "nilai_cm": 85
+        }
+      ],
+      "catatan": null,
+      "status_validasi": "draf"
+    },
+    {
+      "id": "wastafel-ruang-bebas",
+      "objek": "wastafel",
+      "nama": "Ruang bebas di depan bak cuci tangan",
+      "indikator": [
+        "M-06"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, bagian 6. Bak Cuci Tangan, butir 7 (PDF hlm. 137)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 60
+        }
+      ],
+      "catatan": "Tertulis 'setidaknya 60 cm dari tepi bak cuci tangan dengan sirkulasi 60 cm'; maksud persisnya perlu dikonfirmasi.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "pancuran-lebar-bilik",
+      "objek": "area_mandi",
+      "nama": "Lebar efektif bilik pancuran",
+      "indikator": [
+        "M-08"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, bagian 7. Pancuran, butir 1 (PDF hlm. 139)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 90
+        },
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 608.2.1 Transfer Type Shower Compartments (36 x 36 inci, 915 x 915 mm)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "lebar_cm": 91.5,
+          "panjang_cm": 91.5
+        }
+      ],
+      "catatan": "PerMen (lebar efektif 90 cm) diutamakan. Ukuran ADA dicatat sebagai pembanding.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "pancuran-roll-in-ukuran",
+      "objek": "area_mandi",
+      "nama": "Ukuran area shower tanpa undakan untuk kursi roda masuk langsung (roll-in)",
+      "indikator": [
+        "M-08"
+      ],
+      "nilai": [
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 608.2.2 Standard Roll-In Type Shower Compartments (30 x 60 inci, 760 x 1525 mm)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "lebar_cm": 76,
+          "panjang_cm": 152.5
+        }
+      ],
+      "catatan": "PerMen tidak mengatur ukuran roll-in.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "pancuran-tinggi-kran",
+      "objek": "area_mandi",
+      "nama": "Tinggi kran atau tombol pancuran dari lantai",
+      "indikator": [
+        "M-07"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, bagian 7. Pancuran, butir 2 (PDF hlm. 139)",
+          "sifat": "saran",
+          "dibaca_dari_gambar": false,
+          "maks_cm": 120
+        },
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 608.5.2 (1220 mm di atas lantai shower, untuk roll-in)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "maks_cm": 122
+        }
+      ],
+      "catatan": null,
+      "status_validasi": "draf"
+    },
+    {
+      "id": "pancuran-tempat-duduk",
+      "objek": "area_mandi",
+      "nama": "Lebar dan tinggi tempat duduk di pancuran",
+      "indikator": [
+        "M-10"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, bagian 7. Pancuran, butir 6 (PDF hlm. 139)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 45
+        },
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 610.3 Shower Compartment Seats (tinggi 17 sampai 19 inci, 430 sampai 485 mm)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 43,
+          "maks_cm": 48.5
+        }
+      ],
+      "catatan": "Angka PerMen berlaku untuk lebar dan ketinggian; angka ADA hanya untuk tinggi.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "pancuran-selang-hand-shower",
+      "objek": "area_mandi",
+      "nama": "Panjang selang hand shower",
+      "indikator": [
+        "M-07"
+      ],
+      "nilai": [
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 608.6 Shower Spray Unit and Water (59 inci, 1500 mm)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 150
+        }
+      ],
+      "catatan": "PerMen tidak mengatur panjang selang. Checklist tim riset menulis 1525 mm, tetapi teks ADA sec. 608.6 menyebut 1500 mm (59 inci).",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "peralatan-toilet-tinggi-maks",
+      "objek": "ruang_toilet",
+      "nama": "Tinggi perletakan peralatan toilet",
+      "indikator": [
+        "M-07",
+        "M-11"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, bagian 12. Perlengkapan dan peralatan kontrol, butir 6 (PDF hlm. 149)",
+          "sifat": "saran",
+          "dibaca_dari_gambar": false,
+          "maks_cm": 110
+        }
+      ],
+      "catatan": null,
+      "status_validasi": "draf"
+    },
+    {
+      "id": "pegangan-panjang-samping",
+      "objek": "pegangan",
+      "nama": "Panjang pegangan di dinding samping kloset",
+      "indikator": [
+        "M-05"
+      ],
+      "nilai": [
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 604.5.1 Side Wall (42 inci, 1065 mm)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 106.5
+        }
+      ],
+      "catatan": "PerMen tidak mengatur panjang pegangan.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "pegangan-panjang-belakang",
+      "objek": "pegangan",
+      "nama": "Panjang pegangan di dinding belakang kloset",
+      "indikator": [
+        "M-05"
+      ],
+      "nilai": [
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 604.5.2 Rear Wall (36 inci, 915 mm)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "min_cm": 91.5
+        }
+      ],
+      "catatan": "PerMen tidak mengatur panjang pegangan.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "cermin-tinggi-tepi-bawah",
+      "objek": "wastafel",
+      "nama": "Tinggi tepi bawah cermin dari lantai",
+      "indikator": [
+        "M-06"
+      ],
+      "nilai": [
+        {
+          "rujukan": "permen_pupr_14_2017",
+          "rincian": "Lampiran III, Gambar 3.13 (label cermin '90-180 cm di atas tanah', PDF hlm. 131)",
+          "sifat": "saran",
+          "dibaca_dari_gambar": true,
+          "min_cm": 90,
+          "maks_cm": 180
+        },
+        {
+          "rujukan": "ada_2010",
+          "rincian": "ADA 2010 sec. 603.3 Mirrors (cermin di atas wastafel: tepi bawah 40 inci, 1015 mm, maksimal)",
+          "sifat": "persyaratan",
+          "dibaca_dari_gambar": false,
+          "maks_cm": 101.5
+        }
+      ],
+      "catatan": "Dua acuan berbeda tujuan: PerMen memberi rentang pasang di gambar contoh, ADA membatasi tepi bawah agar terlihat dari posisi duduk. Perlu diputuskan peninjau; PerMen diutamakan.",
+      "status_validasi": "draf"
+    },
+    {
+      "id": "jangkauan-zona-perlengkapan",
+      "objek": "area_mandi",
+      "nama": "Rentang tinggi jangkauan untuk kran, holder shower, dan rak dari posisi duduk",
+      "indikator": [
+        "M-07",
+        "M-11"
+      ],
+      "nilai": [
+        {
+          "rujukan": "checklist_tim_riset",
+          "rincian": "Checklist tim riset, tab Pertanyaan Assesmen, M-07 dan M-11 (merujuk ADA 2010 sec. 308)",
+          "sifat": "saran",
+          "dibaca_dari_gambar": false,
+          "min_cm": 38,
+          "maks_cm": 122
+        }
+      ],
+      "catatan": "Batas atas 122 cm sudah dicocokkan ke ADA sec. 308.2.2 (jangkauan atas 48 inci bila ada penghalang dengan kedalaman jangkauan maksimal 51 cm). Batas bawah 38 cm belum dicocokkan ke teks ADA. Untuk batas atas, PerMen (kran paling tinggi 120 cm) diutamakan.",
+      "status_validasi": "draf"
+    }
+  ]
+}

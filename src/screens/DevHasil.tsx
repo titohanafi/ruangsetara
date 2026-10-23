@@ -33,7 +33,8 @@ export function DevHasilScreen() {
       kirim({ jenis: "tambah_foto", foto: { id: "dev-foto", url } });
       const daftar = PERTANYAAN[AREA].pertanyaan;
       const hasil = await analisisFoto([url], AREA);
-      const { jawaban, terisi } = isiDariFoto(daftar, aturanFoto(AREA), hasil, {});
+      // Contoh: perlengkapan mandi (M-07) dijawab Tidak supaya gambar penyesuaian shower bisa dicoba.
+      const { jawaban, terisi } = isiDariFoto(daftar, aturanFoto(AREA), hasil, { "M-07": { nilai: "tidak", sumber: "pengguna" } });
       kirim({ jenis: "selesai_baca", jawaban, terisi, total: daftar.length, bukanRuangan: !hasil.ruang_sesuai });
       kirim({ jenis: "pilih_aktivitas", aktivitas: area.aktivitas[0] });
       pindah("/hasil", { replace: true });

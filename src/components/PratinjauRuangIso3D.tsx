@@ -1,0 +1,251 @@
+import { useEffect, useRef, useState } from "react";
+import { titikDinding } from "../domain/denahGeometri";
+import { DIM } from "../domain/dimensiGambar";
+import { bukaanDinding, gambarBenda, type JenisBenda } from "../domain/gambarBenda";
+import {
+  garisUbin,
+  garisUbinLantai,
+  gambarShower,
+  keRuang,
+  kotak,
+  poligon,
+  titik,
+  type Dinding,
+  type ModeGambar,
+  type Kerangka,
+  type Primitif,
+  type Titik,
+} from "../domain/gambarShower";
+import { posisiSepanjang } from "../domain/tataLetak";
+import {
+  OBJEK_DENAH,
+  type JenisKloset,
+  type LetakDenah,
+  type ObjekDenah,
+  type VarianPintu,
+  type VarianShower,
+} from "../domain/denahPindai";
+import { bangunProyeksi } from "../lib/proyeksiIso3D";
+import { LapisPrimitif } from "./LapisPrimitif";
+
+const JENIS_KLOSET_GAMBAR: Record<JenisKloset, JenisBenda> = {
+  duduk: "kloset_duduk",
+  jongkok: "kloset_jongkok",
+  tidak_jelas: "kloset_tidak_jelas",
+};
+const VARIAN_PINTU_GAMBAR: Record<VarianPintu, JenisBenda> = {
+  ayun_ke_dalam: "pintu",
+  ayun_ke_luar: "pintu_ayun_luar",
+  geser: "pintu_geser",
+  tidak_jelas: "pintu_tanpa_daun",
+};
+
+// Seluruh gambar dalam cm nyata (1 satuan = 1 cm, sama dengan panel): ruangan seluas ruang dalam toilet PerMen
+// (`DIM.ruang`), benda memakai dimensi dari `DIM`. Kamera bekerja dalam meter, jadi koordinat dibagi 100.
+const LEBAR = DIM.ruang.lebar;
+const DALAM = DIM.ruang.dalam;
+const TINGGI = DIM.ruang.tinggi;
+const TEBAL = DIM.ruang.tebalDinding;
+// Setengah-tinggi pandangan awal kamera (meter); gambar lalu dipas-kan ke kanvas, jadi nilainya tidak menentukan ukuran.
+const FRUSTUM_AWAL = 2.2;
+// Margin gambar terhadap tepi kanvas (pecahan lebar/tinggi).
+const MARGIN = 0.03;
+
+/**
+ * Benda yang tidak digambar karena dinding tempatnya menempel tidak digambar (dinding samping berlawanan dan dinding
+ * depan): dari luar mereka tampak dari belakang dan melayang. Berlaku sama untuk semua benda, termasuk pintu.
+ */
+export function bendaTersembunyi(
+  letak: (id: ObjekDenah) => LetakDenah,
+  sisiSamping: "kiri" | "kanan",
+  tidakTerlihat: readonly ObjekDenah[] = [],
+): ObjekDenah[] {
+  return OBJEK_DENAH.filter((id) => {
+    if (tidakTerlihat.includes(id)) return false;
+    const dinding = titikDinding(letak(id)).dinding;
+    return dinding !== "belakang" && dinding !== sisiSamping;
+  });
+}
+
+/** Azimuth kamera (radian) supaya dinding samping yang digambar SELALU di sisi jauh dari kamera (tidak menghalangi
+ *  benda): kamera di (+X,+Z) (45°) membuat sisi kiri+belakang jauh; kamera di (-X,+Z) (135°) membuat kanan+belakang jauh. */
+function azimuthDariSudut(sisiSamping: "kiri" | "kanan"): number {
+  return sisiSamping === "kanan" ? (3 * Math.PI) / 4 : Math.PI / 4;
+}
+
+/** Permukaan dalam dinding (cm dari pusat ruangan): ruang dalam persis seluas `DIM.ruang`, dinding di luarnya. */
+function bidangDalam(dinding: Dinding): number {
+  switch (dinding) {
+    case "belakang":
+      return -DALAM / 2;
+    case "depan":
+      return DALAM / 2;
+    case "kiri":
+      return -LEBAR / 2;
+    case "kanan":
+      return LEBAR / 2;
+  }
+}
+
+/**
+ * Tampilan isometrik tingkat-ruangan (prototipe di belakang flag `VITE_ISO_3D`), seluruhnya gambar SVG bergaya manual
+ * perakitan dalam cm nyata: lantai dan dinding berkeramik (belakang selalu, satu dinding samping sesuai `sudutAktif.x`),
+ * lalu keempat benda (pintu, kloset, wastafel, shower) diposisikan sesuai `letak(id)` yang sama dengan denah tampak atas.
+ * Kamera ortografik isometrik sungguhan berputar mengelilingi ruangan (`bangunProyeksi`), jadi sudut pandang tetap
+ * benar; tidak ada Three.js, kanvas WebGL, atau model 3D yang dimuat (ringan untuk kuota rendah).
+ */
+export function PratinjauRuangIso3D({
+  letak,
+  sudutAktif,
+  varianShower = "tidak_jelas",
+  modeShower = "kondisi",
+  jenisKloset = "tidak_jelas",
+  varianPintu = "tidak_jelas",
+  tampilkanSemua = false,
+  tidakTerlihat = [],
+  kelas = "h-96 w-full",
+}: {
+  letak: (id: ObjekDenah) => LetakDenah;
+  sudutAktif: { x: "kiri" | "kanan" };
+  varianShower?: VarianShower;
+  /** Keadaan shower yang digambar: kondisi sekarang, penyesuaian praktis (hack), atau modifikasi permanen. */
+  modeShower?: ModeGambar;
+  /** Jenis kloset dan cara pintu membuka (hasil pindai); "tidak_jelas" menggambar penanda netral. */
+  jenisKloset?: JenisKloset;
+  varianPintu?: VarianPintu;
+  /** Tampilkan juga benda yang biasanya disembunyikan (di dinding yang tidak digambar). */
+  tampilkanSemua?: boolean;
+  /** Benda yang tidak terlihat di foto (posisinya tidak diketahui): tidak digambar sama sekali, juga bukan lewat tombol mata. */
+  tidakTerlihat?: readonly ObjekDenah[];
+  kelas?: string;
+}) {
+  const pembungkusRef = useRef<HTMLDivElement>(null);
+  const [ukuran, setUkuran] = useState<{ lebar: number; tinggi: number } | null>(null);
+  useEffect(() => {
+    const el = pembungkusRef.current;
+    if (!el) return;
+    const ukur = () => setUkuran(el.clientWidth > 0 && el.clientHeight > 0 ? { lebar: el.clientWidth, tinggi: el.clientHeight } : null);
+    ukur();
+    const pengamat = new ResizeObserver(ukur);
+    pengamat.observe(el);
+    return () => pengamat.disconnect();
+  }, []);
+
+  let gambar = null;
+  if (ukuran) {
+    const dasar = bangunProyeksi(azimuthDariSudut(sudutAktif.x), ukuran.lebar, ukuran.tinggi, FRUSTUM_AWAL);
+    const lihat = { x: sudutAktif.x === "kanan" ? -1 : 1, y: 1 } as const;
+
+    // Pas-kan ruangan (lantai dan puncak dinding yang digambar) ke kanvas: diperbesar sebesar mungkin dan dipusatkan,
+    // berapa pun bentuk kartunya.
+    const sisiX = sudutAktif.x === "kanan" ? LEBAR / 2 : -LEBAR / 2;
+    const dm = (x: number, y: number, z: number) => dasar(x / 100, y / 100, z / 100);
+    const sudutRuang = [
+      dm(-LEBAR / 2, -DALAM / 2, 0),
+      dm(LEBAR / 2, -DALAM / 2, 0),
+      dm(LEBAR / 2, DALAM / 2, 0),
+      dm(-LEBAR / 2, DALAM / 2, 0),
+      dm(-LEBAR / 2 - TEBAL, -DALAM / 2 - TEBAL, TINGGI),
+      dm(LEBAR / 2 + TEBAL, -DALAM / 2 - TEBAL, TINGGI),
+      dm(sisiX, DALAM / 2, TINGGI),
+    ];
+    const [xMin, xMax] = [Math.min(...sudutRuang.map((t) => t[0])), Math.max(...sudutRuang.map((t) => t[0]))];
+    const [yMin, yMax] = [Math.min(...sudutRuang.map((t) => t[1])), Math.max(...sudutRuang.map((t) => t[1]))];
+    const pembesaran = Math.min((ukuran.lebar * (1 - 2 * MARGIN)) / (xMax - xMin), (ukuran.tinggi * (1 - 2 * MARGIN)) / (yMax - yMin));
+    const proyeksi = (x: number, y: number, z: number): Titik => {
+      const [px, py] = dm(x, y, z);
+      return [(px - (xMin + xMax) / 2) * pembesaran + ukuran.lebar / 2, (py - (yMin + yMax) / 2) * pembesaran + ukuran.tinggi / 2];
+    };
+
+    const kerangkaDinding = (dinding: Dinding): Kerangka => ({
+      dinding,
+      sepanjang: 0,
+      bidang: bidangDalam(dinding),
+      proyeksi,
+      skala: 1,
+      lihat,
+    });
+
+    // Lantai hanya seluas ruang dalam (PerMen); dinding berdiri di luarnya dan tidak ikut tercakup lantai. Lantai paling
+    // gelap dan berkotak 30 cm (sama dengan dinding) sebagai penggaris; kotak dimulai dari sudut pojok belakang-kiri.
+    const kBelakang = kerangkaDinding("belakang");
+    const lantai = poligon(
+      "lantai",
+      [
+        proyeksi(-LEBAR / 2, -DALAM / 2, 0),
+        proyeksi(LEBAR / 2, -DALAM / 2, 0),
+        proyeksi(LEBAR / 2, DALAM / 2, 0),
+        proyeksi(-LEBAR / 2, DALAM / 2, 0),
+      ],
+      "ruang",
+    );
+    const ubinLantai = garisUbinLantai(kBelakang, -LEBAR / 2, LEBAR / 2, 0, DALAM, -LEBAR / 2, 0);
+    // Dinding setebal TEBAL di luar ruang dalam. Dinding belakang melebar sampai menutupi ujung dinding samping; dinding
+    // samping dimulai dari permukaan dalam dinding belakang. Garis keramik dimulai dari sudut pojok belakang.
+    const kSamping = kerangkaDinding(sudutAktif.x);
+    // Permukaan dalam dinding dibuat terang supaya garis keramik terlihat: dinding belakang (wastafel dan kloset) putih,
+    // dinding samping (shower) sedikit lebih gelap untuk memberi kesan kedalaman, dan lantai paling gelap. Sisi tebal dan
+    // puncak dinding tetap bernada abu.
+    const mukaDalam = (k: Kerangka, a0: number, a1: number, muka: "latar" | "kanan"): Primitif =>
+      poligon(muka, [titik(k, a0, 0, 0), titik(k, a1, 0, 0), titik(k, a1, 0, TINGGI), titik(k, a0, 0, TINGGI)], "ruang");
+    const dinding: Primitif[] = [
+      ...kotak(kBelakang, -LEBAR / 2 - TEBAL, LEBAR / 2 + TEBAL, -TEBAL, 0, 0, TINGGI, "ruang"),
+      mukaDalam(kBelakang, -LEBAR / 2 - TEBAL, LEBAR / 2 + TEBAL, "latar"),
+      ...garisUbin(kBelakang, -LEBAR / 2, LEBAR / 2, TINGGI, -LEBAR / 2),
+      ...kotak(kSamping, -DALAM / 2, DALAM / 2, -TEBAL, 0, 0, TINGGI, "ruang"),
+      mukaDalam(kSamping, -DALAM / 2, DALAM / 2, "kanan"),
+      ...garisUbin(kSamping, -DALAM / 2, DALAM / 2, TINGGI, -DALAM / 2),
+    ];
+
+    const jenisBenda = (id: Exclude<ObjekDenah, "area_mandi">): JenisBenda =>
+      id === "kloset" ? JENIS_KLOSET_GAMBAR[jenisKloset] : id === "pintu" ? VARIAN_PINTU_GAMBAR[varianPintu] : "wastafel";
+    const terlihat = OBJEK_DENAH.filter((id) => !tidakTerlihat.includes(id));
+    const tersembunyi = tampilkanSemua ? [] : bendaTersembunyi(letak, sudutAktif.x, tidakTerlihat);
+    const posisi = posisiSepanjang(letak, terlihat);
+    // Bukaan pintu pada dinding yang digambar: lubang di atas dinding berkeramik supaya pintu menembus dinding. Pada dinding
+    // yang tidak digambar (mis. dinding depan, sisi kamera) tidak ada dinding untuk dilubangi.
+    const dindingPintu = titikDinding(letak("pintu")).dinding;
+    const bukaan: Primitif[] =
+      terlihat.includes("pintu") && !tersembunyi.includes("pintu") && (dindingPintu === "belakang" || dindingPintu === sudutAktif.x)
+        ? [bukaanDinding({ ...kerangkaDinding(dindingPintu), sepanjang: posisi.pintu })]
+        : [];
+    const susunan = terlihat
+      .map((id) => {
+        const letakId = letak(id);
+        const kerangka: Kerangka = { ...kerangkaDinding(titikDinding(letakId).dinding), sepanjang: posisi[id] };
+        // Benda yang disembunyikan tidak digambar sama sekali (termasuk pintu, tanpa garis bukaan).
+        if (tersembunyi.includes(id)) return null;
+        const daftar: Primitif[] =
+          id === "area_mandi" ? gambarShower(varianShower, modeShower, { kerangka }) : gambarBenda(jenisBenda(id), kerangka);
+        // Urutan gambar dari belakang ke depan: titik pijak benda yang lebih rendah di layar berarti lebih dekat kamera.
+        const [x, y] = keRuang(kerangka, 0, 0);
+        return { id, daftar, kedalaman: proyeksi(x, y, 0)[1] };
+      })
+      .filter((b) => b !== null)
+      .sort((a, b) => a.kedalaman - b.kedalaman);
+
+    gambar = (
+      <svg
+        viewBox={`0 0 ${ukuran.lebar} ${ukuran.tinggi}`}
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <g strokeWidth={1.6} strokeLinejoin="round" strokeLinecap="round">
+          <LapisPrimitif daftar={[lantai, ...ubinLantai, ...dinding, ...bukaan]} garisDasar={1.6} />
+          {susunan.map((b) => (
+            <g key={b.id}>
+              <LapisPrimitif daftar={b.daftar} tebal={0.75} garisDasar={1.6} />
+            </g>
+          ))}
+        </g>
+      </svg>
+    );
+  }
+
+  return (
+    <div ref={pembungkusRef} className={`relative mx-auto ${kelas}`}>
+      {gambar}
+    </div>
+  );
+}

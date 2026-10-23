@@ -121,5 +121,23 @@
     "memuat": "Menyiapkan contoh hasil…",
     "fotoHilang": "Foto contoh tidak ditemukan. Taruh foto di dev/mock-foto.jpg lalu muat ulang.",
     "gagal": "Contoh hasil gagal disiapkan."
+  },
+  "ruang": {
+    "judul": "Ruang Anda",
+    "tabTampakAtas": "Tampak atas",
+    "tabIsometrik": "Isometrik",
+    "modeJudul": "Keadaan ruang",
+    "modeKondisi": "Kondisi sekarang",
+    "modeHack": "Penyesuaian praktis",
+    "modePermanen": "Modifikasi",
+    "putar": "Putar sudut pandang",
+    "tampilkanSemua": "Tampilkan semua benda",
+    "sembunyikanLagi": "Sembunyikan benda di dinding depan",
+    "altTampakAtas": "Denah tampak atas kamar mandi dengan",
+    "altIsometrik": "Gambar isometrik kamar mandi dengan pintu, kloset, wastafel, dan area mandi.",
+    "catatan": "Ilustrasi skematik. Bukan ukuran sebenarnya dan bukan hasil pengukuran ruang Anda.",
+    "catatanPenyesuaian": "Gambar penyesuaian baru tersedia untuk area mandi (pertanyaan M-07). Penyesuaian lain belum digambar.",
+    "tidakAdaPenyesuaian": "Jawaban Anda untuk perlengkapan mandi tidak menunjukkan hambatan, jadi belum ada penyesuaian untuk digambar.",
+    "catatanTiruan": "Contoh tata letak tiruan (mode pengembangan), belum dibaca dari foto."
   }
 }

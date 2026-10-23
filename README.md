@@ -13,4 +13,4 @@ npm run build
 Isi pertanyaan berasal dari checklist peneliti (`riset/checklist-peneliti.xlsx`, tidak di-commit) lewat `python3 scripts/impor_xlsx.py`.
 Aturan proyek ada di `CLAUDE.md`, keputusan di `DECISIONS.md`.
 
-Deploy: Vercel. Isi `GEMINI_API_KEY` di Environment Variables. Fungsi server ada di `api/analisis.mjs` (hasil `npm run bundel:api`).
+Deploy: Vercel. Isi `GEMINI_API_KEY` di Environment Variables. Fungsi server ada di `api/analisis.mjs` dan `api/denah.mjs` (hasil `npm run bundel:api`).

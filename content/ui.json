@@ -105,7 +105,7 @@
     "belumPastiJudul": "Belum dapat dipastikan",
     "dariFoto": "Terisi dari foto",
     "fotoJudul": "Foto ruangan",
-    "fotoCatatan": "Foto Anda tetap menjadi referensi visual asli. Ilustrasi modifikasi ruangan belum tersedia di versi ini.",
+    "fotoCatatan": "Foto Anda tetap menjadi referensi visual asli. Ilustrasi modifikasi ruangan baru tersedia untuk sebagian benda di kamar mandi.",
     "tinjau": "Tinjau semua jawaban ({n})",
     "sumber": "Sumber: Checklist Physical Accessibility Audit (tim peneliti). Rekomendasi mengikuti dokumen sumber; perubahan struktur, listrik, atau pemasangan penopang memerlukan pemeriksaan tenaga yang kompeten.",
     "draf": "Draf, belum ditinjau ahli. Angka pada rekomendasi mengikuti dokumen peneliti dan masih perlu diverifikasi terhadap standar resmi.",
@@ -136,8 +136,9 @@
     "altTampakAtas": "Denah tampak atas kamar mandi dengan",
     "altIsometrik": "Gambar isometrik kamar mandi dengan pintu, kloset, wastafel, dan area mandi.",
     "catatan": "Ilustrasi skematik. Bukan ukuran sebenarnya dan bukan hasil pengukuran ruang Anda.",
-    "catatanPenyesuaian": "Gambar penyesuaian baru tersedia untuk area mandi (pertanyaan M-07). Penyesuaian lain belum digambar.",
+    "catatanPenyesuaian": "Gambar penyesuaian baru tersedia untuk hand shower (pertanyaan M-07). Penyesuaian lain belum digambar.",
     "tidakAdaPenyesuaian": "Jawaban Anda untuk perlengkapan mandi tidak menunjukkan hambatan, jadi belum ada penyesuaian untuk digambar.",
-    "catatanTiruan": "Contoh tata letak tiruan (mode pengembangan), belum dibaca dari foto."
+    "dariFoto": "Terbaca dari foto pertama. Posisi benda perkiraan AI dan bisa meleset.",
+    "tidakAdaGambarShower": "Gambar penyesuaian baru tersedia untuk hand shower yang digantung di dinding. Jenis shower di foto Anda belum punya gambar penyesuaian."
   }
 }

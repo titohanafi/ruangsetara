@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { PetaJawaban } from "../domain/asesmen";
-import { POSISI_BAWAAN, type LetakDenah, type ObjekDenah } from "../domain/denahPindai";
+import { letakDariDenah, tidakTerlihatDariDenah, type HasilDenah } from "../domain/denahPindai";
 import type { ModeGambar } from "../domain/gambarShower";
-import { modeTersedia } from "../domain/ruang";
+import { modeTersedia, perluPenyesuaianShower, sudutAwal } from "../domain/ruang";
 import { UI } from "../domain/konten";
 import { DenahTampakAtas } from "./DenahTampakAtas";
 import { PratinjauRuangIso3D } from "./PratinjauRuangIso3D";
@@ -12,9 +12,6 @@ type Tab = "atas" | "iso";
 type Sudut = "kiri" | "kanan";
 
 const NAMA_MODE: Record<ModeGambar, string> = { kondisi: T.modeKondisi, hack: T.modeHack, permanen: T.modePermanen };
-
-// Tata letak sementara: belum dibaca dari foto (menunggu M3), jadi memakai posisi bawaan.
-const letakBawaan = (id: ObjekDenah): LetakDenah => POSISI_BAWAAN[id];
 
 function Pil({ aktif, onKlik, children }: { aktif: boolean; onKlik: () => void; children: string }) {
   return (
@@ -29,13 +26,17 @@ function Pil({ aktif, onKlik, children }: { aktif: boolean; onKlik: () => void; 
   );
 }
 
-export function RuangAnda({ jawaban }: { jawaban: PetaJawaban }) {
+export function RuangAnda({ jawaban, denah }: { jawaban: PetaJawaban; denah: HasilDenah }) {
+  const letak = letakDariDenah(denah.objek);
+  const tidakTerlihat = tidakTerlihatDariDenah(denah.objek);
   const [tab, setTab] = useState<Tab>("iso");
   const [mode, setMode] = useState<ModeGambar>("kondisi");
-  const [sudut, setSudut] = useState<Sudut>("kanan");
+  const [sudut, setSudut] = useState<Sudut>(() => sudutAwal(letak, tidakTerlihat));
   const [semua, setSemua] = useState(false);
-  const tersedia = modeTersedia(jawaban);
+  const tersedia = modeTersedia(jawaban, denah.varianShower);
   const aktif = tersedia.includes(mode) ? mode : "kondisi";
+  const catatanMode =
+    tersedia.length > 1 ? T.catatanPenyesuaian : !perluPenyesuaianShower(jawaban) ? T.tidakAdaPenyesuaian : T.tidakAdaGambarShower;
 
   return (
     <section className="mt-6" aria-labelledby="ruang-anda">
@@ -55,16 +56,19 @@ export function RuangAnda({ jawaban }: { jawaban: PetaJawaban }) {
         {tab === "iso" ? (
           <div role="img" aria-label={T.altIsometrik}>
             <PratinjauRuangIso3D
-              letak={letakBawaan}
+              letak={letak}
               sudutAktif={{ x: sudut }}
-              varianShower="hand_shower_gantung"
+              varianShower={denah.varianShower}
+              jenisKloset={denah.jenisKloset}
+              varianPintu={denah.varianPintu}
+              tidakTerlihat={tidakTerlihat}
               modeShower={aktif}
               tampilkanSemua={semua}
               kelas="h-96 w-full max-w-md"
             />
           </div>
         ) : (
-          <DenahTampakAtas letak={letakBawaan} label={T.altTampakAtas} />
+          <DenahTampakAtas letak={letak} tidakTerlihat={tidakTerlihat} label={T.altTampakAtas} />
         )}
         {tab === "iso" && (
           <div className="mt-2 flex flex-wrap gap-2">
@@ -95,11 +99,11 @@ export function RuangAnda({ jawaban }: { jawaban: PetaJawaban }) {
               </button>
             ))}
           </div>
-          <p className="mt-2 text-kecil text-redup">{tersedia.length > 1 ? T.catatanPenyesuaian : T.tidakAdaPenyesuaian}</p>
+          <p className="mt-2 text-kecil text-redup">{catatanMode}</p>
         </fieldset>
       )}
       <p className="mt-2 text-kecil text-redup">{T.catatan}</p>
-      <p className="mt-1 text-kecil text-draf">{T.catatanTiruan}</p>
+      <p className="mt-1 text-kecil text-info">✦ {T.dariFoto}</p>
     </section>
   );
 }

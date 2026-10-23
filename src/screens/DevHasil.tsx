@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
+import { DENAH_TIRUAN } from "../domain/denahPindai";
 import { aturanFoto, cariArea, PERTANYAAN, UI } from "../domain/konten";
 import { isiDariFoto } from "../domain/pindai";
 import { analisisFoto } from "../lib/analisis";
@@ -36,6 +37,7 @@ export function DevHasilScreen() {
       // Contoh: perlengkapan mandi (M-07) dijawab Tidak supaya gambar penyesuaian shower bisa dicoba.
       const { jawaban, terisi } = isiDariFoto(daftar, aturanFoto(AREA), hasil, { "M-07": { nilai: "tidak", sumber: "pengguna" } });
       kirim({ jenis: "selesai_baca", jawaban, terisi, total: daftar.length, bukanRuangan: !hasil.ruang_sesuai });
+      kirim({ jenis: "selesai_denah", denah: DENAH_TIRUAN });
       kirim({ jenis: "pilih_aktivitas", aktivitas: area.aktivitas[0] });
       pindah("/hasil", { replace: true });
     })().catch(() => setPesan(T.gagal));

@@ -6,10 +6,8 @@ import { cariArea, HASIL, isi, PERTANYAAN, UI } from "../domain/konten";
 import { useStore } from "../state/store";
 
 const T = UI.hasil;
-// Sampai posisi benda dibaca dari foto (M3), gambar hanya tampil di mode pengembangan dengan foto tiruan.
-const TAMPILKAN_RUANG = import.meta.env.DEV && import.meta.env.VITE_PINDAI_MOCK === "true";
-// Impor malas hanya bila aktif: di build produksi kondisinya false, jadi gambar dan tabel ukurannya tidak ikut terbundel.
-const RuangAnda = TAMPILKAN_RUANG ? lazy(() => import("../components/RuangAnda").then((m) => ({ default: m.RuangAnda }))) : null;
+// Dimuat hanya bila ada hasil baca denah: gambar dan tabel ukurannya tidak ikut dimuat di halaman lain.
+const RuangAnda = lazy(() => import("../components/RuangAnda").then((m) => ({ default: m.RuangAnda })));
 const KATEGORI_D = HASIL.kategori.find((k) => k.nilai === "D");
 
 function Teks({ judul, teks }: { judul: string; teks: string | null }) {
@@ -122,9 +120,9 @@ export function HasilScreen() {
         </section>
       )}
 
-      {RuangAnda && area.id === "kamar-mandi" && (
+      {area.id === "kamar-mandi" && state.denah?.kamarMandi && (
         <Suspense fallback={null}>
-          <RuangAnda jawaban={state.jawaban} />
+          <RuangAnda jawaban={state.jawaban} denah={state.denah} />
         </Suspense>
       )}
 

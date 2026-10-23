@@ -129,21 +129,25 @@ const NAMA: Record<ObjekDenah, string> = { pintu: "pintu", kloset: "kloset", was
 
 export function DenahTampakAtas({
   letak,
+  tidakTerlihat = [],
   label,
   className = "mx-auto h-auto w-full max-w-xs",
 }: {
   letak: (id: ObjekDenah) => LetakDenah;
+  /** Benda yang tidak terlihat di foto: tidak digambar. */
+  tidakTerlihat?: readonly ObjekDenah[];
   label: string;
   className?: string;
 }) {
-  const titik = titikTertata(letak);
+  const ada = OBJEK_DENAH.filter((id) => !tidakTerlihat.includes(id));
+  const titik = titikTertata(letak, ada);
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${label} ${OBJEK_DENAH.map((id) => NAMA[id]).join(", ")}`} className={className}>
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${label} ${ada.map((id) => NAMA[id]).join(", ")}`} className={className}>
       <rect x={PAD} y={PAD} width={W - 2 * PAD} height={H - 2 * PAD} className="fill-lantai stroke-tinta" strokeWidth={3} />
-      <AreaMandi letak={letak("area_mandi")} t={titik.area_mandi} />
-      <Wastafel letak={letak("wastafel")} t={titik.wastafel} />
-      <Kloset letak={letak("kloset")} t={titik.kloset} />
-      <Pintu letak={letak("pintu")} t={titik.pintu} />
+      {ada.includes("area_mandi") && <AreaMandi letak={letak("area_mandi")} t={titik.area_mandi} />}
+      {ada.includes("wastafel") && <Wastafel letak={letak("wastafel")} t={titik.wastafel} />}
+      {ada.includes("kloset") && <Kloset letak={letak("kloset")} t={titik.kloset} />}
+      {ada.includes("pintu") && <Pintu letak={letak("pintu")} t={titik.pintu} />}
     </svg>
   );
 }

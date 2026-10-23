@@ -148,3 +148,65 @@ export function selesaikanTabrakanDenah(objek: Record<ObjekDenah, PosisiObjek>):
   }
   return hasil;
 }
+
+/** Hasil pembacaan denah dari foto: dinding dan zona tiap benda, plus jenis shower, kloset, dan pintu. */
+export interface HasilDenah {
+  /** Foto menampilkan kamar mandi; bila false, tidak ada gambar yang dibuat. */
+  kamarMandi: boolean;
+  objek: Record<ObjekDenah, PosisiObjek>;
+  varianShower: VarianShower;
+  jenisKloset: JenisKloset;
+  varianPintu: VarianPintu;
+}
+
+const adalahObjek = (x: unknown): x is Record<string, unknown> => typeof x === "object" && x !== null && !Array.isArray(x);
+const pilih = <T extends string>(daftar: readonly T[], nilai: unknown, bawaan: T): T =>
+  (daftar as readonly unknown[]).includes(nilai) ? (nilai as T) : bawaan;
+
+/**
+ * Memeriksa respons fungsi server denah (ditulis tangan agar zod tidak ikut bundel). Nilai asing atau hilang menjadi
+ * "tidak jelas" / "tidak terlihat": denah tidak menggambar benda yang tidak terbaca. Null bila bentuknya salah.
+ */
+export function bacaHasilDenah(x: unknown): HasilDenah | null {
+  if (!adalahObjek(x) || typeof x.kamar_mandi !== "boolean") return null;
+  const mentah = adalahObjek(x.objek) ? x.objek : {};
+  const objek = Object.fromEntries(
+    OBJEK_DENAH.map((id) => {
+      const o = mentah[id];
+      return [
+        id,
+        {
+          dinding: pilih(DINDING_OBJEK, adalahObjek(o) ? o.dinding : undefined, "tidak_terlihat"),
+          posisi: pilih(POSISI_DI_DINDING, adalahObjek(o) ? o.posisi : undefined, "tengah"),
+        },
+      ];
+    }),
+  ) as Record<ObjekDenah, PosisiObjek>;
+  return {
+    kamarMandi: x.kamar_mandi,
+    objek: selesaikanTabrakanDenah(rapikanSudutDenah(objek)),
+    varianShower: pilih(VARIAN_SHOWER, x.varian_shower, "tidak_jelas"),
+    jenisKloset: pilih(JENIS_KLOSET, x.jenis_kloset, "tidak_jelas"),
+    varianPintu: pilih(VARIAN_PINTU, x.varian_pintu, "tidak_jelas"),
+  };
+}
+
+/** Letak tiap benda untuk digambar: benda yang tidak terlihat memakai posisi bawaan hanya sebagai tempat (tidak digambar). */
+export function letakDariDenah(objek: Record<ObjekDenah, PosisiObjek>): (id: ObjekDenah) => LetakDenah {
+  return (id) => {
+    const o = objek[id];
+    return o.dinding === "tidak_terlihat" ? POSISI_BAWAAN[id] : { dinding: o.dinding, posisi: o.posisi };
+  };
+}
+
+export const tidakTerlihatDariDenah = (objek: Record<ObjekDenah, PosisiObjek>): ObjekDenah[] =>
+  OBJEK_DENAH.filter((id) => objek[id].dinding === "tidak_terlihat");
+
+/** Hasil tiruan untuk mode pengembangan (`VITE_PINDAI_MOCK=true`): posisi bawaan, bukan tebakan AI. */
+export const DENAH_TIRUAN: HasilDenah = {
+  kamarMandi: true,
+  objek: POSISI_BAWAAN,
+  varianShower: "hand_shower_gantung",
+  jenisKloset: "duduk",
+  varianPintu: "ayun_ke_dalam",
+};

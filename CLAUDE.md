@@ -21,12 +21,12 @@ Proyek ini menyatukan situs asesmen tim peneliti (isi pertanyaan dan rekomendasi
 - `content/pindai.json` menentukan per pertanyaan: `bisa` (Ya/Tidak boleh terisi), `sebagian` (hanya Tidak), `tidak` (tidak ditanyakan ke AI). Itu asumsi tim produk, belum ditinjau peneliti.
 - Jawaban dari foto selalu bertanda "Terisi dari foto" dan bisa diubah. Jawaban pengguna tidak pernah ditimpa pembacaan foto.
 - Foto hanya dikirim ke Gemini setelah pengguna menekan "Baca foto dengan AI" di bawah teks persetujuan. Foto tidak disimpan.
-- Setiap perubahan prompt atau skema (`server/analisis.ts`) wajib diuji ulang dengan semua foto uji lewat jalur aplikasi (foto dikecilkan browser), bukan foto asli. Bahkan mengganti **nama field** di skema (`kamar_mandi` → `ruang_sesuai`) mengubah hasil Gemini, jadi prompt kamar mandi dikunci persis seperti yang teruji (nama field per area ada di `FIELD_RUANG`).
+- Setiap perubahan prompt atau skema (`server/analisis.ts`, `server/denah.ts`) wajib diuji ulang dengan semua foto uji lewat jalur aplikasi (foto dikecilkan browser), bukan foto asli. Bahkan mengganti **nama field** di skema (`kamar_mandi` → `ruang_sesuai`) mengubah hasil Gemini, jadi prompt kamar mandi dikunci persis seperti yang teruji (nama field per area ada di `FIELD_RUANG`).
 
 ## Aturan teknis
 - Vite + React 18 + TypeScript (strict) + Tailwind + React Router (HashRouter) + Zod + Vitest.
 - State hanya di memori (tanpa localStorage): jawaban dan foto hilang saat halaman dimuat ulang, sesuai janji privasi situs peneliti.
-- Satu fungsi server: `server/analisis.ts` dibundel menjadi `api/analisis.mjs` (`npm run bundel:api`, bundel ikut di-commit). Kunci `GEMINI_API_KEY` hanya di server.
+- Dua fungsi server: `server/analisis.ts` (checklist) dan `server/denah.ts` (tata letak kamar mandi untuk gambar ruang), dibundel menjadi `api/analisis.mjs` dan `api/denah.mjs` (`npm run bundel:api`, bundel ikut di-commit). Kunci `GEMINI_API_KEY` hanya di server.
 - Mobile-first (360px), area sentuh minimal 44x44px, WCAG 2.2 AA, ringan untuk kuota rendah (tanpa pustaka berat, font sistem).
 - Token desain di `tailwind.config.ts`, mengikuti warna situs peneliti (hijau tua `#245C4C`, tinta `#183F37`).
 - Logika murni di `src/domain/` dengan tes di `tests/`.

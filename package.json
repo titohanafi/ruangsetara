@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run validasi && npm run bundel:api && tsc --noEmit && vite build",
-    "bundel:api": "esbuild server/analisis.ts --bundle --platform=node --format=esm --target=node22 --outfile=api/analisis.mjs --log-level=warning",
+    "bundel:api": "esbuild server/analisis.ts --bundle --platform=node --format=esm --target=node22 --outfile=api/analisis.mjs --log-level=warning && esbuild server/denah.ts --bundle --platform=node --format=esm --target=node22 --outfile=api/denah.mjs --log-level=warning",
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint .",

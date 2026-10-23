@@ -17,7 +17,7 @@ import {
   type Primitif,
   type Titik,
 } from "../domain/gambarShower";
-import { posisiSepanjang } from "../domain/tataLetak";
+import { posisiSepanjang, type UkuranRuang } from "../domain/tataLetak";
 import {
   OBJEK_DENAH,
   type JenisKloset,
@@ -43,8 +43,6 @@ const VARIAN_PINTU_GAMBAR: Record<VarianPintu, JenisBenda> = {
 
 // Seluruh gambar dalam cm nyata (1 satuan = 1 cm, sama dengan panel): ruangan seluas ruang dalam toilet PerMen
 // (`DIM.ruang`), benda memakai dimensi dari `DIM`. Kamera bekerja dalam meter, jadi koordinat dibagi 100.
-const LEBAR = DIM.ruang.lebar;
-const DALAM = DIM.ruang.dalam;
 const TINGGI = DIM.ruang.tinggi;
 const TEBAL = DIM.ruang.tebalDinding;
 // Setengah-tinggi pandangan awal kamera (meter); gambar lalu dipas-kan ke kanvas, jadi nilainya tidak menentukan ukuran.
@@ -75,7 +73,7 @@ function azimuthDariSudut(sisiSamping: "kiri" | "kanan"): number {
 }
 
 /** Permukaan dalam dinding (cm dari pusat ruangan): ruang dalam persis seluas `DIM.ruang`, dinding di luarnya. */
-function bidangDalam(dinding: Dinding): number {
+function bidangDalam(dinding: Dinding, LEBAR: number, DALAM: number): number {
   switch (dinding) {
     case "belakang":
       return -DALAM / 2;
@@ -102,6 +100,9 @@ export function PratinjauRuangIso3D({
   modeShower = "kondisi",
   modifikasi = [],
   tampilkanUkuran = false,
+  ringkas = false,
+  nomor = {},
+  ruang = DIM.ruang,
   fokus = false,
   jenisKloset = "tidak_jelas",
   varianPintu = "tidak_jelas",
@@ -118,6 +119,12 @@ export function PratinjauRuangIso3D({
   modifikasi?: readonly string[];
   /** Tulis ukuran dan nama pada gambar modifikasi (gambar per pertanyaan). */
   tampilkanUkuran?: boolean;
+  /** Gambar ringkasan (semua modifikasi sekaligus): bentuk lebih ringan dan tanpa teks ukuran. */
+  ringkas?: boolean;
+  /** Nomor kartu tiap pertanyaan; bila diisi, tiap modifikasi diberi lencana bernomor yang sama dengan kartunya. */
+  nomor?: Readonly<Record<string, number>>;
+  /** Ukuran ruang dalam (cm). Bawaan ruang PerMen; gambar ringkasan boleh lebih luas supaya ruang bebas tidak bertumpuk. */
+  ruang?: UkuranRuang;
   /** Perbesar ke bagian yang dimodifikasi (dan benda yang diganti), supaya terbaca di gambar kecil. */
   fokus?: boolean;
   /** Jenis kloset dan cara pintu membuka (hasil pindai); "tidak_jelas" menggambar penanda netral. */
@@ -129,6 +136,8 @@ export function PratinjauRuangIso3D({
   tidakTerlihat?: readonly ObjekDenah[];
   kelas?: string;
 }) {
+  const LEBAR = ruang.lebar;
+  const DALAM = ruang.dalam;
   const pembungkusRef = useRef<HTMLDivElement>(null);
   const [ukuran, setUkuran] = useState<{ lebar: number; tinggi: number } | null>(null);
   useEffect(() => {
@@ -170,7 +179,7 @@ export function PratinjauRuangIso3D({
     const kerangkaDinding = (dinding: Dinding): Kerangka => ({
       dinding,
       sepanjang: 0,
-      bidang: bidangDalam(dinding),
+      bidang: bidangDalam(dinding, LEBAR, DALAM),
       proyeksi,
       skala: 1,
       lihat,
@@ -211,7 +220,7 @@ export function PratinjauRuangIso3D({
       id === "kloset" ? JENIS_KLOSET_GAMBAR[jenisKloset] : id === "pintu" ? VARIAN_PINTU_GAMBAR[varianPintu] : "wastafel";
     const terlihat = OBJEK_DENAH.filter((id) => !tidakTerlihat.includes(id));
     const tersembunyi = tampilkanSemua ? [] : bendaTersembunyi(letak, sudutAktif.x, tidakTerlihat);
-    const posisi = posisiSepanjang(letak, terlihat);
+    const posisi = posisiSepanjang(letak, terlihat, ruang);
     // Bukaan pintu pada dinding yang digambar: lubang di atas dinding berkeramik supaya pintu menembus dinding. Pada dinding
     // yang tidak digambar (mis. dinding depan, sisi kamera) tidak ada dinding untuk dilubangi.
     const dindingPintu = titikDinding(letak("pintu")).dinding;
@@ -250,8 +259,9 @@ export function PratinjauRuangIso3D({
       posisi,
       dindingTergambar: ["belakang", sudutAktif.x],
       tampilkanUkuran,
+      ringkas,
     };
-    const bagian: BagianModifikasi[] = modifikasi.flatMap((id) => gambarModifikasi(id, ctx));
+    const bagian: (BagianModifikasi & { id: string })[] = modifikasi.flatMap((id) => gambarModifikasi(id, ctx).map((b) => ({ ...b, id })));
     const susunMod = bagian
       .filter((b) => b.objek === null || (!tersembunyi.includes(b.objek) && !tidakTerlihat.includes(b.objek)))
       .map((b, i) => ({
@@ -269,6 +279,48 @@ export function PratinjauRuangIso3D({
       .filter((b) => b.objek === null || (!tersembunyi.includes(b.objek) && !tidakTerlihat.includes(b.objek)))
       .flatMap((b) => b.daftar.filter((p) => p.jenis === "ukur" || p.jenis === "label"));
 
+    // Cakram (kepala shower) dihitung dari ukuran sebenarnya di layar; titikPrimitif memakai perkiraan untuk panel yang jauh lebih besar.
+    const titikBentuk = (p: Primitif): Titik[] =>
+      p.jenis === "cakram"
+        ? (() => {
+            const jari = p.r * Math.max(Math.hypot(...p.sumbuA), Math.hypot(...p.sumbuU));
+            return [
+              [p.cx - jari, p.cy - jari],
+              [p.cx + jari, p.cy + jari],
+            ];
+          })()
+        : titikPrimitif(p);
+
+    // Lencana bernomor (sama dengan nomor kartu rekomendasi): di atas bagian modifikasi tiap pertanyaan, atau di atas benda yang
+    // diganti (pintu, kloset, wastafel, shower). Lencana yang berdekatan digeser ke atas supaya tidak bertumpuk.
+    const BENDA_DIGANTI: Record<string, ObjekDenah> = {
+      "M-01": "pintu",
+      "M-12": "pintu",
+      "M-04": "kloset",
+      "M-06": "wastafel",
+      "M-07": "area_mandi",
+    };
+    const lencana: { id: string; nomor: number; x: number; y: number }[] = [];
+    for (const id of modifikasi) {
+      const n = nomor[id];
+      if (n === undefined) continue;
+      const titikId = [
+        ...susunMod.filter((b) => bagian.some((p, i) => p.id === id && `mod-${i}` === b.id)).flatMap((b) => b.daftar),
+        ...susunBenda.filter((b) => b.id === BENDA_DIGANTI[id]).flatMap((b) => b.daftar),
+      ].flatMap(titikBentuk);
+      if (titikId.length === 0) continue;
+      const xs = titikId.map((t) => t[0]);
+      const ys = titikId.map((t) => t[1]);
+      const x0 = (Math.min(...xs) + Math.max(...xs)) / 2;
+      const y0 = Math.min(...ys) - 14;
+      // Coba posisi di atas bagiannya, lalu geser ke samping dan ke atas sampai tidak menimpa lencana lain; tetap di dalam kanvas.
+      const calon = [0, 22, -22, 44, -44].flatMap((dx) => [0, -20, -40].map((dy) => [x0 + dx, y0 + dy] as const));
+      const dalam = (c: readonly [number, number]) => c[0] >= 12 && c[0] <= ukuran.lebar - 12 && c[1] >= 12 && c[1] <= ukuran.tinggi - 12;
+      const bebas = calon.find((c) => dalam(c) && !lencana.some((l) => Math.hypot(l.x - c[0], l.y - c[1]) < 20));
+      const [x, y] = bebas ?? [Math.min(Math.max(x0, 12), ukuran.lebar - 12), Math.min(Math.max(y0, 12), ukuran.tinggi - 12)];
+      lencana.push({ id, nomor: n, x, y });
+    }
+
     // Fokus: kotak pembatas (piksel kanvas) dari bagian modifikasi dan benda yang diganti, diberi ruang, dengan rasio kanvas.
     let tampak = { x: 0, y: 0, w: ukuran.lebar, h: ukuran.tinggi };
     if (fokus && susunMod.length > 0) {
@@ -278,17 +330,6 @@ export function PratinjauRuangIso3D({
         modifikasi.includes("M-06") ? "wastafel" : null,
         modifikasi.includes("M-07") ? "area_mandi" : null,
       ];
-      // Cakram (kepala shower) dihitung dari ukuran sebenarnya di layar; titikPrimitif memakai perkiraan untuk panel yang jauh lebih besar.
-      const titikBentuk = (p: Primitif): Titik[] =>
-        p.jenis === "cakram"
-          ? (() => {
-              const jari = p.r * Math.max(Math.hypot(...p.sumbuA), Math.hypot(...p.sumbuU));
-              return [
-                [p.cx - jari, p.cy - jari],
-                [p.cx + jari, p.cy + jari],
-              ];
-            })()
-          : titikPrimitif(p);
       const titikFokus = [
         ...susunMod.flatMap((b) => b.daftar),
         ...anotasi,
@@ -323,6 +364,27 @@ export function PratinjauRuangIso3D({
             </g>
           ))}
           <LapisPrimitif daftar={anotasi} tebal={0.75} garisDasar={1.6} skalaTeks={tampak.w / ukuran.lebar} />
+          {lencana.map((l) => (
+            <g key={l.id}>
+              <circle
+                cx={l.x}
+                cy={l.y}
+                r={9 * (tampak.w / ukuran.lebar)}
+                className="fill-white stroke-utama"
+                strokeWidth={1.5 * (tampak.w / ukuran.lebar)}
+              />
+              <text
+                x={l.x}
+                y={l.y + 3.5 * (tampak.w / ukuran.lebar)}
+                textAnchor="middle"
+                fontSize={10 * (tampak.w / ukuran.lebar)}
+                fontWeight={800}
+                className="fill-utama-gelap stroke-none"
+              >
+                {l.nomor}
+              </text>
+            </g>
+          ))}
         </g>
       </svg>
     );

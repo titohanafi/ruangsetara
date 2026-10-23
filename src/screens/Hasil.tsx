@@ -10,6 +10,7 @@ import { useStore } from "../state/store";
 const T = UI.hasil;
 // Dimuat hanya bila ada hasil baca denah: gambar dan tabel ukurannya tidak ikut dimuat di halaman lain.
 const GambarModifikasiKartu = lazy(() => import("../components/GambarModifikasiKartu").then((m) => ({ default: m.GambarModifikasiKartu })));
+const RingkasanModifikasi = lazy(() => import("../components/RingkasanModifikasi").then((m) => ({ default: m.RingkasanModifikasi })));
 const RuangAnda = lazy(() => import("../components/RuangAnda").then((m) => ({ default: m.RuangAnda })));
 const KATEGORI_D = HASIL.kategori.find((k) => k.nilai === "D");
 
@@ -160,7 +161,7 @@ export function HasilScreen() {
 
       {area.id === "kamar-mandi" && state.denah?.kamarMandi && (
         <Suspense fallback={null}>
-          <RuangAnda jawaban={state.jawaban} denah={state.denah} />
+          <RuangAnda denah={state.denah} />
         </Suspense>
       )}
 
@@ -182,6 +183,12 @@ export function HasilScreen() {
             />
           ))}
         </ol>
+      )}
+
+      {area.id === "kamar-mandi" && state.denah?.kamarMandi && digambar.size > 0 && (
+        <Suspense fallback={null}>
+          <RingkasanModifikasi jawaban={state.jawaban} denah={state.denah} />
+        </Suspense>
       )}
 
       <details className="mt-6 rounded-kartu border border-garis bg-putih p-4">

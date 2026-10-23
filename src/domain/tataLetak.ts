@@ -60,13 +60,19 @@ const SETENGAH_LEBAR: Record<ObjekDenah, number> = {
   area_mandi: 25,
 };
 
-const panjangDinding = (dinding: DindingDenah): number =>
-  dinding === "belakang" || dinding === "depan" ? DIM.ruang.lebar : DIM.ruang.dalam;
+/** Ukuran ruang dalam (cm). Bawaan `DIM.ruang`; gambar "setelah modifikasi" boleh lebih luas. */
+export interface UkuranRuang {
+  lebar: number;
+  dalam: number;
+}
+
+const panjangDinding = (dinding: DindingDenah, ruang: UkuranRuang = DIM.ruang): number =>
+  dinding === "belakang" || dinding === "depan" ? ruang.lebar : ruang.dalam;
 
 /** Titik benda sepanjang dindingnya (cm dari tengah dinding), dari `letak` (dinding dan zona) sebelum penataan jarak. */
-export function sepanjangDinding(letak: LetakDenah): number {
+export function sepanjangDinding(letak: LetakDenah, ruang: UkuranRuang = DIM.ruang): number {
   const t = titikDinding(letak);
-  return t.dinding === "belakang" || t.dinding === "depan" ? ((t.x - W / 2) / W) * DIM.ruang.lebar : ((t.y - H / 2) / H) * DIM.ruang.dalam;
+  return t.dinding === "belakang" || t.dinding === "depan" ? ((t.x - W / 2) / W) * ruang.lebar : ((t.y - H / 2) / H) * ruang.dalam;
 }
 
 /**
@@ -77,17 +83,18 @@ export function sepanjangDinding(letak: LetakDenah): number {
 export function posisiSepanjang(
   letak: (id: ObjekDenah) => LetakDenah,
   ids: readonly ObjekDenah[] = OBJEK_DENAH,
+  ruang: UkuranRuang = DIM.ruang,
 ): Record<ObjekDenah, number> {
   const perDinding = new Map<DindingDenah, BendaDinding[]>();
   for (const id of ids) {
     const l = letak(id);
     const dinding = titikDinding(l).dinding;
     const daftar = perDinding.get(dinding) ?? [];
-    daftar.push({ id, awal: sepanjangDinding(l), setengah: SETENGAH_LEBAR[id] });
+    daftar.push({ id, awal: sepanjangDinding(l, ruang), setengah: SETENGAH_LEBAR[id] });
     perDinding.set(dinding, daftar);
   }
   const hasil = {} as Record<ObjekDenah, number>;
-  for (const [dinding, daftar] of perDinding) Object.assign(hasil, susunSepanjangDinding(daftar, panjangDinding(dinding)));
+  for (const [dinding, daftar] of perDinding) Object.assign(hasil, susunSepanjangDinding(daftar, panjangDinding(dinding, ruang)));
   return hasil;
 }
 

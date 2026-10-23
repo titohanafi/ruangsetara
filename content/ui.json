@@ -136,8 +136,6 @@
     "judul": "Ruang Anda",
     "tabTampakAtas": "Tampak atas",
     "tabIsometrik": "Isometrik",
-    "modeJudul": "Keadaan ruang",
-    "modeKondisi": "Kondisi sekarang",
     "putar": "Putar sudut pandang",
     "tampilkanSemua": "Tampilkan semua benda",
     "sembunyikanLagi": "Sembunyikan benda di dinding depan",
@@ -145,16 +143,19 @@
     "altIsometrik": "Gambar isometrik kamar mandi dengan pintu, kloset, wastafel, dan area mandi.",
     "catatan": "Ilustrasi skematik. Bukan ukuran sebenarnya dan bukan hasil pengukuran ruang Anda.",
     "dariFoto": "Terbaca dari foto pertama. Posisi benda perkiraan AI dan bisa meleset.",
-    "modeModifikasi": "Setelah modifikasi",
-    "digambar": "Digambar sesuai jawaban Tidak: {daftar}.",
     "legenda": "Hijau menandai bagian yang ditambahkan atau diganti.",
     "bendaTakTerlihat": "Tidak digambar karena bendanya tidak terbaca di foto: {daftar}.",
     "belumDigambar": "Belum ada gambarnya (lihat teks rekomendasi di bawah): {daftar}.",
-    "tidakAdaModifikasi": "Belum ada jawaban Tidak yang bisa digambar. Teks rekomendasi tetap ada di bawah.",
     "tersembunyiSudut": "Tidak tampak dari sudut ini karena dindingnya tidak digambar: {daftar}. Putar sudut pandang atau pilih Tampilkan semua benda.",
     "judulKartu": "Contoh tampilan setelah modifikasi",
     "keteranganKartu": "Bagian hijau adalah yang ditambahkan atau diganti. Ilustrasi skematik; ukuran mengikuti teks Modifikasi di atas (acuan untuk bangunan gedung, bukan syarat untuk rumah tinggal).",
     "angkaDitinjau": "* Angka ini masih ditinjau peneliti.",
-    "altKartu": "Ilustrasi isometrik kamar mandi dengan modifikasi {nama}."
+    "altKartu": "Ilustrasi isometrik kamar mandi dengan modifikasi {nama}.",
+    "catatanKondisi": "Kondisi ruang sekarang, digambar dari foto pertama. Gambar setelah modifikasi ada di kartu tiap pertanyaan dan di ringkasan akhir halaman ini.",
+    "ringkasanJudul": "Semua modifikasi dalam satu ruangan",
+    "ringkasanIsi": "Nomor di gambar sama dengan nomor kartu di atas. Nyalakan atau matikan tiap nomor untuk melihatnya satu per satu.",
+    "nomorJudul": "Modifikasi yang digambar",
+    "zonaMati": "Zona lantai (ruang putar, area bebas, keramik) dimatikan dulu supaya gambar tidak penuh; nyalakan lewat nomornya.",
+    "ruangDiperluas": "Ruang digambar lebih luas ({lebar} × {dalam} cm) supaya ruang putar dan area shower tidak tumpang tindih. Itu ukuran ideal, bukan ukuran ruang Anda."
   }
 }

@@ -39,6 +39,8 @@ export interface KonteksModifikasi {
   dindingTergambar: readonly Dinding[];
   /** Tulis ukuran dan nama di gambar (gambar per pertanyaan); mati di gambar ringkasan supaya tidak penuh. */
   tampilkanUkuran: boolean;
+  /** Gambar ringkasan (semua modifikasi dalam satu ruangan): bentuk dibuat lebih ringan, mis. cermin hanya kerangka, tanpa panah kemiringan. */
+  ringkas?: boolean;
 }
 
 export interface BagianModifikasi {
@@ -49,9 +51,14 @@ export interface BagianModifikasi {
   pijak: readonly [number, number] | "lantai";
 }
 
-const LEBAR = DIM.ruang.lebar;
-const DALAM = DIM.ruang.dalam;
-const panjangDinding = (d: Dinding): number => (d === "belakang" || d === "depan" ? LEBAR : DALAM);
+/** Ukuran ruang dalam yang sedang digambar, dibaca dari permukaan dalam dinding (boleh lebih luas dari `DIM.ruang`). */
+function ukuranRuang(ctx: KonteksModifikasi): { lebar: number; dalam: number } {
+  return { lebar: 2 * ctx.kerangka("kanan").bidang, dalam: 2 * ctx.kerangka("depan").bidang };
+}
+const panjangDinding = (ctx: KonteksModifikasi, d: Dinding): number => {
+  const r = ukuranRuang(ctx);
+  return d === "belakang" || d === "depan" ? r.lebar : r.dalam;
+};
 const jepit = (v: number, min: number, maks: number): number => Math.min(Math.max(v, min), maks);
 
 /** Dinding samping terdekat dari benda yang menempel di `dinding` pada posisi `sepanjang` (cm dari tengah dinding). */
@@ -61,16 +68,16 @@ export function dindingSamping(dinding: Dinding, sepanjang: number): Dinding {
 }
 
 /** Rentang `a` (pada dinding samping) yang mulai dari bidang dinding tempat benda menempel dan masuk sejauh `panjang`. */
-function rentangDariDinding(samping: Dinding, asal: Dinding, panjang: number): [number, number] {
+function rentangDariDinding(ctx: KonteksModifikasi, samping: Dinding, asal: Dinding, panjang: number): [number, number] {
   const minus = asal === "belakang" || asal === "kiri";
-  const awal = minus ? -panjangDinding(samping) / 2 : panjangDinding(samping) / 2 - panjang;
+  const awal = minus ? -panjangDinding(ctx, samping) / 2 : panjangDinding(ctx, samping) / 2 - panjang;
   return [awal, awal + panjang];
 }
 
 /** Posisi `a` pada dinding samping `samping` yang berjarak `jarak` dari bidang dinding `asal` tempat benda menempel. */
-function aDariDinding(samping: Dinding, asal: Dinding, jarak: number): number {
+function aDariDinding(ctx: KonteksModifikasi, samping: Dinding, asal: Dinding, jarak: number): number {
   const minus = asal === "belakang" || asal === "kiri";
-  return minus ? -panjangDinding(samping) / 2 + jarak : panjangDinding(samping) / 2 - jarak;
+  return minus ? -panjangDinding(ctx, samping) / 2 + jarak : panjangDinding(ctx, samping) / 2 - jarak;
 }
 
 /** Batang pegangan: tabung (kotak tipis) horizontal dengan dua braket ke dinding. */
@@ -89,7 +96,7 @@ function pegangan(ctx: KonteksModifikasi): BagianModifikasi[] {
   const hasil: BagianModifikasi[] = [];
   const tengahBelakang = { ...ctx.kerangka(dT), sepanjang: s };
   const sisiBelakang = panjangBelakang / 2;
-  const batas = panjangDinding(dT) / 2;
+  const batas = panjangDinding(ctx, dT) / 2;
   const a0 = Math.max(-batas - s, -sisiBelakang);
   const a1 = Math.min(batas - s, sisiBelakang);
   if (a1 - a0 > 10) {
@@ -107,7 +114,7 @@ function pegangan(ctx: KonteksModifikasi): BagianModifikasi[] {
   const dS = dindingSamping(dT, s);
   if (ctx.dindingTergambar.includes(dS)) {
     const kS = ctx.kerangka(dS);
-    const [b0, b1] = rentangDariDinding(dS, dT, panjangSamping);
+    const [b0, b1] = rentangDariDinding(ctx, dS, dT, panjangSamping);
     const daftar = batang(kS, b0, b1);
     if (ctx.tampilkanUkuran) daftar.push(ukurSejajar(kS, b0, b1, 0, DIM.pegangan.tinggiMaks + 26, `${angka(panjangSamping)} cm`));
     hasil.push({ daftar, objek: "kloset", pijak: pusat(kS, (b0 + b1) / 2, 0) });
@@ -156,7 +163,7 @@ function kursiMandi(ctx: KonteksModifikasi): BagianModifikasi[] {
   const k = { ...ctx.kerangka(dM), sepanjang: ctx.posisi.area_mandi };
   const t = DIM.akses.tempatDuduk;
   const setengah = t / 2;
-  const batas = panjangDinding(dM) / 2;
+  const batas = panjangDinding(ctx, dM) / 2;
   const dKloset = titikDinding(ctx.letak("kloset")).dinding;
   const kKloset = { ...ctx.kerangka(dKloset), sepanjang: ctx.posisi.kloset };
   const [kx, ky] = ruangDari(kKloset, 0, 30);
@@ -179,7 +186,7 @@ function kursiMandi(ctx: KonteksModifikasi): BagianModifikasi[] {
 function showerRata(ctx: KonteksModifikasi): BagianModifikasi[] {
   const dM = titikDinding(ctx.letak("area_mandi")).dinding;
   const k = { ...ctx.kerangka(dM), sepanjang: ctx.posisi.area_mandi };
-  const batas = panjangDinding(dM) / 2;
+  const batas = panjangDinding(ctx, dM) / 2;
   const setengah = DIM.rollIn.panjang / 2;
   const a0 = Math.max(-batas - k.sepanjang, -setengah);
   const a1 = Math.min(batas - k.sepanjang, setengah);
@@ -192,7 +199,7 @@ function showerRata(ctx: KonteksModifikasi): BagianModifikasi[] {
     poligon("rongga", [T(a0 + 6, dalam - 9), T(a1 - 6, dalam - 9), T(a1 - 6, dalam - 4), T(a0 + 6, dalam - 4)], "aksen"),
   ];
   const tengah = (a0 + a1) / 2;
-  for (const a of [tengah - 40, tengah, tengah + 40]) {
+  for (const a of ctx.ringkas ? [] : [tengah - 40, tengah, tengah + 40]) {
     if (a - 6 < a0 || a + 6 > a1) continue;
     const dari = dalam - 40;
     const ke = dalam - 16;
@@ -210,7 +217,7 @@ function lingkaranLantai(ctx: KonteksModifikasi, x: number, y: number, r: number
 
 /** M-02: ruang putar kursi roda, lingkaran bebas di lantai, di tengah ruangan. */
 function ruangPutar(ctx: KonteksModifikasi): BagianModifikasi[] {
-  const r = Math.min(DIM.ruangPutar, LEBAR) / 2;
+  const r = Math.min(DIM.ruangPutar, ukuranRuang(ctx).lebar) / 2;
   const garis = lingkaranLantai(ctx, 0, 0, r);
   const daftar: Primitif[] = [{ jenis: "garisPoli", titik: [...garis, garis[0]], peran: "aksen", putus: true }];
   if (ctx.tampilkanUkuran) {
@@ -225,10 +232,10 @@ function areaBebasKloset(ctx: KonteksModifikasi): BagianModifikasi[] {
   const dT = titikDinding(ctx.letak("kloset")).dinding;
   const k = { ...ctx.kerangka(dT), sepanjang: ctx.posisi.kloset };
   const lebar = DIM.ruangPutar;
-  const batas = panjangDinding(dT) / 2;
+  const batas = panjangDinding(ctx, dT) / 2;
   const a0 = Math.max(-batas - k.sepanjang, -lebar / 2);
   const a1 = Math.min(batas - k.sepanjang, lebar / 2);
-  const dalam = Math.min(lebar, panjangDinding(dindingSamping(dT, k.sepanjang)));
+  const dalam = Math.min(lebar, panjangDinding(ctx, dindingSamping(dT, k.sepanjang)));
   const T = (a: number, n: number): Titik => titik(k, a, n, 0);
   const daftar: Primitif[] = [
     { jenis: "garisPoli", titik: [T(a0, 0), T(a1, 0), T(a1, dalam), T(a0, dalam), T(a0, 0)], peran: "aksen", putus: true },
@@ -243,22 +250,38 @@ function kerangkaBenda(ctx: KonteksModifikasi, objek: ObjekDenah): Kerangka {
 }
 
 /** Rentang `a` yang dijepit agar tetap di dalam dinding (cm), bila `a0..a1` pada kerangka `k` melewati ujung dinding. */
-function jepitDinding(k: Kerangka, a0: number, a1: number): [number, number] {
-  const batas = panjangDinding(k.dinding) / 2;
+function jepitDinding(ctx: KonteksModifikasi, k: Kerangka, a0: number, a1: number): [number, number] {
+  const batas = panjangDinding(ctx, k.dinding) / 2;
   return [Math.max(a0, -batas - k.sepanjang + 2), Math.min(a1, batas - k.sepanjang - 2)];
 }
 
 /** M-06: cermin di atas wastafel, tepi bawahnya dalam jangkauan duduk. (Wastafel dan keran diganti lewat penggantian benda.) */
 function cermin(ctx: KonteksModifikasi): BagianModifikasi[] {
   const k = kerangkaBenda(ctx, "wastafel");
-  const [a0, a1] = jepitDinding(k, -DIM.wastafel.lebarBak / 2, DIM.wastafel.lebarBak / 2);
+  const [a0, a1] = jepitDinding(ctx, k, -DIM.wastafel.lebarBak / 2, DIM.wastafel.lebarBak / 2);
   if (a1 - a0 < 10) return [];
-  const daftar = kotak(k, a0, a1, 0, 1.5, DIM.cermin.tepiBawah, DIM.cermin.tepiAtas, "aksen");
+  const { tepiBawah, tepiAtas } = DIM.cermin;
+  // Ringkasan: hanya kerangka tipis supaya tidak menutupi benda di belakangnya.
+  const daftar: Primitif[] = ctx.ringkas
+    ? [
+        {
+          jenis: "garisPoli",
+          titik: [
+            titik(k, a0, 0, tepiBawah),
+            titik(k, a1, 0, tepiBawah),
+            titik(k, a1, 0, tepiAtas),
+            titik(k, a0, 0, tepiAtas),
+            titik(k, a0, 0, tepiBawah),
+          ],
+          peran: "aksen",
+        },
+      ]
+    : kotak(k, a0, a1, 0, 1.5, tepiBawah, tepiAtas, "aksen");
   if (ctx.tampilkanUkuran)
     daftar.push(
       ukurTegak(
         k,
-        jepit(a1 + 14, a0, panjangDinding(k.dinding) / 2 - k.sepanjang - 2),
+        jepit(a1 + 14, a0, panjangDinding(ctx, k.dinding) / 2 - k.sepanjang - 2),
         0,
         0,
         DIM.cermin.tepiBawah,
@@ -270,6 +293,7 @@ function cermin(ctx: KonteksModifikasi): BagianModifikasi[] {
 
 /** M-09: keramik bertekstur, digambar sebagai goresan pendek tersebar di seluruh lantai. */
 function lantaiBertekstur(ctx: KonteksModifikasi): BagianModifikasi[] {
+  const { lebar: LEBAR, dalam: DALAM } = ukuranRuang(ctx);
   const daftar: Primitif[] = [];
   const jarak = 20;
   const tepi = 8;
@@ -292,7 +316,7 @@ function rakHandukBagian(ctx: KonteksModifikasi): BagianModifikasi[] {
   const u = (DIM.jangkauan.bawah + DIM.jangkauan.atas) / 2;
   const hasil: BagianModifikasi[] = [];
   const kM = kerangkaBenda(ctx, "area_mandi");
-  const batasM = panjangDinding(kM.dinding) / 2;
+  const batasM = panjangDinding(ctx, kM.dinding) / 2;
   // Rak di sisi seberang hand shower (hand shower dipasang ke arah a positif).
   const aRak = jepit(-40, -batasM - kM.sepanjang + 24, batasM - kM.sepanjang - 24);
   hasil.push({
@@ -309,7 +333,7 @@ function rakHandukBagian(ctx: KonteksModifikasi): BagianModifikasi[] {
       ukurTegak(kM, aRak - 30, 0, DIM.jangkauan.bawah, DIM.jangkauan.atas, `${rentang(DIM.jangkauan.bawah, DIM.jangkauan.atas)}*`, "atas"),
     );
   const kW = kerangkaBenda(ctx, "wastafel");
-  const batasW = panjangDinding(kW.dinding) / 2;
+  const batasW = panjangDinding(ctx, kW.dinding) / 2;
   // Di sisi wastafel yang lebih jauh dari kloset, supaya tidak menumpuk dengan pegangan di belakang kloset.
   const kK = kerangkaBenda(ctx, "kloset");
   const [kx, ky] = ruangDari(kK, 0, 30);
@@ -340,14 +364,14 @@ function tombol(k: Kerangka, a: number, u: number): Primitif[] {
 function tombolDarurat(ctx: KonteksModifikasi): BagianModifikasi[] {
   const u = DIM.jangkauan.bawah;
   const kK = kerangkaBenda(ctx, "kloset");
-  const [b0, b1] = jepitDinding(kK, -60, 60);
+  const [b0, b1] = jepitDinding(ctx, kK, -60, 60);
   // Tombol dekat kloset dipasang di dinding samping di sebelah mangkuk bila dindingnya tergambar (tidak tertutup kloset);
   // bila tidak, di dinding belakang kloset di sisi yang lebih jauh dari wastafel.
   const dT = titikDinding(ctx.letak("kloset")).dinding;
   const dS = dindingSamping(dT, kK.sepanjang);
   let bagianKloset: { k: Kerangka; a: number };
   if (ctx.dindingTergambar.includes(dS)) {
-    bagianKloset = { k: ctx.kerangka(dS), a: aDariDinding(dS, dT, 31) };
+    bagianKloset = { k: ctx.kerangka(dS), a: aDariDinding(ctx, dS, dT, 31) };
   } else {
     const kW = kerangkaBenda(ctx, "wastafel");
     const [wx, wy] = ruangDari(kW, 0, 12);
@@ -385,7 +409,7 @@ function ukuranPintu(ctx: KonteksModifikasi): BagianModifikasi[] {
 function ukuranKloset(ctx: KonteksModifikasi): BagianModifikasi[] {
   if (!ctx.tampilkanUkuran) return [];
   const k = kerangkaBenda(ctx, "kloset");
-  const [, b1] = jepitDinding(k, -60, 60);
+  const [, b1] = jepitDinding(ctx, k, -60, 60);
   const a = jepit(46, -60, b1 - 4);
   return [
     {
@@ -400,7 +424,7 @@ function ukuranKloset(ctx: KonteksModifikasi): BagianModifikasi[] {
 function ukuranJangkauan(ctx: KonteksModifikasi): BagianModifikasi[] {
   if (!ctx.tampilkanUkuran) return [];
   const k = kerangkaBenda(ctx, "area_mandi");
-  const batas = panjangDinding(k.dinding) / 2;
+  const batas = panjangDinding(ctx, k.dinding) / 2;
   const a = jepit(62, -batas - k.sepanjang + 4, batas - k.sepanjang - 4);
   return [
     {

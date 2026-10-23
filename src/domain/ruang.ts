@@ -1,5 +1,8 @@
 // Gambar "Ruang Anda" di halaman hasil kamar mandi: logika murni, terpisah dari komponen.
+import { titikDinding } from "./denahGeometri";
 import { OBJEK_DENAH, type LetakDenah, type ObjekDenah } from "./denahPindai";
+import { DIM } from "./dimensiGambar";
+import type { UkuranRuang } from "./tataLetak";
 import { BERGAMBAR } from "./bergambar";
 
 export type SudutPandang = "kiri" | "kanan";
@@ -31,4 +34,20 @@ export function sudutUntuk(
   const [kanan, kiri] = [terlihat("kanan"), terlihat("kiri")];
   if (kanan === 0 && kiri === 0) return { sudut: "kanan", semua: true };
   return { sudut: kiri > kanan ? "kiri" : "kanan", semua: false };
+}
+
+/**
+ * Ukuran ruang untuk gambar ringkasan "setelah modifikasi" (keputusan pemilik: ruang boleh diperluas karena modifikasi menuju
+ * kondisi ideal). Hanya diperluas bila area shower tanpa undakan (M-08) ikut digambar, dan seperlunya: sumbu tegak lurus dinding
+ * shower dibuat selebar ruang putar + lebar area shower (152,5 + 76 cm dari tabel) supaya ruang putar tidak tumpang tindih dengan
+ * area shower. Sumbu lain dan ruang selebihnya tetap. Tanpa M-08 ukurannya tetap `DIM.ruang`.
+ */
+export function ruangIdeal(letak: (id: ObjekDenah) => LetakDenah, aktif: readonly string[]): UkuranRuang {
+  const dasar = { lebar: DIM.ruang.lebar, dalam: DIM.ruang.dalam };
+  if (!aktif.includes("M-08")) return dasar;
+  const kebutuhan = DIM.ruangPutar + DIM.rollIn.lebar;
+  const dinding = titikDinding(letak("area_mandi")).dinding;
+  return dinding === "kiri" || dinding === "kanan"
+    ? { lebar: Math.max(dasar.lebar, kebutuhan), dalam: dasar.dalam }
+    : { lebar: dasar.lebar, dalam: Math.max(dasar.dalam, kebutuhan) };
 }

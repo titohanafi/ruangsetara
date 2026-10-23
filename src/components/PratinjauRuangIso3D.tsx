@@ -224,7 +224,11 @@ export function PratinjauRuangIso3D({
             ? gambarShower(varianShower, modeShower, { kerangka })
             : id === "kloset" && modifikasi.includes("M-04")
               ? gambarBenda("kloset_duduk", kerangka, "aksen") // M-04: kloset diganti kloset duduk (hijau)
-              : gambarBenda(jenisBenda(id), kerangka);
+              : id === "pintu" && (modifikasi.includes("M-01") || modifikasi.includes("M-12"))
+                ? gambarBenda("pintu_ayun_luar", kerangka, "aksen") // M-01, M-12: pintu lebar membuka ke luar (hijau)
+                : id === "wastafel" && modifikasi.includes("M-06")
+                  ? gambarBenda("wastafel", kerangka, "aksen") // M-06: wastafel gantung, keran tuas (hijau)
+                  : gambarBenda(jenisBenda(id), kerangka);
         // Urutan gambar dari belakang ke depan: titik pijak benda yang lebih rendah di layar berarti lebih dekat kamera.
         const [x, y] = keRuang(kerangka, 0, 0);
         return { id, daftar, kedalaman: proyeksi(x, y, 0)[1] };

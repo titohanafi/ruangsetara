@@ -7,15 +7,27 @@ import type { LetakDenah, ObjekDenah } from "./denahPindai";
 import { DIM } from "./dimensiGambar";
 import { footprintOval, kotak, poligon, titik, type Dinding, type Kerangka, type Primitif, type Titik } from "./gambarShower";
 
-/** Pertanyaan yang sudah punya gambar modifikasi, dan benda di ruangan yang harus terlihat agar gambarnya bisa dipasang. */
-export const BERGAMBAR: Record<string, ObjekDenah | null> = {
-  "M-02": null,
-  "M-03": "kloset",
-  "M-04": "kloset",
-  "M-05": "kloset",
-  "M-08": "area_mandi",
-  "M-10": "area_mandi",
+/**
+ * Pertanyaan yang sudah punya gambar modifikasi, dan benda di ruangan yang dipasangi. Gambar dibuat bila **salah satu** benda
+ * itu terlihat di foto; daftar kosong berarti gambarnya tidak bergantung pada benda tertentu (lantai atau ruang bebas).
+ * M-01, M-04, dan sebagian M-06 dan M-12 menggambar lewat penggantian benda di `PratinjauRuangIso3D` (warna hijau).
+ */
+export const BERGAMBAR: Record<string, readonly ObjekDenah[]> = {
+  "M-01": ["pintu"],
+  "M-02": [],
+  "M-03": ["kloset"],
+  "M-04": ["kloset"],
+  "M-05": ["kloset"],
+  "M-06": ["wastafel"],
+  "M-08": ["area_mandi"],
+  "M-09": [],
+  "M-10": ["area_mandi"],
+  "M-11": ["area_mandi", "wastafel"],
+  "M-12": ["kloset", "area_mandi", "pintu"],
 };
+
+/** Pertanyaan yang mengganti benda (warna hijau) alih-alih menambah bagian, dan bendanya. */
+export const PENGGANTI: Record<string, ObjekDenah> = { "M-01": "pintu", "M-04": "kloset", "M-06": "wastafel", "M-12": "pintu" };
 
 export interface KonteksModifikasi {
   /** Permukaan dalam dinding (sepanjang = 0, skala 1), satuan cm. */
@@ -185,6 +197,100 @@ function areaBebasKloset(ctx: KonteksModifikasi): BagianModifikasi[] {
   ];
 }
 
+/** Kerangka dinding tempat `objek` menempel, di posisinya sepanjang dinding. */
+function kerangkaBenda(ctx: KonteksModifikasi, objek: ObjekDenah): Kerangka {
+  return { ...ctx.kerangka(titikDinding(ctx.letak(objek)).dinding), sepanjang: ctx.posisi[objek] };
+}
+
+/** Rentang `a` yang dijepit agar tetap di dalam dinding (cm), bila `a0..a1` pada kerangka `k` melewati ujung dinding. */
+function jepitDinding(k: Kerangka, a0: number, a1: number): [number, number] {
+  const batas = panjangDinding(k.dinding) / 2;
+  return [Math.max(a0, -batas - k.sepanjang + 2), Math.min(a1, batas - k.sepanjang - 2)];
+}
+
+/** M-06: cermin di atas wastafel, tepi bawahnya dalam jangkauan duduk. (Wastafel dan keran diganti lewat penggantian benda.) */
+function cermin(ctx: KonteksModifikasi): BagianModifikasi[] {
+  const k = kerangkaBenda(ctx, "wastafel");
+  const [a0, a1] = jepitDinding(k, -DIM.wastafel.lebarBak / 2, DIM.wastafel.lebarBak / 2);
+  if (a1 - a0 < 10) return [];
+  const daftar = kotak(k, a0, a1, 0, 1.5, DIM.cermin.tepiBawah, DIM.cermin.tepiAtas, "aksen");
+  return [{ daftar, objek: "wastafel", pijak: pusat(k, (a0 + a1) / 2, 0) }];
+}
+
+/** M-09: keramik bertekstur, digambar sebagai goresan pendek tersebar di seluruh lantai. */
+function lantaiBertekstur(ctx: KonteksModifikasi): BagianModifikasi[] {
+  const daftar: Primitif[] = [];
+  const jarak = 20;
+  const tepi = 8;
+  let baris = 0;
+  for (let y = -DALAM / 2 + tepi; y <= DALAM / 2 - tepi; y += jarak, baris++) {
+    const geser = baris % 2 === 0 ? 0 : jarak / 2;
+    for (let x = -LEBAR / 2 + tepi + geser; x <= LEBAR / 2 - tepi - 3; x += jarak) {
+      daftar.push({ jenis: "garisPoli", titik: [ctx.proyeksi(x, y, 0), ctx.proyeksi(x + 4, y, 0)], peran: "aksen" });
+    }
+  }
+  return [{ daftar, objek: null, pijak: "lantai" }];
+}
+
+/** M-11: rak di dinding area shower dan handuk pada batang di dinding wastafel, pada ketinggian dalam rentang jangkauan. */
+function rakHandukBagian(ctx: KonteksModifikasi): BagianModifikasi[] {
+  const u = (DIM.jangkauan.bawah + DIM.jangkauan.atas) / 2;
+  const hasil: BagianModifikasi[] = [];
+  const kM = kerangkaBenda(ctx, "area_mandi");
+  const batasM = panjangDinding(kM.dinding) / 2;
+  // Rak di sisi seberang hand shower (hand shower dipasang ke arah a positif).
+  const aRak = jepit(-40, -batasM - kM.sepanjang + 24, batasM - kM.sepanjang - 24);
+  hasil.push({
+    daftar: [
+      ...kotak(kM, aRak - 20, aRak + 20, 0, 12, u, u + 3, "aksen"),
+      ...kotak(kM, aRak - 17, aRak - 13, 0, 10, u - 9, u, "aksen"),
+      ...kotak(kM, aRak + 13, aRak + 17, 0, 10, u - 9, u, "aksen"),
+    ],
+    objek: "area_mandi",
+    pijak: pusat(kM, aRak, 6),
+  });
+  const kW = kerangkaBenda(ctx, "wastafel");
+  const batasW = panjangDinding(kW.dinding) / 2;
+  // Di sisi wastafel yang lebih jauh dari kloset, supaya tidak menumpuk dengan pegangan di belakang kloset.
+  const kK = kerangkaBenda(ctx, "kloset");
+  const [kx, ky] = ruangDari(kK, 0, 30);
+  const calon = [-1, 1].map((sisi) =>
+    jepit(sisi * (DIM.wastafel.lebarBak / 2 + 24), -batasW - kW.sepanjang + 18, batasW - kW.sepanjang - 18),
+  );
+  const jarak = (a: number) => Math.hypot(ruangDari(kW, a, 4)[0] - kx, ruangDari(kW, a, 4)[1] - ky);
+  const aBatang = jarak(calon[0]) >= jarak(calon[1]) ? calon[0] : calon[1];
+  hasil.push({
+    daftar: [
+      ...kotak(kW, aBatang - 16, aBatang + 16, 3, 5.5, u - 1, u + 1, "aksen"),
+      ...kotak(kW, aBatang - 14, aBatang - 11, 0, 3, u - 2, u + 2, "aksen"),
+      ...kotak(kW, aBatang + 11, aBatang + 14, 0, 3, u - 2, u + 2, "aksen"),
+      ...kotak(kW, aBatang - 12, aBatang + 12, 5.5, 8, u - 38, u + 1, "aksen"),
+    ],
+    objek: "wastafel",
+    pijak: pusat(kW, aBatang, 4),
+  });
+  return hasil;
+}
+
+/** Tombol panggil darurat: pelat kecil di dinding dekat kloset dan di area shower, serendah batas bawah jangkauan duduk. */
+function tombol(k: Kerangka, a: number, u: number): Primitif[] {
+  return [...kotak(k, a - 5, a + 5, 0, 2, u, u + 10, "aksen"), ...kotak(k, a - 2, a + 2, 2, 3.5, u + 3, u + 7, "aksen")];
+}
+
+/** M-12: tombol panggil darurat dekat kloset dan dekat area mandi. (Pintu membuka ke luar digambar lewat penggantian pintu.) */
+function tombolDarurat(ctx: KonteksModifikasi): BagianModifikasi[] {
+  const u = DIM.jangkauan.bawah;
+  const kK = kerangkaBenda(ctx, "kloset");
+  const [b0, b1] = jepitDinding(kK, -60, 60);
+  // Di samping tangki, ke arah tengah ruangan (menjauhi sudut dan pegangan samping).
+  const aK = jepit(kK.sepanjang >= 0 ? -32 : 32, b0 + 6, b1 - 6);
+  const kM = kerangkaBenda(ctx, "area_mandi");
+  return [
+    { daftar: tombol(kK, aK, u), objek: "kloset", pijak: pusat(kK, aK, 1) },
+    { daftar: tombol(kM, 0, u), objek: "area_mandi", pijak: pusat(kM, 0, 1) },
+  ];
+}
+
 /** Semua bagian gambar untuk pertanyaan `id` (kosong bila belum punya gambar). */
 export function gambarModifikasi(id: string, ctx: KonteksModifikasi): BagianModifikasi[] {
   switch (id) {
@@ -194,10 +300,18 @@ export function gambarModifikasi(id: string, ctx: KonteksModifikasi): BagianModi
       return areaBebasKloset(ctx);
     case "M-05":
       return pegangan(ctx);
+    case "M-06":
+      return cermin(ctx);
     case "M-08":
       return showerRata(ctx);
+    case "M-09":
+      return lantaiBertekstur(ctx);
     case "M-10":
       return kursiMandi(ctx);
+    case "M-11":
+      return rakHandukBagian(ctx);
+    case "M-12":
+      return tombolDarurat(ctx);
     default:
       return [];
   }

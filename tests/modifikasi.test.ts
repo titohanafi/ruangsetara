@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { OBJEK_DENAH, POSISI_BAWAAN, type HasilDenah, type LetakDenah, type ObjekDenah } from "../src/domain/denahPindai";
 import { titikDinding } from "../src/domain/denahGeometri";
 import { DIM } from "../src/domain/dimensiGambar";
-import { BERGAMBAR, dindingSamping, gambarModifikasi, type KonteksModifikasi } from "../src/domain/gambarModifikasi";
+import { BERGAMBAR, dindingSamping, gambarModifikasi, PENGGANTI, type KonteksModifikasi } from "../src/domain/gambarModifikasi";
 import type { Dinding, Kerangka, Primitif, Titik } from "../src/domain/gambarShower";
 import { PERTANYAAN } from "../src/domain/konten";
 import { ringkasModifikasi } from "../src/domain/modifikasi";
@@ -39,17 +39,49 @@ describe("dinding samping terdekat", () => {
 });
 
 describe("gambar modifikasi", () => {
-  it("setiap gambar menghasilkan titik berhingga (M-04 menggambar lewat penggantian kloset, bukan bagian tambahan)", () => {
-    expect(gambarModifikasi("M-04", konteks())).toEqual([]);
-    for (const id of Object.keys(BERGAMBAR).filter((i) => i !== "M-04")) {
+  // M-01 dan M-04 menggambar hanya lewat penggantian benda (pintu, kloset), tanpa bagian tambahan.
+  const soloPengganti = ["M-01", "M-04"];
+
+  it("setiap gambar menghasilkan titik berhingga", () => {
+    for (const id of soloPengganti) expect(gambarModifikasi(id, konteks()), id).toEqual([]);
+    for (const id of Object.keys(BERGAMBAR).filter((i) => !soloPengganti.includes(i))) {
       const bagian = gambarModifikasi(id, konteks());
       expect(bagian.length, id).toBeGreaterThan(0);
       for (const b of bagian) for (const [x, y] of semuaTitik(b.daftar)) expect(Number.isFinite(x) && Number.isFinite(y), id).toBe(true);
     }
   });
 
-  it("pertanyaan tanpa gambar menghasilkan daftar kosong", () => {
-    expect(gambarModifikasi("M-12", konteks())).toEqual([]);
+  it("pertanyaan yang gambarnya bukan bagian tambahan menghasilkan daftar kosong", () => {
+    expect(gambarModifikasi("M-07", konteks())).toEqual([]); // hand shower: lewat mode gambar shower
+    expect(gambarModifikasi("tidak-ada", konteks())).toEqual([]);
+  });
+
+  it("pergantian benda (PENGGANTI) hanya untuk benda yang ada di BERGAMBAR", () => {
+    for (const [id, objek] of Object.entries(PENGGANTI)) expect(BERGAMBAR[id], id).toContain(objek);
+  });
+
+  it("cermin (M-06) memakai tepi bawah ADA dan tepi atas PerMen dari tabel, dalam jangkauan wajar", () => {
+    expect(DIM.cermin.tepiBawah).toBe(101.5);
+    expect(DIM.cermin.tepiAtas).toBe(180);
+    expect(DIM.cermin.tepiAtas).toBeLessThan(DIM.ruang.tinggi);
+    const [b] = gambarModifikasi("M-06", konteks());
+    expect(b.objek).toBe("wastafel");
+  });
+
+  it("lantai bertekstur (M-09) tidak bergantung benda dan menutup seluruh lantai", () => {
+    const [b] = gambarModifikasi("M-09", konteks());
+    expect(b).toMatchObject({ objek: null, pijak: "lantai" });
+    expect(b.daftar.length).toBeGreaterThan(50);
+  });
+
+  it("rak dan handuk (M-11): satu di area mandi, satu di wastafel, tinggi dalam rentang jangkauan", () => {
+    const bagian = gambarModifikasi("M-11", konteks());
+    expect(bagian.map((b) => b.objek).sort()).toEqual(["area_mandi", "wastafel"]);
+    expect((DIM.jangkauan.bawah + DIM.jangkauan.atas) / 2).toBeGreaterThanOrEqual(DIM.jangkauan.bawah);
+  });
+
+  it("tombol darurat (M-12): dekat kloset dan dekat area mandi", () => {
+    expect(gambarModifikasi("M-12", konteks()).map((b) => b.objek)).toEqual(["kloset", "area_mandi"]);
   });
 
   it("pegangan (M-05): batang belakang dan samping, samping hanya bila dindingnya digambar", () => {
@@ -79,7 +111,7 @@ describe("gambar modifikasi", () => {
       for (const dm of dinding) {
         const letak = (id: ObjekDenah): LetakDenah =>
           id === "kloset" ? { dinding: dk, posisi: "tengah" } : id === "area_mandi" ? { dinding: dm, posisi: "tengah" } : POSISI_BAWAAN[id];
-        for (const id of Object.keys(BERGAMBAR).filter((i) => i !== "M-04"))
+        for (const id of Object.keys(BERGAMBAR).filter((i) => !soloPengganti.includes(i)))
           for (const b of gambarModifikasi(id, konteks(["belakang", "kanan"], letak)))
             for (const [x, y] of semuaTitik(b.daftar)) expect(Number.isFinite(x) && Number.isFinite(y), `${id} ${dk} ${dm}`).toBe(true);
       }
@@ -104,8 +136,8 @@ const id = (r: { id: string }[]) => r.map((p) => p.id);
 describe("ringkasModifikasi", () => {
   it("memisahkan yang digambar, yang belum ada gambarnya, dan yang bendanya tidak terbaca", () => {
     const r = ringkasModifikasi(daftar, tidak("M-01", "M-05", "M-07", "M-10"), denah({}, ["area_mandi"]));
-    expect(id(r.digambar)).toEqual(["M-05"]);
-    expect(id(r.belumDigambar)).toEqual(["M-01"]);
+    expect(id(r.digambar)).toEqual(["M-01", "M-05"]);
+    expect(id(r.belumDigambar)).toEqual([]);
     expect(id(r.bendaTakTerlihat)).toEqual(["M-07", "M-10"]);
   });
 
@@ -121,6 +153,23 @@ describe("ringkasModifikasi", () => {
   it("perlengkapan mandi (M-07) hanya digambar untuk hand shower yang digantung", () => {
     expect(id(ringkasModifikasi(daftar, tidak("M-07"), denah()).digambar)).toEqual(["M-07"]);
     expect(id(ringkasModifikasi(daftar, tidak("M-07"), denah({ varianShower: "shower_tetap" })).belumDigambar)).toEqual(["M-07"]);
+  });
+
+  it("rak dan handuk (M-11) tetap digambar bila salah satu bendanya terlihat; tombol darurat (M-12) bila salah satu dari tiga", () => {
+    expect(id(ringkasModifikasi(daftar, tidak("M-11"), denah({}, ["area_mandi"])).digambar)).toEqual(["M-11"]);
+    expect(id(ringkasModifikasi(daftar, tidak("M-11"), denah({}, ["area_mandi", "wastafel"])).bendaTakTerlihat)).toEqual(["M-11"]);
+    expect(id(ringkasModifikasi(daftar, tidak("M-12"), denah({}, ["kloset", "area_mandi"])).digambar)).toEqual(["M-12"]);
+  });
+
+  it("lantai bertekstur (M-09) dan ruang putar (M-02) digambar walau semua benda tidak terbaca", () => {
+    const r = ringkasModifikasi(daftar, tidak("M-02", "M-09"), denah({}, [...OBJEK_DENAH]));
+    expect(id(r.digambar)).toEqual(["M-02", "M-09"]);
+  });
+
+  it("semua 12 pertanyaan kamar mandi kini punya gambar (tidak ada yang belum digambar)", () => {
+    const r = ringkasModifikasi(daftar, tidak(...daftar.map((p) => p.id)), denah());
+    expect(id(r.belumDigambar)).toEqual([]);
+    expect(id(r.digambar)).toHaveLength(12);
   });
 
   it("kloset tidak terbaca: M-03, M-04, M-05 tidak digambar, M-02 tetap (tidak bergantung benda)", () => {

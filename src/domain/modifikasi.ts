@@ -19,9 +19,10 @@ export interface RingkasModifikasi {
   bendaTakTerlihat: Pertanyaan[];
 }
 
-function bendaPerlu(id: string): ObjekDenah | null | undefined {
-  if (id === PERTANYAAN_SHOWER) return "area_mandi";
-  return id in BERGAMBAR ? BERGAMBAR[id] : undefined;
+/** Benda yang dipasangi gambar pertanyaan itu; undefined bila belum ada gambarnya. */
+function bendaPerlu(id: string): readonly ObjekDenah[] | undefined {
+  if (id === PERTANYAAN_SHOWER) return ["area_mandi"];
+  return BERGAMBAR[id];
 }
 
 export function ringkasModifikasi(daftar: Pertanyaan[], jawaban: PetaJawaban, denah: HasilDenah): RingkasModifikasi {
@@ -31,7 +32,7 @@ export function ringkasModifikasi(daftar: Pertanyaan[], jawaban: PetaJawaban, de
     const benda = bendaPerlu(p.id);
     const bisaGambar = benda !== undefined && (p.id !== PERTANYAAN_SHOWER || denah.varianShower === "hand_shower_gantung");
     if (!bisaGambar) hasil.belumDigambar.push(p);
-    else if (benda && denah.objek[benda].dinding === "tidak_terlihat") hasil.bendaTakTerlihat.push(p);
+    else if (benda.length > 0 && benda.every((o) => denah.objek[o].dinding === "tidak_terlihat")) hasil.bendaTakTerlihat.push(p);
     else hasil.digambar.push(p);
   }
   return hasil;

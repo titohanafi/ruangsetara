@@ -140,6 +140,7 @@
     "legenda": "Hijau menandai bagian yang ditambahkan atau diganti.",
     "bendaTakTerlihat": "Tidak digambar karena bendanya tidak terbaca di foto: {daftar}.",
     "belumDigambar": "Belum ada gambarnya (lihat teks rekomendasi di bawah): {daftar}.",
-    "tidakAdaModifikasi": "Belum ada jawaban Tidak yang bisa digambar. Teks rekomendasi tetap ada di bawah."
+    "tidakAdaModifikasi": "Belum ada jawaban Tidak yang bisa digambar. Teks rekomendasi tetap ada di bawah.",
+    "tersembunyiSudut": "Tidak tampak dari sudut ini karena dindingnya tidak digambar: {daftar}. Putar sudut pandang atau pilih Tampilkan semua benda."
   }
 }

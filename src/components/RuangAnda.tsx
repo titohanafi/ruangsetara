@@ -2,10 +2,11 @@ import { useState } from "react";
 import type { PetaJawaban } from "../domain/asesmen";
 import { letakDariDenah, tidakTerlihatDariDenah, type HasilDenah } from "../domain/denahPindai";
 import { isi, PERTANYAAN, UI } from "../domain/konten";
+import { BERGAMBAR } from "../domain/gambarModifikasi";
 import { PERTANYAAN_SHOWER, ringkasModifikasi, type ModeRuang } from "../domain/modifikasi";
 import { sudutAwal } from "../domain/ruang";
 import { DenahTampakAtas } from "./DenahTampakAtas";
-import { PratinjauRuangIso3D } from "./PratinjauRuangIso3D";
+import { bendaTersembunyi, PratinjauRuangIso3D } from "./PratinjauRuangIso3D";
 
 const T = UI.ruang;
 type Tab = "atas" | "iso";
@@ -39,6 +40,12 @@ export function RuangAnda({ jawaban, denah }: { jawaban: PetaJawaban; denah: Has
   const adaModifikasi = ringkas.digambar.length > 0;
   const aktif: ModeRuang = adaModifikasi ? mode : "kondisi";
   const modifikasi = aktif === "modifikasi" ? ringkas.digambar.map((p) => p.id) : [];
+  // Gambar yang bendanya ada di dinding yang tidak digambar dari sudut ini (kecuali bila semua benda ditampilkan).
+  const sembunyi = semua ? [] : bendaTersembunyi(letak, sudut, tidakTerlihat);
+  const dariSudut = ringkas.digambar.filter((p) => {
+    const perlu = p.id === PERTANYAAN_SHOWER ? (["area_mandi"] as const) : (BERGAMBAR[p.id] ?? []);
+    return perlu.length > 0 && perlu.every((o) => sembunyi.includes(o) || tidakTerlihat.includes(o));
+  });
 
   return (
     <section className="mt-6" aria-labelledby="ruang-anda">
@@ -98,6 +105,9 @@ export function RuangAnda({ jawaban, denah }: { jawaban: PetaJawaban; denah: Has
           {!adaModifikasi && <p className="mt-2 text-kecil text-redup">{T.tidakAdaModifikasi}</p>}
           {adaModifikasi && <p className="mt-2 text-kecil text-redup">{isi(T.digambar, { daftar: daftarNama(ringkas.digambar) })}</p>}
           {aktif === "modifikasi" && <p className="mt-1 text-kecil text-redup">{T.legenda}</p>}
+          {aktif === "modifikasi" && dariSudut.length > 0 && (
+            <p className="mt-1 text-kecil text-redup">{isi(T.tersembunyiSudut, { daftar: daftarNama(dariSudut) })}</p>
+          )}
           {ringkas.bendaTakTerlihat.length > 0 && (
             <p className="mt-1 text-kecil text-redup">{isi(T.bendaTakTerlihat, { daftar: daftarNama(ringkas.bendaTakTerlihat) })}</p>
           )}

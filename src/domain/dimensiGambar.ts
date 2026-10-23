@@ -2,12 +2,19 @@
 // Satuan gambar = 1 cm. Tiap angka berasal dari tabel `content/ukuran-aksesibel.json` (PerMen PUPR 14/2017 diutamakan,
 // lalu ADA 2010) atau tercatat sebagai PERKIRAAN di `DIMENSI_PERKIRAAN` di bawah, yang harus diperiksa tim riset. Gambar
 // tidak pernah menampilkan angka.
-import { nilaiAcuan, type KunciNilai } from "./ukuranAksesibel";
+import { nilaiAcuan, UKURAN_AKSESIBEL, type KunciNilai } from "./ukuranAksesibel";
 
 function dariTabel(id: string, kunci: KunciNilai): number {
   const n = nilaiAcuan(id, kunci);
   if (!n) throw new Error(`tabel ukuran aksesibel tidak punya ${id}/${kunci}`);
   return n.cm;
+}
+
+/** Angka dari satu rujukan tertentu (bukan yang diutamakan), mis. batas ADA yang dipakai teks Modifikasi di sheet. */
+function dariRujukan(id: string, rujukan: string, kunci: KunciNilai): number {
+  const n = UKURAN_AKSESIBEL.entri.find((e) => e.id === id)?.nilai.find((v) => v.rujukan === rujukan)?.[kunci];
+  if (typeof n !== "number") throw new Error(`tabel ukuran aksesibel tidak punya ${id}/${rujukan}/${kunci}`);
+  return n;
 }
 
 /** Dimensi yang BUKAN dari tabel: dipilih agar gambar masuk akal, belum bersumber. Daftar ini dilaporkan ke tim riset. */
@@ -73,6 +80,13 @@ export const DIM = {
     panjangSamping: dariTabel("pegangan-panjang-samping", "min_cm"),
     panjangBelakang: dariTabel("pegangan-panjang-belakang", "min_cm"),
   },
+  /** Cermin di atas wastafel: tepi bawah memakai batas ADA (angka di teks Modifikasi M-06), tepi atas batas pasang PerMen. */
+  cermin: {
+    tepiBawah: dariRujukan("cermin-tinggi-tepi-bawah", "ada_2010", "maks_cm"),
+    tepiAtas: dariRujukan("cermin-tinggi-tepi-bawah", "permen_pupr_14_2017", "maks_cm"),
+  },
+  /** Rentang jangkauan dari posisi duduk untuk keran, holder, dan rak. */
+  jangkauan: { bawah: dariTabel("jangkauan-zona-perlengkapan", "min_cm"), atas: dariTabel("jangkauan-zona-perlengkapan", "maks_cm") },
   /** Diameter ruang putar kursi roda (PerMen, ADA sama). */
   ruangPutar: dariTabel("ruang-putar-kursi-roda", "min_cm"),
   /** Panjang area shower tanpa undakan (roll-in); ADA, PerMen tidak mengatur. Lebarnya memakai bilik pancuran PerMen (`akses.lebarBilik`). */

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import type { PetaJawaban } from "../domain/asesmen";
 import { letakDariDenah, tidakTerlihatDariDenah, type HasilDenah } from "../domain/denahPindai";
-import type { ModeGambar } from "../domain/gambarShower";
-import { modeTersedia, perluPenyesuaianShower, sudutAwal } from "../domain/ruang";
-import { UI } from "../domain/konten";
+import { isi, PERTANYAAN, UI } from "../domain/konten";
+import { PERTANYAAN_SHOWER, ringkasModifikasi, type ModeRuang } from "../domain/modifikasi";
+import { sudutAwal } from "../domain/ruang";
 import { DenahTampakAtas } from "./DenahTampakAtas";
 import { PratinjauRuangIso3D } from "./PratinjauRuangIso3D";
 
@@ -11,15 +11,17 @@ const T = UI.ruang;
 type Tab = "atas" | "iso";
 type Sudut = "kiri" | "kanan";
 
-const NAMA_MODE: Record<ModeGambar, string> = { kondisi: T.modeKondisi, hack: T.modeHack, permanen: T.modePermanen };
+const NAMA_MODE: Record<ModeRuang, string> = { kondisi: T.modeKondisi, modifikasi: T.modeModifikasi };
+const daftarNama = (daftar: { elemen: string | null; id: string }[]): string => daftar.map((p) => p.elemen ?? p.id).join(", ");
 
-function Pil({ aktif, onKlik, children }: { aktif: boolean; onKlik: () => void; children: string }) {
+function Pil({ aktif, onKlik, children, mati = false }: { aktif: boolean; onKlik: () => void; children: string; mati?: boolean }) {
   return (
     <button
       type="button"
       aria-pressed={aktif}
+      disabled={mati}
       onClick={onKlik}
-      className={`min-h-sentuh rounded-tombol border px-4 text-kecil font-semibold ${aktif ? "border-utama bg-utama text-putih" : "border-garis bg-putih text-tinta"}`}
+      className={`min-h-sentuh rounded-tombol border px-4 text-kecil font-semibold disabled:opacity-50 ${aktif ? "border-utama bg-utama text-putih" : "border-garis bg-putih text-tinta"}`}
     >
       {children}
     </button>
@@ -30,13 +32,13 @@ export function RuangAnda({ jawaban, denah }: { jawaban: PetaJawaban; denah: Has
   const letak = letakDariDenah(denah.objek);
   const tidakTerlihat = tidakTerlihatDariDenah(denah.objek);
   const [tab, setTab] = useState<Tab>("iso");
-  const [mode, setMode] = useState<ModeGambar>("kondisi");
+  const [mode, setMode] = useState<ModeRuang>("kondisi");
   const [sudut, setSudut] = useState<Sudut>(() => sudutAwal(letak, tidakTerlihat));
   const [semua, setSemua] = useState(false);
-  const tersedia = modeTersedia(jawaban, denah.varianShower);
-  const aktif = tersedia.includes(mode) ? mode : "kondisi";
-  const catatanMode =
-    tersedia.length > 1 ? T.catatanPenyesuaian : !perluPenyesuaianShower(jawaban) ? T.tidakAdaPenyesuaian : T.tidakAdaGambarShower;
+  const ringkas = ringkasModifikasi(PERTANYAAN["kamar-mandi"].pertanyaan, jawaban, denah);
+  const adaModifikasi = ringkas.digambar.length > 0;
+  const aktif: ModeRuang = adaModifikasi ? mode : "kondisi";
+  const modifikasi = aktif === "modifikasi" ? ringkas.digambar.map((p) => p.id) : [];
 
   return (
     <section className="mt-6" aria-labelledby="ruang-anda">
@@ -62,7 +64,8 @@ export function RuangAnda({ jawaban, denah }: { jawaban: PetaJawaban; denah: Has
               jenisKloset={denah.jenisKloset}
               varianPintu={denah.varianPintu}
               tidakTerlihat={tidakTerlihat}
-              modeShower={aktif}
+              modeShower={modifikasi.includes(PERTANYAAN_SHOWER) ? "permanen" : "kondisi"}
+              modifikasi={modifikasi}
               tampilkanSemua={semua}
               kelas="h-96 w-full max-w-md"
             />
@@ -86,20 +89,21 @@ export function RuangAnda({ jawaban, denah }: { jawaban: PetaJawaban; denah: Has
         <fieldset className="mt-3">
           <legend className="label-mikro">{T.modeJudul}</legend>
           <div className="mt-2 flex flex-wrap gap-2">
-            {(["kondisi", "hack", "permanen"] as const).map((m) => (
-              <button
-                key={m}
-                type="button"
-                disabled={!tersedia.includes(m)}
-                aria-pressed={aktif === m}
-                onClick={() => setMode(m)}
-                className={`min-h-sentuh rounded-tombol border px-4 text-kecil font-semibold disabled:opacity-50 ${aktif === m ? "border-utama bg-utama text-putih" : "border-garis bg-putih text-tinta"}`}
-              >
+            {(["kondisi", "modifikasi"] as const).map((m) => (
+              <Pil key={m} aktif={aktif === m} mati={m === "modifikasi" && !adaModifikasi} onKlik={() => setMode(m)}>
                 {NAMA_MODE[m]}
-              </button>
+              </Pil>
             ))}
           </div>
-          <p className="mt-2 text-kecil text-redup">{catatanMode}</p>
+          {!adaModifikasi && <p className="mt-2 text-kecil text-redup">{T.tidakAdaModifikasi}</p>}
+          {adaModifikasi && <p className="mt-2 text-kecil text-redup">{isi(T.digambar, { daftar: daftarNama(ringkas.digambar) })}</p>}
+          {aktif === "modifikasi" && <p className="mt-1 text-kecil text-redup">{T.legenda}</p>}
+          {ringkas.bendaTakTerlihat.length > 0 && (
+            <p className="mt-1 text-kecil text-redup">{isi(T.bendaTakTerlihat, { daftar: daftarNama(ringkas.bendaTakTerlihat) })}</p>
+          )}
+          {ringkas.belumDigambar.length > 0 && (
+            <p className="mt-1 text-kecil text-redup">{isi(T.belumDigambar, { daftar: daftarNama(ringkas.belumDigambar) })}</p>
+          )}
         </fieldset>
       )}
       <p className="mt-2 text-kecil text-redup">{T.catatan}</p>

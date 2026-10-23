@@ -152,7 +152,7 @@ Sumber: tim produk / pembangun, penggambar dari **Transisi**. Tempat: `DECISIONS
 | Tidak terlihat = tidak digambar | Benda yang tidak terbaca tidak digambar. Jenis kloset yang tidak jelas tampil sebagai kotak putus-putus berlogo "?" |
 | Gambar bukan ukuran | Diberi label "Ilustrasi skematik. Bukan ukuran sebenarnya" dan tidak pernah memuat angka |
 | Proporsi gambar | Dari tabel PerMen PUPR 14/2017 dan ADA 2010 (`content/ukuran-aksesibel.json`, semua berstatus `draf`; tabel menyebut itu aturan toilet umum, bukan rumah tinggal), ditambah beberapa perkiraan Transisi yang belum bersumber |
-| Gambar "setelah" | Hanya untuk **hand shower yang digantung**, dan hanya aktif bila M-07 dijawab **Tidak**. Gambar "Penyesuaian praktis" (hand shower diturunkan) dan "Modifikasi" (dipindah ke jangkauan) dipetakan ke teks M-07 di sheet. **Pemetaan ini keputusan pembangun, perlu ditinjau peneliti.** Penyesuaian lain (grab bar, kursi mandi, pintu, ambang shower) belum punya gambar |
+| Gambar "setelah modifikasi" | Satu ilustrasi isometrik seluruh ruangan. Tiap pertanyaan yang dijawab **Tidak** menambahkan gambar penyesuaiannya sesuai teks **Modifikasi** di sheet (hijau). "Ya" dan "Belum tahu" tidak digambar. Sudah: M-02 ruang putar, M-03 area bebas kloset, M-04 kloset duduk, M-05 pegangan, M-07 hand shower di jangkauan, M-08 lantai shower rata, M-10 kursi mandi. Belum: M-01, M-06, M-09, M-11, M-12. **Pemetaan teks Modifikasi ke gambar adalah penafsiran pembangun, perlu ditinjau peneliti.** Tidak ada "Penyesuaian praktis" di gambar |
 
 ---
 
@@ -173,7 +173,7 @@ Sumber: `CLAUDE.md`.
 1. Apakah penafsiran kata kunci di bagian 2 benar (ukur, uji, simulasi, konfirmasi, kekokohan = tidak bisa dari foto)? Khususnya M-09 (`bisa`: "observasi permukaan; periksa genangan"), G-05, dan G-06.
 2. Apakah rentang jangkauan di sheet (38 sampai 122 cm, M-07 dan M-11) boleh dijadikan dasar kalimat "jangkauan" di prompt AI? Saat ini prompt memakai "setinggi pinggang ke bawah".
 3. Angka yang dicatat di `riset/koreksi-untuk-tim-riset.md` perlu dikoreksi di sheet.
-4. Apakah gambar "Hand shower diturunkan" memang cocok mewakili Penyesuaian praktis dan Modifikasi M-07?
+4. Apakah gambar tiap modifikasi (pegangan di belakang dan samping kloset, kursi lipat, area shower rata dengan saluran, ruang putar, area bebas) sudah mewakili teks Modifikasi di sheet?
 5. Perlu foto uji kamar mandi yang nyata dan beragam (baru ada tiga foto, dua di antaranya buatan AI).
 6. Mobilitas, dapur, dan kamar tidur **belum pernah diuji** dengan foto. Aturan fotonya hanya turunan dari sheet.
 

@@ -1,23 +1,5 @@
 // Gambar "Ruang Anda" di halaman hasil kamar mandi: logika murni, terpisah dari komponen.
-import { statusButir, type PetaJawaban } from "./asesmen";
-import { OBJEK_DENAH, type LetakDenah, type ObjekDenah, type VarianShower } from "./denahPindai";
-import type { ModeGambar } from "./gambarShower";
-
-/** Pertanyaan yang penyesuaiannya sudah punya gambar: perlengkapan mandi (hand shower dan jangkauan). */
-export const PERTANYAAN_SHOWER = "M-07";
-
-/** Gambar "setelah" hanya digambar bila jawabannya memang menunjukkan hambatan; "belum tahu" tidak ditebak. */
-export function perluPenyesuaianShower(jawaban: PetaJawaban): boolean {
-  return statusButir(jawaban[PERTANYAAN_SHOWER]) === "penyesuaian";
-}
-
-/**
- * Keadaan yang boleh dipilih: "kondisi" selalu; "hack" dan "permanen" hanya bila ada penyesuaian untuk digambar.
- * Gambar penyesuaian baru ada untuk hand shower yang digantung; jenis shower lain tidak punya gambar "setelah".
- */
-export function modeTersedia(jawaban: PetaJawaban, varian: VarianShower): ModeGambar[] {
-  return perluPenyesuaianShower(jawaban) && varian === "hand_shower_gantung" ? ["kondisi", "hack", "permanen"] : ["kondisi"];
-}
+import { OBJEK_DENAH, type LetakDenah, type ObjekDenah } from "./denahPindai";
 
 export type SudutPandang = "kiri" | "kanan";
 

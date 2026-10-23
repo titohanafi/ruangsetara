@@ -128,17 +128,18 @@
     "tabIsometrik": "Isometrik",
     "modeJudul": "Keadaan ruang",
     "modeKondisi": "Kondisi sekarang",
-    "modeHack": "Penyesuaian praktis",
-    "modePermanen": "Modifikasi",
     "putar": "Putar sudut pandang",
     "tampilkanSemua": "Tampilkan semua benda",
     "sembunyikanLagi": "Sembunyikan benda di dinding depan",
     "altTampakAtas": "Denah tampak atas kamar mandi dengan",
     "altIsometrik": "Gambar isometrik kamar mandi dengan pintu, kloset, wastafel, dan area mandi.",
     "catatan": "Ilustrasi skematik. Bukan ukuran sebenarnya dan bukan hasil pengukuran ruang Anda.",
-    "catatanPenyesuaian": "Gambar penyesuaian baru tersedia untuk hand shower (pertanyaan M-07). Penyesuaian lain belum digambar.",
-    "tidakAdaPenyesuaian": "Jawaban Anda untuk perlengkapan mandi tidak menunjukkan hambatan, jadi belum ada penyesuaian untuk digambar.",
     "dariFoto": "Terbaca dari foto pertama. Posisi benda perkiraan AI dan bisa meleset.",
-    "tidakAdaGambarShower": "Gambar penyesuaian baru tersedia untuk hand shower yang digantung di dinding. Jenis shower di foto Anda belum punya gambar penyesuaian."
+    "modeModifikasi": "Setelah modifikasi",
+    "digambar": "Digambar sesuai jawaban Tidak: {daftar}.",
+    "legenda": "Hijau menandai bagian yang ditambahkan atau diganti.",
+    "bendaTakTerlihat": "Tidak digambar karena bendanya tidak terbaca di foto: {daftar}.",
+    "belumDigambar": "Belum ada gambarnya (lihat teks rekomendasi di bawah): {daftar}.",
+    "tidakAdaModifikasi": "Belum ada jawaban Tidak yang bisa digambar. Teks rekomendasi tetap ada di bawah."
   }
 }

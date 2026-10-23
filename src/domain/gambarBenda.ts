@@ -15,6 +15,7 @@ import {
   poligon,
   titik,
   type Kerangka,
+  type Peran,
   type Primitif,
   type SisiDinding,
   type Titik,
@@ -70,25 +71,25 @@ function sisiTerlihat(k: Kerangka): 1 | -1 {
   return (x1 - x0) * lihat.x + (y1 - y0) * lihat.y >= 0 ? 1 : -1;
 }
 
-function klosetDuduk(k: Kerangka): Primitif[] {
+function klosetDuduk(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const { a, n } = geseranMangkuk(k);
   const sisi = sisiTerlihat(k);
   const pusatN = 31 + n;
   const setengah = DIM.kloset.lebar / 2;
   const tinggiDudukan = DIM.kloset.tinggiDudukan;
   return [
-    ...kotak(k, -setengah, setengah, 0, 18, 38, 80, "netral"),
-    ...kotak(k, -setengah - 2, setengah + 2, -1, 19.5, 80, 85, "netral"),
-    ...ekstrusi(k, footprintOval(0, 9.25, 3.5, 3.5, 12), 85, 88, "netral", true),
-    ...ekstrusi(k, footprintOval(a, pusatN, 11, 17, 24), 0, 28, "netral", true),
-    ...ekstrusi(k, footprintOval(a, pusatN, 18, 26, 32), 28, tinggiDudukan, "netral", true),
-    poligon("rongga", oval(k, a, pusatN, 12, 19, tinggiDudukan), "netral"),
+    ...kotak(k, -setengah, setengah, 0, 18, 38, 80, peran),
+    ...kotak(k, -setengah - 2, setengah + 2, -1, 19.5, 80, 85, peran),
+    ...ekstrusi(k, footprintOval(0, 9.25, 3.5, 3.5, 12), 85, 88, peran, true),
+    ...ekstrusi(k, footprintOval(a, pusatN, 11, 17, 24), 0, 28, peran, true),
+    ...ekstrusi(k, footprintOval(a, pusatN, 18, 26, 32), 28, tinggiDudukan, peran, true),
+    poligon("rongga", oval(k, a, pusatN, 12, 19, tinggiDudukan), peran),
     {
       jenis: "garis",
       dari: titik(k, sisi * setengah, 18, 38),
       ke: titik(k, sisi * setengah, 18 + PANJANG_PENYAMBUNG, 38),
       gaya: "tegas",
-      peran: "netral",
+      peran: peran,
     },
   ];
 }
@@ -212,10 +213,11 @@ function klosetTidakJelas(k: Kerangka): Primitif[] {
 }
 
 /** Gambar satu benda pada dinding yang ditentukan `kerangka` (bawaan: dinding kanan panel). */
-export function gambarBenda(jenis: JenisBenda, kerangka: Kerangka = kerangkaPanel("kanan")): Primitif[] {
+/** `peran` hanya mengubah warna kloset duduk: "aksen" menandai kloset pengganti pada gambar setelah modifikasi. */
+export function gambarBenda(jenis: JenisBenda, kerangka: Kerangka = kerangkaPanel("kanan"), peran: Peran = "netral"): Primitif[] {
   switch (jenis) {
     case "kloset_duduk":
-      return klosetDuduk(kerangka);
+      return klosetDuduk(kerangka, peran);
     case "kloset_jongkok":
       return klosetJongkok(kerangka);
     case "wastafel":

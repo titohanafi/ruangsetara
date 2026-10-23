@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { titikDinding } from "../domain/denahGeometri";
 import { DIM } from "../domain/dimensiGambar";
 import { bukaanDinding, gambarBenda, type JenisBenda } from "../domain/gambarBenda";
+import { gambarModifikasi, type BagianModifikasi, type KonteksModifikasi } from "../domain/gambarModifikasi";
 import {
   garisUbin,
   garisUbinLantai,
@@ -99,6 +100,7 @@ export function PratinjauRuangIso3D({
   sudutAktif,
   varianShower = "tidak_jelas",
   modeShower = "kondisi",
+  modifikasi = [],
   jenisKloset = "tidak_jelas",
   varianPintu = "tidak_jelas",
   tampilkanSemua = false,
@@ -110,6 +112,8 @@ export function PratinjauRuangIso3D({
   varianShower?: VarianShower;
   /** Keadaan shower yang digambar: kondisi sekarang, penyesuaian praktis (hack), atau modifikasi permanen. */
   modeShower?: ModeGambar;
+  /** Pertanyaan yang gambar modifikasinya ditampilkan (hijau). Kosong = kondisi sekarang. M-04 mengganti kloset dengan kloset duduk. */
+  modifikasi?: readonly string[];
   /** Jenis kloset dan cara pintu membuka (hasil pindai); "tidak_jelas" menggambar penanda netral. */
   jenisKloset?: JenisKloset;
   varianPintu?: VarianPintu;
@@ -209,20 +213,46 @@ export function PratinjauRuangIso3D({
       terlihat.includes("pintu") && !tersembunyi.includes("pintu") && (dindingPintu === "belakang" || dindingPintu === sudutAktif.x)
         ? [bukaanDinding({ ...kerangkaDinding(dindingPintu), sepanjang: posisi.pintu })]
         : [];
-    const susunan = terlihat
+    const susunBenda = terlihat
       .map((id) => {
         const letakId = letak(id);
         const kerangka: Kerangka = { ...kerangkaDinding(titikDinding(letakId).dinding), sepanjang: posisi[id] };
         // Benda yang disembunyikan tidak digambar sama sekali (termasuk pintu, tanpa garis bukaan).
         if (tersembunyi.includes(id)) return null;
         const daftar: Primitif[] =
-          id === "area_mandi" ? gambarShower(varianShower, modeShower, { kerangka }) : gambarBenda(jenisBenda(id), kerangka);
+          id === "area_mandi"
+            ? gambarShower(varianShower, modeShower, { kerangka })
+            : id === "kloset" && modifikasi.includes("M-04")
+              ? gambarBenda("kloset_duduk", kerangka, "aksen") // M-04: kloset diganti kloset duduk (hijau)
+              : gambarBenda(jenisBenda(id), kerangka);
         // Urutan gambar dari belakang ke depan: titik pijak benda yang lebih rendah di layar berarti lebih dekat kamera.
         const [x, y] = keRuang(kerangka, 0, 0);
         return { id, daftar, kedalaman: proyeksi(x, y, 0)[1] };
       })
-      .filter((b) => b !== null)
-      .sort((a, b) => a.kedalaman - b.kedalaman);
+      .filter((b) => b !== null);
+
+    // Gambar modifikasi: bagian di lantai digambar lebih dulu; bagian di dinding ikut diurutkan bersama benda. Yang dipasang
+    // pada benda yang disembunyikan atau tidak terlihat di foto tidak digambar.
+    const ctx: KonteksModifikasi = {
+      kerangka: kerangkaDinding,
+      proyeksi,
+      letak,
+      posisi,
+      dindingTergambar: ["belakang", sudutAktif.x],
+    };
+    const bagian: BagianModifikasi[] = modifikasi.flatMap((id) => gambarModifikasi(id, ctx));
+    const susunMod = bagian
+      .filter((b) => b.objek === null || (!tersembunyi.includes(b.objek) && !tidakTerlihat.includes(b.objek)))
+      .map((b, i) => ({
+        id: `mod-${i}`,
+        daftar: b.daftar,
+        // Lantai: isian lebih dulu, garis putus-putus di atasnya supaya tidak tertutup isian zona lain.
+        kedalaman:
+          b.pijak === "lantai"
+            ? -1e9 + (b.daftar.some((p) => p.jenis === "poligon") ? 0 : 1000) + i
+            : proyeksi(b.pijak[0], b.pijak[1], 0)[1],
+      }));
+    const susunan = [...susunBenda, ...susunMod].sort((a, b) => a.kedalaman - b.kedalaman);
 
     gambar = (
       <svg

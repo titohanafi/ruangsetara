@@ -34,8 +34,9 @@ export function DevHasilScreen() {
       kirim({ jenis: "tambah_foto", foto: { id: "dev-foto", url } });
       const daftar = PERTANYAAN[AREA].pertanyaan;
       const hasil = await analisisFoto([url], AREA);
-      // Contoh: perlengkapan mandi (M-07) dijawab Tidak supaya gambar penyesuaian shower bisa dicoba.
-      const { jawaban, terisi } = isiDariFoto(daftar, aturanFoto(AREA), hasil, { "M-07": { nilai: "tidak", sumber: "pengguna" } });
+      // Contoh: semua pertanyaan dijawab Tidak supaya semua gambar modifikasi bisa dicoba.
+      const semuaTidak = Object.fromEntries(daftar.map((p) => [p.id, { nilai: "tidak" as const, sumber: "pengguna" as const }]));
+      const { jawaban, terisi } = isiDariFoto(daftar, aturanFoto(AREA), hasil, semuaTidak);
       kirim({ jenis: "selesai_baca", jawaban, terisi, total: daftar.length, bukanRuangan: !hasil.ruang_sesuai });
       kirim({ jenis: "selesai_denah", denah: DENAH_TIRUAN });
       kirim({ jenis: "pilih_aktivitas", aktivitas: area.aktivitas[0] });

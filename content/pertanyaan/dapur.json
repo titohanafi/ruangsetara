@@ -1,0 +1,127 @@
+{
+  "fokus": "Fokus: kemampuan pengguna kursi roda untuk masuk ke dapur, mendekati meja kerja, menyiapkan makanan, mengambil peralatan, menggunakan wastafel, dan mengakses penyimpanan.",
+  "pertanyaan": [
+    {
+      "id": "K-01",
+      "elemen": "Akses masuk dan sirkulasi dapur",
+      "pertanyaan": "Apakah pengguna dapat masuk dan bergerak di dapur?",
+      "indikator": "Pintu dan jalur di antara meja, kabinet, serta peralatan tidak menghalangi kursi roda. Tersedia ruang untuk mendekati area kerja dan berputar sesuai kebutuhan.",
+      "cara_verifikasi": "Foto dapur; ukur lebar pintu, jalur, dan ruang manuver.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, prinsip jalur dan pintu aksesibel.",
+      "hack": "Singkirkan barang di jalur dapur dan beri jarak perabot paling sedikit 75 cm dari bukaan daun pintu. Pasang ramp ambang karet portable untuk ambang yang rendah.",
+      "modifikasi": "Lepas daun pintu atau lebarkan ke minimal 80 cm, dengan jalur minimal 92 cm dan ruang putar 152,5 x 152,5 cm. Ratakan ambang hingga tidak lebih dari 1,25 cm",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran II A.1 & A.3",
+        "ADA §304, §403.5.1, §404.2.3"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "K-02",
+      "elemen": "Ketinggian dan ruang bawah meja",
+      "pertanyaan": "Apakah meja kerja dapat digunakan dari posisi duduk?",
+      "indikator": "Permukaan kerja memungkinkan aktivitas memotong, menyiapkan bahan, dan meletakkan peralatan dari posisi duduk. Jika diperlukan pendekatan frontal, sediakan ruang kaki dan lutut yang memadai.",
+      "cara_verifikasi": "Ukur tinggi meja, kedalaman, dan ruang bebas bawah meja; uji aktivitas.",
+      "referensi": "Prinsip desain universal; rekomendasi desain dapur aksesibel.",
+      "hack": "Gunakan talenan atau lap tray di pangkuan, atau meja dorong setinggi kursi roda. Tambahkan alas anti-slip di bawah talenan.",
+      "modifikasi": "Turunkan sebagian meja ke 71 - 86,5 cm, lebar minimal 76 cm, dengan ruang lutut minimal 68,5 cm tinggi dan 43 cm dalam. Alternatif lebih ringan: permukaan lipat di dinding atau papan tarik di bawah meja.",
+      "referensi_rekomendasi": [
+        "ADA §902.3, §804.3.1, §306",
+        "PUPR Lampiran I A.7",
+        "https://enablingdevices.com/blog/8-cooking-hacks-for-chefs-with-disabilities/"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "K-03",
+      "elemen": "Aksesibilitas wastafel",
+      "pertanyaan": "Apakah wastafel dapat digunakan dari kursi roda?",
+      "indikator": "Pengguna dapat mendekati wastafel, menjangkau keran, dan menggunakan bak tanpa terhalang kabinet atau pipa yang membahayakan lutut.",
+      "cara_verifikasi": "Ukur tinggi bibir wastafel, ruang pendekatan, dan ruang bawah; uji jangkauan.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, prinsip fasilitas aksesibel; ADA Standards, §606 sebagai pembanding.",
+      "hack": "Bungkus pipa di bawah wastafel (kalau ada air panas) dan kosongkan kabinet bawahnya. Kalau wastafel tidak bisa diakses, cuci di baskom di meja rendah, diisi lewat selang atau pompa galon elektrik.",
+      "modifikasi": "Lepas kabinet bawah wastafel dan ganti keran dengan keran tuas atau keran semprot tarik. Kalau renovasi: bibir wastafel maksimal 86,5 cm, bak maksimal 16,5 cm dalam, ruang bebas 76 x 122 cm di depannya.",
+      "referensi_rekomendasi": [
+        "PUPR Pasal 42",
+        "ADA §606, §309.4, §305"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "K-04",
+      "elemen": "Posisi kompor dan kontrol",
+      "pertanyaan": "Apakah peralatan masak dapat dijangkau dengan aman?",
+      "indikator": "Tombol kontrol mudah dijangkau dari posisi duduk. Pengguna dapat mengoperasikan kompor tanpa harus menjangkau melewati api atau permukaan panas.",
+      "cara_verifikasi": "Foto posisi kompor; ukur jangkauan kontrol; konfirmasi kemampuan pengguna.",
+      "referensi": "Rekomendasi desain universal dan keselamatan dapur; bukan dimensi universal yang berlaku untuk semua kompor.",
+      "hack": "Gunakan kompor induksi portable dengan tombol di depan, di meja rendah. Tambahkan cermin di atas kompor atau gunakan panci bertutup kaca.",
+      "modifikasi": "Turunkan counter kompor ke 71 - 86,5 cm dan pakai kompor tanam dengan tombol depan, dalam jangkauan 38 - 12,2 cm. Lapisi bagian bawah dengan bahan tahan panas dan pindahkan tabung gas ke samping.",
+      "referensi_rekomendasi": [
+        "ADA §804.6.5, §308",
+        "PUPR Pasal 48",
+        "https://www.peacehealth.org/medical-topics/id/ug2942"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "K-05",
+      "elemen": "Kabinet dan laci",
+      "pertanyaan": "Apakah penyimpanan peralatan dapat dijangkau?",
+      "indikator": "Peralatan yang sering digunakan tersimpan pada ketinggian yang dapat dijangkau tanpa memanjat, membungkuk berlebihan, atau meminta bantuan. Laci yang dapat ditarik penuh dapat diprioritaskan.",
+      "cara_verifikasi": "Ukur tinggi rak dan laci; inventarisasi barang yang sering digunakan; uji jangkauan.",
+      "referensi": "Prinsip desain universal; ADA Standards, §308 sebagai pembanding jangkauan.",
+      "hack": "Pindahkan barang yang sering dipakai ke ketinggian 38 - 122 cm dari lantai. Gunakan keranjang tarik, rak putar, pegboard setinggi pinggang, dan penjepit (reacher) untuk barang ringan.",
+      "modifikasi": "Ganti pegangan dengan model U atau D, dan pasang laci tarik penuh atau rak tarik turun. Targetkan minimal 50% penyimpanan dalam jangkauan.",
+      "referensi_rekomendasi": [
+        "ADA §804.5, §308, §309.4",
+        "PUPR Lampiran I B.1 (Gambar 1.11–1.17)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "K-06",
+      "elemen": "Aksesibilitas kulkas",
+      "pertanyaan": "Apakah kulkas dapat digunakan secara mandiri?",
+      "indikator": "Pengguna dapat membuka pintu kulkas, menjangkau rak yang sering digunakan, dan mengambil atau menyimpan bahan makanan tanpa terhalang furnitur.",
+      "cara_verifikasi": "Foto pintu dan interior; ukur posisi rak; uji membuka pintu dan mengambil barang.",
+      "referensi": "Rekomendasi desain universal dan asesmen aktivitas pengguna.",
+      "hack": "Balik arah buka pintu kulkas supaya pintu membuka menjauhi sisi tempat pengguna parkir menyamping. Pindahkan makanan yang sering diambil ke rak tengah dan pintu, dan gunakan keranjang di dalam kulkas.",
+      "modifikasi": "Kalau ganti kulkas, pilih model freezer bawah atau side-by-side, dengan minimal setengah ruang freezer di bawah 137 cm. Sediakan ruang bebas 76 x 122 cm di depannya.",
+      "referensi_rekomendasi": [
+        "ADA §804.6.7",
+        "Studi Hyogo Welfare Techno House Kobe"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "K-07",
+      "elemen": "Ruang persiapan dan manuver",
+      "pertanyaan": "Apakah tersedia area untuk menyiapkan makanan?",
+      "indikator": "Terdapat ruang bebas untuk mendekati permukaan kerja, meletakkan bahan makanan, dan berpindah antara wastafel, area persiapan, serta kompor.",
+      "cara_verifikasi": "Ukur area bebas dan jarak antarelemen; simulasi urutan menyiapkan makanan.",
+      "referensi": "Prinsip desain universal; pendekatan aktivitas dalam asesmen aksesibilitas.",
+      "hack": "Dekatkan kulkas, wastafel, dan kompor, dan gunakan troli sebagai meja persiapan yang bisa berpindah. Kalau dapur terlalu sempit, pindahkan sebagian aktivitas ke ruang lain dengan alat masak portable.",
+      "modifikasi": "Sediakan jarak minimal 101,5 cm antar elemen berhadapan (dapur memanjang) atau 152,5 mm (dapur bentuk U), plus ruang bebas 76 x 122 cm di depan tiap alat.",
+      "referensi_rekomendasi": [
+        "ADA §804.2, §305",
+        "PUPR Lampiran I B.3"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "K-08",
+      "elemen": "Keselamatan dan kontrol risiko",
+      "pertanyaan": "Apakah dapur aman digunakan dari posisi duduk?",
+      "indikator": "Benda tajam, cairan panas, bahan pembersih, dan kabel tidak menimbulkan risiko tambahan. Kontrol penting dapat dijangkau, sedangkan barang berbahaya disimpan secara aman.",
+      "cara_verifikasi": "Observasi foto dan langsung; wawancara pengguna; identifikasi risiko aktivitas.",
+      "referensi": "Rekomendasi keselamatan berbasis pengguna; bukan satu ketentuan dimensi khusus dalam Permen PUPR.",
+      "hack": "Bawa barang panas dengan lap tray atau tempat gelas di kursi roda, dan simpan pisau serta bahan pembersih di zona jangkauan yang aman. Rapikan kabel dengan klip dan siapkan APAR kecil.",
+      "modifikasi": "Pindahkan stopkontak dan saklar ke ketinggian 38 - 122 cm, dan pasang detektor gas atau asap. Gunakan lantai yang tidak licin.",
+      "referensi_rekomendasi": [
+        "PUPR Pasal 48, Lampiran II C.4.b",
+        "ADA §308, §309"
+      ],
+      "status_validasi": "draf"
+    }
+  ]
+}

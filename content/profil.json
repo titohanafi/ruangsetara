@@ -1,0 +1,28 @@
+{
+  "pengantar": "Ceritakan sedikit tentang pengguna kursi roda agar asesmen memiliki konteks yang tepat.",
+  "catatan_caregiver": "Diisi oleh caregiver? Jawablah sesuai kondisi pengguna kursi roda.",
+  "pertanyaan": [
+    { "id": "pengisi", "pertanyaan": "Siapa yang mengisi?", "pilihan": ["Pengguna sendiri", "Caregiver"] },
+    {
+      "id": "kursi_roda",
+      "pertanyaan": "Jenis kursi roda yang digunakan di rumah?",
+      "pilihan": ["Manual", "Elektrik", "Keduanya", "Lainnya"]
+    },
+    {
+      "id": "gerak",
+      "pertanyaan": "Bagaimana pengguna menggerakkan kursi roda?",
+      "pilihan": ["Sendiri", "Kadang dibantu", "Selalu dibantu"]
+    },
+    {
+      "id": "tangan",
+      "pertanyaan": "Tangan yang digunakan untuk mengoperasikan benda?",
+      "pilihan": ["Kedua tangan", "Kanan", "Kiri", "Kedua tangan membutuhkan bantuan"]
+    },
+    { "id": "penopang", "pertanyaan": "Membutuhkan penopang tubuh saat duduk?", "pilihan": ["Tidak", "Kadang", "Selalu", "Belum tahu"] },
+    {
+      "id": "pindah",
+      "pertanyaan": "Bantuan untuk berpindah dari kursi roda?",
+      "pilihan": ["Tanpa bantuan", "Alat bantu", "Bantuan orang", "Bantuan orang dan alat", "Belum tahu"]
+    }
+  ]
+}

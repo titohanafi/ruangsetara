@@ -1,0 +1,178 @@
+{
+  "fokus": "Fokus: kemampuan pengguna kursi roda masuk ke kamar mandi, mendekati toilet dan wastafel, melakukan transfer, mandi, serta mengendalikan risiko terpeleset dan jatuh.",
+  "pertanyaan": [
+    {
+      "id": "M-01",
+      "elemen": "Akses masuk kamar mandi",
+      "pertanyaan": "Apakah pintu kamar mandi dapat dilewati kursi roda?",
+      "indikator": "Bukaan bersih memadai untuk kursi roda dan pintu tidak menghalangi pendekatan atau evakuasi. Arah bukaan dan mekanisme pintu perlu dinilai berdasarkan kondisi ruang.",
+      "cara_verifikasi": "Ukur bukaan bersih; foto arah bukaan dan ruang pendekatan.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, ketentuan pintu dan fasilitas sanitasi aksesibel; ADA §404 sebagai pembanding.",
+      "hack": "Kalau pintu membuka ke dalam dan menghalangi kursi roda, lepas daun pintunya dan ganti dengan tirai kedap air. Untuk ambang atau lantai kamar mandi yang lebih rendah, gunakan ramp ambang portable dari karet atau aluminium.",
+      "modifikasi": "Lebarkan pintu ke minimal 90 cm, membuka ke arah luar, dengan ruang bebas 152,5 cm antara pintu dan kloset. Alternatif hemat ruang adalah pintu geser yang masuk ke dalam dinding (pocket door). Ratakan perbedaan tinggi lantai sampai tidak lebih dari 1,25 cm, dan gunakan pegangan pintu tipe tuas.",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran II A.1 & Lampiran III (Toilet)",
+        "ADA §404.2.3, §603.2.3 (pintu tidak boleh membuka ke ruang bebas perlengkapan)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "M-02",
+      "elemen": "Ruang manuver",
+      "pertanyaan": "Apakah tersedia ruang untuk bermanuver di kamar mandi?",
+      "indikator": "Pengguna dapat masuk, mengubah arah, dan mendekati toilet, wastafel, atau area mandi tanpa harus menggeser banyak benda. Diameter 1.525 mm dapat menjadi acuan awal putaran, dengan penyesuaian pada konfigurasi ruang.",
+      "cara_verifikasi": "Ukur area bebas; petakan perlengkapan sanitasi dan hambatannya.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, prinsip ruang aksesibel; ADA §304 sebagai pembanding.",
+      "hack": "Keluarkan barang yang tidak perlu (ember, rak, keranjang cucian) dan gantung perlengkapan di dinding. Kalau kamar mandi sempit, siasati dengan masuk lurus lalu keluar mundur.",
+      "modifikasi": "Targetkan ruang putar 1,5 x 1,5 m untuk kursi roda manual dan 1,8 x 1,8 m untuk kursi roda listrik",
+      "referensi_rekomendasi": [
+        "ADA §304 (ruang putar 152,5 cm)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "M-03",
+      "elemen": "Ruang pendekatan toilet",
+      "pertanyaan": "Apakah toilet dapat didekati dari kursi roda?",
+      "indikator": "Tersedia ruang pada sisi atau bagian depan toilet sesuai metode transfer pengguna. Tempat sampah, kabinet, atau perlengkapan lain tidak menghalangi area transfer.",
+      "cara_verifikasi": "Ukur jarak bebas di depan dan samping toilet; konfirmasi metode transfer.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, ketentuan toilet aksesibel; ADA §604 sebagai pembanding.",
+      "hack": "Pindahkan tempat sampah, rak, atau ember dari samping dan depan kloset. Tentukan sisi transfer sesuai sisi tubuh pengguna yang lebih kuat.",
+      "modifikasi": "Sediakan ruang bebas di samping kloset untuk kursi roda parkir sejajar. Area bebas 152,5 cm lebar x 142 cm dalam di sekitar kloset, dengan kloset berjarak 40,5 - 45,5 cm dari dinding samping.",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran III (Toilet)",
+        "ADA §604.2 (posisi kloset), §604.3 (ruang bebas)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "M-04",
+      "elemen": "Ketinggian dudukan toilet",
+      "pertanyaan": "Apakah tinggi toilet mendukung transfer yang aman?",
+      "indikator": "Tinggi dudukan toilet sesuai kemampuan transfer pengguna dan perbedaan tinggi dengan kursi roda. Tidak menyebabkan pengguna harus turun atau naik secara berlebihan.",
+      "cara_verifikasi": "Ukur tinggi dudukan toilet dan kursi roda; konfirmasi pengalaman transfer.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, ketentuan toilet aksesibel; ADA §604 sebagai pembanding.",
+      "hack": "Untuk kloset duduk yang terlalu rendah, pasang dudukan penambah tinggi (raised toilet seat). Untuk kloset jongkok, gunakan kursi kloset portable (commode) yang diletakkan di atas kloset jongkok.",
+      "modifikasi": "Ganti kloset jongkok dengan kloset duduk, dengan tinggi dudukan sekitar 45–50 cm untuk pengguna kursi roda. Idealnya disamakan dengan tinggi dudukan kursi roda pengguna.",
+      "referensi_rekomendasi": [
+        "Permenkes 24/2016"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "M-05",
+      "elemen": "Grab bar / pegangan rambat",
+      "pertanyaan": "Apakah tersedia pegangan bantu yang sesuai?",
+      "indikator": "Pegangan tersedia pada lokasi yang mendukung transfer dan stabilisasi tubuh, terpasang kokoh, serta dapat digenggam. Posisi dan kapasitas beban harus mengikuti standar yang berlaku.",
+      "cara_verifikasi": "Foto pegangan; ukur posisi dan dimensi; periksa kekokohan oleh pihak kompeten.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, fasilitas sanitasi aksesibel; ADA §609 sebagai pembanding.",
+      "hack": "Gunakan bingkai pegangan toilet yang berdiri sendiri (toilet safety frame) yang dipasang mengapit kloset tanpa dibor. Jangan memakai pegangan model tempel atau vakum untuk menopang berat badan saat transfer, karena bisa lepas tiba-tiba.",
+      "modifikasi": "Pasang grab bar di dinding samping dan belakang kloset pada ketinggian 84 - 91,5 cm, dengan panjang minimal 106,5 cm (samping) dan 91,5 cm (belakang), diameter 32 - 51 cm.",
+      "referensi_rekomendasi": [
+        "ADA §604.5, §609"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "M-06",
+      "elemen": "Aksesibilitas wastafel",
+      "pertanyaan": "Apakah wastafel dapat digunakan dari posisi duduk?",
+      "indikator": "Pengguna dapat mendekatkan kursi roda, menjangkau keran, dan menggunakan wastafel. Ruang lutut dan kaki tidak terhalang kabinet atau pipa yang berbahaya.",
+      "cara_verifikasi": "Ukur tinggi wastafel dan ruang bawah; uji jangkauan keran.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, fasilitas sanitasi aksesibel; ADA §606 sebagai pembanding.",
+      "hack": "Bungkus pipa di bawah wastafel (kalau ada air panas) dan kosongkan bagian bawahnya. Kalau wastafel tidak terjangkau, siapkan baskom dan gayung kecil di atas meja atau kursi rendah.",
+      "modifikasi": "Ganti kabinet wastafel dengan wastafel gantung atau wastafel tanpa kabinet, dengan bibir maksimal 86,5 cm dan ruang lutut minimal 68,5 cm. Pasang keran tuas tunggal, dan turunkan cermin sehingga tepi bawahnya maksimal 101,5 cm dari lantai.",
+      "referensi_rekomendasi": [
+        "PUPR Pasal 42",
+        "ADA §606, §603.3 (cermin)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "M-07",
+      "elemen": "Kontrol dan perlengkapan",
+      "pertanyaan": "Apakah keran dan perlengkapan mandi mudah dioperasikan?",
+      "indikator": "Keran, shower, tombol siram, dan perlengkapan yang digunakan sehari-hari dapat dijangkau serta dioperasikan tanpa membutuhkan tenaga atau gerakan yang berlebihan.",
+      "cara_verifikasi": "Ukur ketinggian dan jangkauan; uji pengoperasian; konfirmasi pengguna.",
+      "referensi": "Prinsip desain universal; ADA §309 sebagai pembanding untuk kontrol operasional.",
+      "hack": "Gunakan shower tangan (hand shower) dengan selang panjang, dan bidet shower (semprotan kloset) yang ditaruh dalam jangkauan. Pasang penahan atau holder shower di ketinggian rendah dengan perekat.",
+      "modifikasi": "Ganti keran putar dengan keran tuas, dan pindahkan tombol siram, keran, dan holder shower ke jangkauan 38 - 122 cm. Kalau ada water heater, pasang kontrol suhu termostatik untuk mencegah luka bakar.",
+      "referensi_rekomendasi": [
+        "ADA §309 (dioperasikan satu tangan, gaya maks. 22,2 N), §604.6 (tombol siram), §608.6 (shower tangan dengan selang min. 1525 mm)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "M-08",
+      "elemen": "Akses shower atau bak mandi",
+      "pertanyaan": "Apakah area mandi dapat diakses tanpa hambatan?",
+      "indikator": "Pengguna dapat memasuki area mandi dan berpindah posisi sesuai metode yang digunakan. Ambang tinggi dan bibir bak yang menghambat perlu diidentifikasi.",
+      "cara_verifikasi": "Foto area mandi; ukur ambang dan ruang pendekatan; konfirmasi metode mandi.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, fasilitas sanitasi aksesibel; ADA §§607–608 sebagai pembanding.",
+      "hack": "Kalau kamar mandi memakai bak mandi dan gayung, pindahkan air ke ember di atas kursi atau meja setinggi jangkauan, atau gunakan hand shower dari keran. Alternatif lain adalah mandi dengan spons (sponge bath) di dekat wastafel.",
+      "modifikasi": "Buat area shower tanpa undakan, dengan bibir pembatas (ambang) maksimal 1,3 cm dan bertepi miring agar roda bisa lewat; air ditahan dengan kemiringan lantai ke arah saluran dan saluran memanjang. Ukuran area shower minimal 76 x 152,5 cm untuk shower yang bisa dimasuki kursi roda, atau 91,5 x 91,5 cm untuk shower dengan transfer ke kursi mandi. Bak mandi tembok yang tinggi bisa dibongkar dan diganti area shower.",
+      "referensi_rekomendasi": [
+        "PUPR Pasal 43 (pancuran harus aksesibel)",
+        "ADA §608.2 (ukuran shower), §608.7 (ambang)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "M-09",
+      "elemen": "Permukaan lantai dan drainase",
+      "pertanyaan": "Apakah lantai kamar mandi aman untuk kursi roda?",
+      "indikator": "Lantai tidak licin secara berlebihan, tidak rusak, dan tidak menimbulkan genangan. Kemiringan menuju drainase tidak mengganggu kestabilan kursi roda.",
+      "cara_verifikasi": "Observasi permukaan; periksa genangan; ukur kemiringan bila diperlukan.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, persyaratan jalur dan fasilitas aksesibel; standar teknis lantai dan drainase terkait.",
+      "hack": "Pasang keset atau stiker anti-slip di area basah, dan bersihkan lumut secara rutin. Gunakan wiper lantai untuk mengalirkan genangan ke saluran air setelah mandi.",
+      "modifikasi": "Ganti keramik dengan keramik bertekstur yang tidak licin. Atur kemiringan lantai yang landai ke arah saluran supaya air tidak menggenang tapi kursi roda tetap stabil.",
+      "referensi_rekomendasi": [
+        "PUPR Pasal 41 ayat (2)",
+        "ADA §302 (permukaan lantai stabil, kokoh, dan anti-slip)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "M-10",
+      "elemen": "Kursi mandi / shower seat",
+      "pertanyaan": "Apakah tersedia tempat duduk mandi yang aman?",
+      "indikator": "Jika pengguna memerlukan dudukan, tersedia tempat duduk yang stabil, sesuai metode transfer, dan tidak menghalangi jalur. Beban dan pemasangan harus sesuai spesifikasi produk.",
+      "cara_verifikasi": "Foto dudukan; periksa kekokohan; konfirmasi kenyamanan dan metode transfer.",
+      "referensi": "Prinsip desain universal dan asesmen kebutuhan individual; ADA §608 sebagai pembanding untuk shower.",
+      "hack": "Gunakan kursi mandi portable dengan kaki karet anti-slip, atau bangku transfer yang separuh di dalam dan separuh di luar area mandi. Kursi plastik biasa sebaiknya tidak dipakai untuk menopang transfer karena mudah tergelincir atau patah.",
+      "modifikasi": "Pasang kursi lipat yang menempel di dinding area shower, dengan tinggi dudukan 43 - 48,5 cm. Untuk pengguna yang lebih bergantung, pertimbangkan kursi shower-commode beroda yang bisa langsung masuk ke area shower.",
+      "referensi_rekomendasi": [
+        "ADA §610 (kursi shower), §608.4"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "M-11",
+      "elemen": "Penyimpanan perlengkapan mandi",
+      "pertanyaan": "Apakah barang mandi dapat dijangkau?",
+      "indikator": "Sabun, sampo, handuk, dan perlengkapan rutin tersedia dalam jangkauan dari posisi duduk atau posisi mandi. Penyimpanan tidak menimbulkan risiko jatuhnya barang ke pengguna.",
+      "cara_verifikasi": "Ukur ketinggian rak dan gantungan; uji jangkauan; konfirmasi pengguna.",
+      "referensi": "Prinsip desain universal; ADA §308 sebagai pembanding jangkauan.",
+      "hack": "Simpan sabun, sampo, dan handuk dalam keranjang atau rak sudut di ketinggian jangkauan dari posisi duduk. Gunakan dispenser sabun tempel dan kait handuk yang ditempel rendah.",
+      "modifikasi": "Pasang rak dan gantungan handuk pada ketinggian 38 - 122 cm dari lantai, dekat area mandi dan wastafel.",
+      "referensi_rekomendasi": [
+        "ADA §308 (jangkauan), §603.4 (perlengkapan kamar mandi)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "M-12",
+      "elemen": "Keamanan dan kemandirian",
+      "pertanyaan": "Apakah pengguna dapat menjaga privasi dan keselamatan?",
+      "indikator": "Pintu dapat digunakan tanpa menghambat bantuan darurat; lantai dan pegangan mendukung keselamatan; pengguna dapat mengakses perlengkapan darurat atau meminta pertolongan bila dibutuhkan.",
+      "cara_verifikasi": "Observasi mekanisme pintu; wawancara pengguna; tinjau skenario bantuan darurat.",
+      "referensi": "Prinsip desain universal, keselamatan hunian, dan asesmen kebutuhan individual.",
+      "hack": "Gunakan kunci pintu yang bisa dibuka dari luar saat darurat, dan selalu bawa ponsel dalam kantong tahan air atau gantung di dekat kloset. Sepakati dengan anggota rumah tanda atau waktu cek kalau pengguna terlalu lama di kamar mandi.",
+      "modifikasi": "Pasang bel atau tombol panggil darurat di dekat kloset dan area mandi, pada ketinggian yang bisa dijangkau termasuk dari lantai. Pintu yang membuka ke luar juga memudahkan bantuan darurat karena tidak terhalang jika pengguna jatuh di dekat pintu.",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran III (pintu toilet membuka ke luar) · prinsip keselamatan dan kemandirian dalam Desain Universal (PUPR Lampiran I A.2 & A.5)"
+      ],
+      "status_validasi": "draf"
+    }
+  ]
+}

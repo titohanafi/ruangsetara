@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-kertas font-sans text-isi text-tinta;
+  }
+  button,
+  a,
+  input,
+  select,
+  summary {
+    @apply outline-offset-4;
+  }
+  :focus-visible {
+    @apply outline outline-[3px] outline-utama;
+  }
+  button:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+  summary {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  .tombol {
+    @apply inline-flex min-h-sentuh items-center justify-center gap-2 rounded-tombol px-5 py-2 font-semibold transition-colors;
+  }
+  .tombol-utama {
+    @apply tombol bg-utama text-putih hover:bg-utama-gelap;
+  }
+  .tombol-tipis {
+    @apply tombol border border-garisKontrol bg-putih text-tinta hover:bg-utama-muda;
+  }
+  .kartu {
+    @apply rounded-kartu border border-garis bg-putih p-5 shadow-kartu;
+  }
+  .label-mikro {
+    @apply text-mikro font-semibold uppercase text-redup;
+  }
+}
+
+/* Cetak / simpan PDF: hanya isi hasil, tanpa kerangka dan tombol. */
+@media print {
+  .tanpa-cetak {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+  .kartu {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+}

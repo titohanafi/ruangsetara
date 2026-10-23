@@ -1,0 +1,156 @@
+{
+  "fokus": "Fokus: kemampuan pengguna kursi roda bergerak dari satu area ke area lain, melewati pintu, bermanuver, menjangkau fasilitas, dan menggunakan ruang secara mandiri.",
+  "pertanyaan": [
+    {
+      "id": "G-01",
+      "elemen": "Lebar jalur sirkulasi",
+      "pertanyaan": "Apakah jalur sirkulasi dapat dilalui kursi roda?",
+      "indikator": "Jalur bebas dari furnitur, barang, dan penghalang. Gunakan lebar bersih sekitar 915 mm sebagai acuan awal desain aksesibel; periksa juga kebutuhan berpapasan dan kondisi kursi roda pengguna.",
+      "cara_verifikasi": "Ukur lebar bersih pada titik tersempit; foto jalur dari beberapa sudut.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, ketentuan jalur pedestrian dan sirkulasi; ADA Standards, §403 sebagai pembanding.",
+      "hack": "Singkirkan barang yang menyempitkan jalur (rak sepatu, galon, kardus, motor yang diparkir di ruang depan) dan pindahkan ke sisi ruangan. Ukur titik tersempit di jalur utama, lalu prioritaskan membebaskan titik itu dulu.",
+      "modifikasi": "Sediakan jalur minimal 92 cm untuk dilewati pengguna kursi roda. Kalau dinding atau lemari tanam menyempitkan jalur, pertimbangkan membongkar atau memindahkannya.",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran II A.3 (Koridor)",
+        "ADA §403.5.1 (lebar jalur min. 915 mm)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "G-02",
+      "elemen": "Ruang manuver",
+      "pertanyaan": "Apakah pengguna dapat berputar dengan kursi roda?",
+      "indikator": "Tersedia area bebas untuk berputar tanpa menabrak furnitur. Diameter 1.525 mm dapat digunakan sebagai acuan awal untuk putaran penuh, dengan memperhatikan jenis kursi roda.",
+      "cara_verifikasi": "Ukur diameter atau dimensi area bebas; uji manuver langsung bila memungkinkan.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, prinsip ruang gerak aksesibel; ADA Standards, §304.",
+      "hack": "Geser meja dan kursi ke dinding, keluarkan perabot yang jarang dipakai, dan pakai penggeser furnitur supaya perabot mudah dipindah saat butuh ruang lebih. Kalau ruang tetap tidak cukup untuk berputar penuh, atur rute supaya pengguna bisa masuk lurus dan keluar mundur.",
+      "modifikasi": "Area kosong berdiameter sekitar 150 cm di tiap ruang utama, dan celah antar perabot di jalur utama minimal 92 cm. Ganti perabot besar dengan yang lebih ramping, lipat, atau menempel di dinding (meja lipat dinding, rak gantung). Kalau masih kurang, bongkar elemen permanen yang memakan ruang, seperti lemari tanam, partisi, atau tembok pembatas yang bukan struktur utama.",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran I B.3 (Sirkulasi)",
+        "ADA §304 (ruang putar 152,5 cm)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "G-03",
+      "elemen": "Lebar bukaan pintu",
+      "pertanyaan": "Apakah pintu dapat dilewati dengan mudah?",
+      "indikator": "Lebar bukaan bersih cukup untuk kursi roda melewati pintu tanpa menyentuh kusen. Sebagai acuan pembanding, ADA menggunakan lebar bersih minimum 815 mm untuk pintu yang memenuhi ketentuannya.",
+      "cara_verifikasi": "Ukur bukaan bersih ketika pintu terbuka; periksa pegangan dan posisi daun pintu.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, ketentuan pintu; ADA Standards, §404.",
+      "hack": "Buka daun pintu sampai penuh dan tahan dengan pengganjal pintu, karena daun pintu yang setengah terbuka mengurangi lebar bersih. Untuk pintu yang tidak perlu ditutup (misalnya dapur), lepas daun pintunya dan lepas juga kusennya kalau perlu atau ganti dengan tirai.",
+      "modifikasi": "Pasang engsel offset untuk menambah lebar bersih beberapa sentimeter tanpa membongkar kusen. Kalau dilebarkan, targetkan lebar efektif bukaan minimal 80 cm untuk pintu dalam rumah dan 90 cm untuk pintu masuk utama. Untuk ruang sempit, pertimbangkan pintu geser.",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran II A.1 (Pintu)",
+        "ADA §404.2.3 (lebar bersih min. 815 mm)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "G-04",
+      "elemen": "Ambang pintu dan perubahan level",
+      "pertanyaan": "Apakah terdapat ambang yang menghambat?",
+      "indikator": "Jalur tidak memiliki undakan yang menghambat roda. Jika terdapat perbedaan level, tersedia transisi atau ramp yang aman dan sesuai ketentuan teknis.",
+      "cara_verifikasi": "Foto ambang; ukur tinggi perbedaan level dan kemiringan transisi.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, ketentuan ramp dan jalur aksesibel.",
+      "hack": "Gunakan ramp ambang portable dari karet atau aluminium untuk ambang pintu dan undakan rendah. Untuk undakan antar ruang atau teras yang lebih tinggi, gunakan ramp portable lipat yang bisa dipindah.",
+      "modifikasi": "Ratakan ambang supaya perbedaan tinggi tidak lebih dari 1,25 cm. Untuk undakan yang lebih tinggi, buat ramp permanen dengan kelandaian maksimal 1:10 di dalam bangunan dan 1:12 di luar bangunan, lebar efektif minimal 95 cm, dan permukaan datar di awal dan akhir ramp minimal sepanjang 120 cm. Tambahkan pegangan rambat kalau ramp cukup panjang.",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran II B.2 (Ram)",
+        "ADA §303 (perubahan level), §405 (ramp)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "G-05",
+      "elemen": "Permukaan lantai",
+      "pertanyaan": "Apakah permukaan lantai aman dilalui?",
+      "indikator": "Lantai stabil, rata, tidak licin, tidak berlubang, dan tidak memiliki sambungan yang mengganggu pergerakan roda.",
+      "cara_verifikasi": "Observasi foto; periksa sambungan, kerusakan, dan kondisi permukaan langsung.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, persyaratan jalur aksesibel dan permukaan lantai.",
+      "hack": "Singkirkan karpet kecil yang bisa menghambat gerak kursi roda, atau rekatkan tepinya dengan selotip karpet kalau tetap mau dipakai. Pasang stiker atau keset anti-slip di area yang sering basah (depan kamar mandi, dapur, teras).",
+      "modifikasi": "Perbaiki keramik yang retak, lepas, atau tidak rata, dan ganti lantai licin dengan material bertekstur. Permukaan sebaiknya stabil, kuat, dan tidak licin, dengan sambungan atau gundukan tidak lebih dari 1,25 cm.",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran II A.4 (permukaan jalur)",
+        "ADA §302 (permukaan lantai, termasuk karpet dan celah maks. 13 mm)",
+        "https://www.roomsketcher.com/blog/make-your-home-wheelchair-accessible/"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "G-06",
+      "elemen": "Kontinuitas jalur",
+      "pertanyaan": "Apakah pengguna dapat berpindah antarruang tanpa hambatan?",
+      "indikator": "Jalur antara pintu masuk, ruang utama, dapur, kamar tidur, dan kamar mandi saling terhubung tanpa harus melewati area yang terlalu sempit atau tidak dapat dilalui.",
+      "cara_verifikasi": "Telusuri rute pada denah atau foto; ukur titik tersempit.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, prinsip aksesibilitas dan jalur sirkulasi.",
+      "hack": "Telusuri rute harian (pintu masuk → ruang utama → dapur → kamar tidur → kamar mandi) bersama pengguna, lalu tandai titik yang sempit atau terhalang dan bebaskan satu per satu. Kalau satu ruang tidak bisa diakses (misalnya kamar di lantai atas), pindahkan fungsinya ke lantai bawah.",
+      "modifikasi": "Perbaiki titik-titik yang paling menghambat di sepanjang rute harian, karena satu titik sempit saja sudah cukup membuat seluruh rute tidak bisa dilalui (lorong / celah sempit, pintu sempit, undakan / ambang)",
+      "referensi_rekomendasi": [
+        "PUPR Pasal 14 (konektivitas dan kontinuitas jalur)",
+        "ADA §402 (rute aksesibel)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "G-07",
+      "elemen": "Penempatan furnitur",
+      "pertanyaan": "Apakah furnitur menghalangi pergerakan?",
+      "indikator": "Meja, kursi, lemari, rak, dan dekorasi tidak menghalangi jalur utama atau ruang putar kursi roda.",
+      "cara_verifikasi": "Observasi foto; ukur jarak bebas di antara furnitur.",
+      "referensi": "Prinsip desain universal; rekomendasi tata ruang berbasis aktivitas pengguna.",
+      "hack": "Rapatkan furnitur ke dinding dan kurangi furnitur yang jarang dipakai. Jaga jarak perabot paling sedikit 75 cm dari bukaan daun pintu, dan pasang penggeser furnitur (furniture slider) di kaki perabot supaya mudah digeser saat perlu ruang lebih.",
+      "modifikasi": "Ganti furnitur besar dengan furnitur yang lebih ramping, lipat, atau menempel di dinding (meja lipat dinding, rak gantung).",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran II A.1 (jarak perabot dari pintu)",
+        "prinsip Desain Universal (PUPR Lampiran I)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "G-08",
+      "elemen": "Jangkauan kontrol dan penyimpanan",
+      "pertanyaan": "Apakah fasilitas penting dapat dijangkau?",
+      "indikator": "Sakelar, gagang pintu, kontrol perangkat, dan penyimpanan yang sering digunakan dapat dijangkau dari posisi duduk tanpa membungkuk atau meregang berlebihan.",
+      "cara_verifikasi": "Ukur ketinggian dan jarak jangkauan; konfirmasi kepada pengguna.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, prinsip fasilitas aksesibel; ADA Standards, §308 sebagai pembanding.",
+      "hack": "Gunakan smart plug, lampu dengan remote, atau saklar nirkabel tempel untuk saklar yang terlalu tinggi. Simpan barang yang sering dipakai di ketinggian 38 - 122 cm, dan gunakan penjepit (reacher) untuk barang ringan di tempat tinggi.",
+      "modifikasi": "Pindahkan saklar, stopkontak, dan kontrol lain ke ketinggian yang terjangkau, sesuai prinsip PUPR bahwa tombol/stop kontak dan pencahayaan diletakkan pada ketinggian yang terjangkau oleh setiap pengguna.",
+      "referensi_rekomendasi": [
+        "PUPR Pasal 48",
+        "ADA §308 (jangkauan), §309 (kontrol)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "G-09",
+      "elemen": "Ruang pendekatan pintu",
+      "pertanyaan": "Apakah pengguna dapat membuka dan menutup pintu secara mandiri?",
+      "indikator": "Tersedia ruang untuk mendekati pintu, meraih gagang, membuka daun pintu, dan melewatinya tanpa terjepit antara pintu dan kursi roda.",
+      "cara_verifikasi": "Foto posisi pendekatan; ukur ruang bebas; simulasi pembukaan pintu.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, ketentuan pintu dan sirkulasi aksesibel.",
+      "hack": "Pasang tali atau pegangan tarik di sisi dalam daun pintu supaya pengguna bisa menutup pintu dari kursi roda. Untuk gagang bulat, pasang adaptor tuas (lever converter) yang dijepit di atas gagang tanpa membongkar kunci. Lepas penutup pintu otomatis (door closer) kalau pintu terlalu berat.",
+      "modifikasi": "Ganti gagang dengan tipe tuas atau dorong/tarik yang bisa dioperasikan dengan satu kepalan tangan tertutup, dipasang paling tinggi 110 cm, dan bukan tuas putar. Sediakan ruang bebas paling sedikit 152,5 x 152,5 cm di depan pintu, dan pastikan pintu ringan (beban tekan/tarik daun pintu paling berat 5 kg).",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran II A.1",
+        "ADA §404.2.4 (ruang pendekatan pintu), §404.2.7 (gagang 865–1220 mm), §404.2.9 (gaya buka pintu dalam maks. 22,2 N)",
+        "https://www.sralab.org/lifecenter/resources/considerations-adapting-home-wheelchair-accessibility"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "G-10",
+      "elemen": "Kemandirian dan keselamatan",
+      "pertanyaan": "Apakah pengguna merasa aman dan dapat bergerak mandiri?",
+      "indikator": "Tidak ada hambatan yang memaksa pengguna meminta bantuan untuk aktivitas mobilitas rutin. Risiko terguling, tergelincir, atau terjepit diminimalkan.",
+      "cara_verifikasi": "Wawancara pengguna; observasi aktivitas; catat bantuan yang masih diperlukan.",
+      "referensi": "Prinsip desain universal dan asesmen kebutuhan individual; bukan satu persyaratan dimensi tunggal.",
+      "hack": "Pasang lampu sensor gerak di jalur malam hari, rapikan kabel dengan klip dinding, dan pastikan ponsel selalu terjangkau. Sepakati rencana darurat dengan anggota rumah, termasuk siapa yang dihubungi dan bagaimana keluar rumah kalau terjadi kebakaran atau gempa.",
+      "modifikasi": "Pasang pegangan rambat di titik-titik rawan (ramp, undakan, area transfer), dan pastikan minimal ada satu jalur keluar rumah tanpa undakan. Tambahkan detektor asap atau gas.",
+      "referensi_rekomendasi": [
+        "Prinsip keselamatan dan kemandirian dalam Desain Universal (PUPR Lampiran I A.2 & A.5) · PUPR Lampiran II C.4.b (sistem peringatan bahaya)"
+      ],
+      "status_validasi": "draf"
+    }
+  ]
+}

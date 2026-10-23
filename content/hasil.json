@@ -1,0 +1,60 @@
+{
+  "kategori": [
+    {
+      "nilai": "A",
+      "status": "Dapat diakses berdasarkan informasi",
+      "makna": "Bukti yang tersedia menunjukkan kebutuhan akses kemungkinan telah terpenuhi.",
+      "tindak_lanjut": "Pertahankan kondisi dan verifikasi bila diperlukan."
+    },
+    {
+      "nilai": "B",
+      "status": "Perlu perhatian atau modifikasi",
+      "makna": "Ada keterbatasan yang mungkin mengganggu aktivitas atau kenyamanan.",
+      "tindak_lanjut": "Identifikasi modifikasi yang dibutuhkan."
+    },
+    {
+      "nilai": "C",
+      "status": "Hambatan signifikan teridentifikasi",
+      "makna": "Terdapat hambatan yang berpotensi menghalangi atau membahayakan aktivitas pengguna.",
+      "tindak_lanjut": "Prioritaskan rekomendasi perbaikan."
+    },
+    {
+      "nilai": "D",
+      "status": "Belum dapat dipastikan",
+      "makna": "Foto, ukuran, atau informasi pengguna belum cukup untuk menentukan kondisi.",
+      "tindak_lanjut": "Minta pengukuran, foto tambahan, atau konfirmasi pengguna."
+    }
+  ],
+  "aturan_penting": "Aturan penting: foto saja tidak selalu cukup untuk menentukan kepatuhan dimensi, kemampuan transfer, kekokohan pegangan, atau kenyamanan pengguna. Jika bukti tidak memadai, gunakan status Belum dapat dipastikan, bukan menyimpulkan bahwa ruang tersebut tidak aksesibel.",
+  "acuan": [
+    {
+      "acuan": "Permen PUPR No. 14/PRT/M/2017 tentang Persyaratan Kemudahan Bangunan Gedung",
+      "penggunaan": "Rujukan utama untuk memeriksa aksesibilitas jalur, pintu, ramp, sirkulasi, serta fasilitas bangunan yang relevan. Ketentuan spesifik perlu dicocokkan dengan pasal dan lampiran yang berlaku."
+    },
+    {
+      "acuan": "ADA Standards for Accessible Design, §304 dan §403",
+      "penggunaan": "Pembanding untuk ruang putar dan jalur aksesibel. Bukan peraturan yang otomatis berlaku di Indonesia."
+    },
+    {
+      "acuan": "ADA Standards, §404",
+      "penggunaan": "Pembanding teknis untuk pintu, lebar bukaan, dan ruang pendekatan."
+    },
+    {
+      "acuan": "ADA Standards, §308–309",
+      "penggunaan": "Pembanding untuk jangkauan dan pengoperasian kontrol."
+    },
+    {
+      "acuan": "ADA Standards, §§603–610",
+      "penggunaan": "Pembanding teknis untuk toilet, wastafel, shower, bathtub, dan pegangan bantu."
+    },
+    {
+      "acuan": "Prinsip desain universal",
+      "penggunaan": "Acuan untuk memastikan fasilitas dapat digunakan oleh beragam kemampuan fisik dan kebutuhan pengguna."
+    },
+    {
+      "acuan": "Asesmen aktivitas sehari-hari dan konfirmasi pengguna",
+      "penggunaan": "Acuan untuk kriteria yang sangat bergantung pada kemampuan transfer, jangkauan, kebiasaan, dan kebutuhan bantuan individu."
+    }
+  ],
+  "catatan_acuan": "Catatan: sebelum tabel dipakai sebagai instrumen audit kepatuhan hukum, nomor pasal, dimensi minimum, pengecualian, dan ketentuan teknis setiap indikator harus diverifikasi terhadap dokumen resmi. Dimensi ADA yang dicantumkan di atas adalah pembanding desain, bukan klaim bahwa angka tersebut merupakan ketentuan minimum Indonesia."
+}

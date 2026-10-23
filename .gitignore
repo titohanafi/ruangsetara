@@ -1,0 +1,8 @@
+node_modules
+dist
+*.local
+.DS_Store
+.vercel
+
+# Data mentah tim riset, tetap lokal
+riset/*.xlsx

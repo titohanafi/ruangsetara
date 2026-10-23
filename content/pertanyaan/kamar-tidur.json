@@ -1,0 +1,156 @@
+{
+  "fokus": "Fokus: kemampuan pengguna kursi roda masuk ke kamar tidur, mendekati dan berpindah ke tempat tidur, menggunakan lemari, serta melakukan aktivitas berpakaian dan beristirahat.",
+  "pertanyaan": [
+    {
+      "id": "B-01",
+      "elemen": "Akses masuk kamar",
+      "pertanyaan": "Apakah kamar tidur dapat dimasuki kursi roda?",
+      "indikator": "Bukaan pintu dan jalur menuju tempat tidur tidak terhalang furnitur. Lebar bersih pintu diperiksa terhadap kebutuhan kursi roda; 815 mm merupakan acuan pembanding ADA, bukan otomatis ketentuan Indonesia.",
+      "cara_verifikasi": "Foto akses masuk; ukur bukaan pintu dan jalur.",
+      "referensi": "Permen PUPR No. 14/PRT/M/2017, ketentuan pintu dan jalur aksesibel; ADA §404 sebagai pembanding.",
+      "hack": "Pindahkan perabot yang menghalangi pintu dan jalur menuju tempat tidur, dengan jarak perabot paling sedikit 75 cm dari bukaan daun pintu. Singkirkan keset atau karpet di depan pintu, dan pasang ramp ambang karet kalau ada ambang rendah.",
+      "modifikasi": "Lepas daun pintu dan ganti dengan tirai, pasang engsel offset, atau lebarkan pintu ke minimal 80 cm. Ganti pegangan pintu dengan tipe tuas yang bisa dioperasikan dengan satu kepalan tangan, dipasang paling tinggi 110 cm.",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran II A.1",
+        "ADA §404.2.3 (lebar bersih pintu min. 815 mm)"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "B-02",
+      "elemen": "Ruang putar dan sirkulasi",
+      "pertanyaan": "Apakah tersedia ruang untuk bermanuver?",
+      "indikator": "Terdapat area bebas untuk berputar dan mengubah arah di dalam kamar. Area putar awal dapat mengacu pada diameter 1.525 mm, kemudian disesuaikan dengan kondisi ruang dan kursi roda.",
+      "cara_verifikasi": "Ukur area bebas; tandai furnitur yang menghalangi; uji manuver.",
+      "referensi": "Prinsip jalur aksesibel; ADA §304 sebagai pembanding.",
+      "hack": "Kurangi atau pindahkan perabot supaya ada area kosong untuk berputar, dan hindari karpet kecil di dekat tempat tidur agar kursi roda bisa bergerak lancar. Kalau kamar sempit (umum di kost), dorong tempat tidur ke satu sisi dan pilih perabot multifungsi.",
+      "modifikasi": "Sediakan satu area kosong berdiameter sekitar 150 cm di dalam kamar untuk berputar, dan sisakan jarak minimal 92 cm di antara perabot di jalur gerak (misalnya dari pintu ke tempat tidur dan ke lemari). Di depan pintu, sisakan ruang bebas 152,5 x 152,5 cm dan jangan letakkan perabot di area itu.",
+      "referensi_rekomendasi": [
+        "PUPR Lampiran II A.3",
+        "ADA §304, §403.5.1",
+        "https://www.roomsketcher.com/blog/make-your-home-wheelchair-accessible/"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "B-03",
+      "elemen": "Ruang pendekatan tempat tidur",
+      "pertanyaan": "Apakah pengguna dapat mendekati tempat tidur?",
+      "indikator": "Tersedia ruang di sisi tempat tidur yang dibutuhkan untuk mendekatkan kursi roda, berpindah ke tempat tidur, dan kembali ke kursi roda. Kebutuhan ruang ditentukan berdasarkan metode transfer pengguna.",
+      "cara_verifikasi": "Ukur jarak bebas di sisi tempat tidur; konfirmasi cara transfer; lakukan simulasi jika aman.",
+      "referensi": "Rekomendasi desain universal dan asesmen kebutuhan individual.",
+      "hack": "Tarik tempat tidur menjauh dari dinding agar ada ruang kosong di sisi tempat transfer dilakukan. Tentukan sisi transfer sesuai sisi tubuh pengguna yang lebih kuat.",
+      "modifikasi": "Sediakan ruang bebas sekitar 91 cm di sisi tempat tidur untuk transfer dari kursi roda. Kalau transfer dibantu orang lain atau alat angkat, sediakan ruang di kedua sisi.",
+      "referensi_rekomendasi": [
+        "ADA §806.2.3",
+        "SRA Lab: https://www.sralab.org/lifecenter/resources/adapting-home-wheelchair-accessibility"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "B-04",
+      "elemen": "Ketinggian tempat tidur",
+      "pertanyaan": "Apakah tinggi tempat tidur sesuai kebutuhan transfer?",
+      "indikator": "Permukaan tempat tidur memungkinkan transfer yang aman sesuai kemampuan pengguna. Tidak ada satu tinggi yang ideal untuk semua orang; bandingkan tinggi dudukan kursi roda dengan permukaan kasur saat digunakan.",
+      "cara_verifikasi": "Ukur tinggi dudukan kursi roda dan kasur; konfirmasi kemudahan transfer.",
+      "referensi": "Rekomendasi desain berbasis pengguna; bukan angka universal yang ditetapkan Permen PUPR.",
+      "hack": "Samakan tinggi kasur dengan tinggi dudukan kursi roda, karena tempat tidur yang terlalu rendah atau tinggi mengubah transfer menjadi gerakan mengangkat atau menjatuhkan badan. Kalau terlalu rendah, pasang riser di bawah kaki tempat tidur; kalau terlalu tinggi, ganti dengan kasur yang lebih tipis. Kasur yang tergeletak di lantai (umum di Indonesia) sebaiknya dinaikkan ke dipan atau ranjang.",
+      "modifikasi": "Gunakan ranjang dengan tinggi sekitar 43 - 58 cm sebagai pedoman untuk pengguna kursi roda, dengan kasur yang padat. Untuk kebutuhan perawatan, pertimbangkan ranjang yang tingginya bisa diatur.",
+      "referensi_rekomendasi": [
+        "Active Mobility: https://www.activemobility.com.au/blog/accessible-bedroom",
+        "https://www.studiomatrx.org/students/universal-and-accessible-design/bedrooms-and-living-spaces"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "B-05",
+      "elemen": "Ruang transfer",
+      "pertanyaan": "Apakah pengguna dapat berpindah antara kursi roda dan tempat tidur?",
+      "indikator": "Ruang transfer tidak terhalang nakas, kaki tempat tidur, atau furnitur. Jika menggunakan papan transfer atau bantuan orang lain, ruang untuk metode tersebut tersedia.",
+      "cara_verifikasi": "Observasi posisi furnitur; ukur area transfer; konfirmasi metode transfer.",
+      "referensi": "Prinsip desain universal dan asesmen kebutuhan individual.",
+      "hack": "Singkirkan nakas atau barang yang menghalangi ruang transfer, dan pindahkan nakas ke kepala tempat tidur. Gunakan papan transfer (transfer board) kalau diperlukan, dan pastikan kursi roda bisa dikunci di posisi sejajar tempat tidur.",
+      "modifikasi": "Pasang pegangan (grab bar) atau rel di samping tempat tidur. Alternatif tanpa bor adalah tiang dari lantai ke langit-langit yang dipasang dengan sistem tekanan seperti tiang gorden kamar mandi.",
+      "referensi_rekomendasi": [
+        "Homezada: https://zen.homezada.com/2025/02/26/15-ways-to-adapt-bedroom-spaces-for-accessibility-and-safety/",
+        "Bob Vila: https://www.bobvila.com/slideshow/easy-ways-to-make-your-home-more-disability-friendly-580317"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "B-06",
+      "elemen": "Aksesibilitas lemari",
+      "pertanyaan": "Apakah lemari pakaian dapat digunakan dari posisi duduk?",
+      "indikator": "Pintu lemari, laci, dan pakaian yang sering digunakan dapat dijangkau tanpa harus berdiri atau membungkuk berlebihan.",
+      "cara_verifikasi": "Ukur ketinggian rak dan laci; uji jangkauan; periksa ruang membuka pintu lemari.",
+      "referensi": "Prinsip desain universal; ADA §308 sebagai pembanding jangkauan.",
+      "hack": "Pindahkan pakaian yang sering dipakai ke rak tengah dan bawah, dan gunakan gantungan di balik pintu, rak sepatu gantung, dan kait pada ketinggian yang terjangkau. Gunakan penjepit (reacher) untuk barang ringan di rak atas.",
+      "modifikasi": "Turunkan gantungan baju, karena gantungan standar setinggi sekitar 150 cm hampir tidak mungkin dijangkau, dan cukup diturunkan ke 90 - 120 cm. Alternatif lain: sistem gantungan tarik turun, atau lemari tanpa pintu kalau pintu ayun menghalangi.",
+      "referensi_rekomendasi": [
+        "ADA §308 (jangkauan 38 - 122 cm), §811 (penyimpanan dalam jangkauan)",
+        "Homezada: https://zen.homezada.com/2025/02/26/15-ways-to-adapt-bedroom-spaces-for-accessibility-and-safety/",
+        "Bob Vila: https://www.bobvila.com/slideshow/easy-ways-to-make-your-home-more-disability-friendly-580317",
+        "https://www.roomsketcher.com/blog/make-your-home-wheelchair-accessible/"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "B-07",
+      "elemen": "Jangkauan barang pribadi",
+      "pertanyaan": "Apakah meja samping tempat tidur dan barang pribadi dapat dijangkau?",
+      "indikator": "Ponsel, lampu, obat pribadi, air minum, dan barang rutin dapat dijangkau dari tempat tidur atau kursi roda tanpa berpindah posisi secara berisiko.",
+      "cara_verifikasi": "Foto area samping tempat tidur; ukur jangkauan; konfirmasi kebutuhan pengguna.",
+      "referensi": "Rekomendasi desain universal dan asesmen aktivitas sehari-hari.",
+      "hack": "Letakkan ponsel, lampu, obat, dan air minum di meja samping tempat tidur dengan tinggi kira-kira sama dengan kasur, di sisi yang mudah dijangkau. Gunakan pengatur kabel pengisi daya agar tidak jatuh, dan wadah atau organizer yang menempel di sisi tempat tidur.",
+      "modifikasi": "Pasang rak dinding kecil di samping tempat tidur pada ketinggian jangkauan dari kasur dan kursi roda.",
+      "referensi_rekomendasi": [
+        "ADA §308"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "B-08",
+      "elemen": "Kontrol listrik",
+      "pertanyaan": "Apakah sakelar dan stopkontak dapat digunakan?",
+      "indikator": "Sakelar lampu dan kontrol yang sering digunakan mudah dijangkau dari posisi duduk maupun dari tempat tidur jika diperlukan. Kabel tidak melintang di jalur kursi roda.",
+      "cara_verifikasi": "Ukur tinggi dan posisi kontrol; foto jalur kabel; uji penggunaan.",
+      "referensi": "Prinsip aksesibilitas dan desain universal; ketentuan teknis instalasi listrik perlu diperiksa terpisah.",
+      "hack": "Gunakan lampu dengan remote, smart plug, atau lampu sentuh di nakas, dan stopkontak sambungan yang ditaruh dalam jangkauan. Rapikan kabel dengan klip dinding supaya tidak melintang di jalur kursi roda.",
+      "modifikasi": "Pindahkan saklar dan stopkontak ke ketinggian yang terjangkau. Tambahkan saklar kedua di samping tempat tidur supaya tidak perlu turun untuk mematikan lampu.",
+      "referensi_rekomendasi": [
+        "PUPR Pasal 48",
+        "ADA §308, §309"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "B-09",
+      "elemen": "Ruang aktivitas pribadi",
+      "pertanyaan": "Apakah tersedia ruang untuk berpakaian dan merawat diri?",
+      "indikator": "Pengguna dapat mengambil pakaian, berpakaian, dan melakukan perawatan diri dengan ruang gerak yang sesuai. Peralatan yang dibutuhkan tersedia dalam jangkauan.",
+      "cara_verifikasi": "Simulasikan urutan aktivitas; ukur area yang digunakan; wawancara pengguna.",
+      "referensi": "Asesmen aktivitas sehari-hari dan rekomendasi desain universal.",
+      "hack": "Siapkan area berpakaian di dekat lemari dengan ruang kosong yang cukup, dan letakkan kursi atau bangku yang kokoh di dekat lemari untuk memudahkan berpakaian. Simpan perlengkapan perawatan diri dalam satu keranjang atau troli yang mudah dijangkau.",
+      "modifikasi": "Pasang cermin yang dimulai dari ketinggian rendah, atau cermin penuh, supaya bisa dipakai dari posisi duduk.",
+      "referensi_rekomendasi": [
+        "ADA §603.3",
+        "Homezada: https://zen.homezada.com/2025/02/26/15-ways-to-adapt-bedroom-spaces-for-accessibility-and-safety/"
+      ],
+      "status_validasi": "draf"
+    },
+    {
+      "id": "B-10",
+      "elemen": "Akses malam hari",
+      "pertanyaan": "Apakah jalur dari tempat tidur menuju pintu dan kamar mandi aman?",
+      "indikator": "Jalur bebas dari barang yang dapat tersandung atau menghalangi roda. Pencahayaan memadai dan barang yang dibutuhkan pada malam hari dapat dijangkau.",
+      "cara_verifikasi": "Foto jalur; observasi pencahayaan; konfirmasi rutinitas malam hari.",
+      "referensi": "Prinsip desain universal dan keselamatan lingkungan hunian.",
+      "hack": "Pasang lampu malam dengan sensor gerak yang menerangi jalur ke kamar mandi. Pastikan jalur dari tempat tidur ke pintu bebas dari barang, dan simpan ponsel atau senter di nakas.",
+      "modifikasi": "Pasang pencahayaan permanen di jalur dari kamar tidur ke kamar mandi dengan saklar yang bisa dijangkau dari tempat tidur. Pertimbangkan juga kursi toilet portable di samping tempat tidur untuk kebutuhan buang air malam hari.",
+      "referensi_rekomendasi": [
+        "Fifty Plus Advocate: https://www.fiftyplusadvocate.com/2013/03/27/stay-in-your-home-forever-your-bedroom/"
+      ],
+      "status_validasi": "draf"
+    }
+  ]
+}

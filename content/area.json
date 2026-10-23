@@ -1,0 +1,36 @@
+{
+  "area": [
+    {
+      "id": "mobilitas",
+      "nama": "Mobilitas di rumah",
+      "ikon": "↔",
+      "deskripsi": "Jalur, pintu, dan pergerakan antarruang.",
+      "aktivitas": ["Berpindah antarruang", "Membuka dan menutup pintu", "Menjangkau barang"],
+      "bisa_dipindai": false
+    },
+    {
+      "id": "dapur",
+      "nama": "Dapur",
+      "ikon": "♧",
+      "deskripsi": "Menyiapkan makanan dan menggunakan dapur.",
+      "aktivitas": ["Menyiapkan makanan", "Memasak", "Mencuci peralatan", "Mengambil bahan makanan"],
+      "bisa_dipindai": false
+    },
+    {
+      "id": "kamar-tidur",
+      "nama": "Kamar tidur",
+      "ikon": "☾",
+      "deskripsi": "Beristirahat, berpindah, dan merawat diri.",
+      "aktivitas": ["Berpindah ke tempat tidur", "Berpakaian", "Mengambil barang pribadi", "Bergerak pada malam hari"],
+      "bisa_dipindai": false
+    },
+    {
+      "id": "kamar-mandi",
+      "nama": "Kamar mandi",
+      "ikon": "≈",
+      "deskripsi": "Mandi, menggunakan toilet, dan kebersihan diri.",
+      "aktivitas": ["Menggunakan toilet", "Mandi", "Menggunakan wastafel", "Mengambil perlengkapan mandi"],
+      "bisa_dipindai": true
+    }
+  ]
+}

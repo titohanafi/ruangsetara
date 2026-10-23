@@ -80,11 +80,21 @@ export function PertanyaanScreen() {
           </div>
         )}
 
-        {j?.sumber !== "foto" && state.catatanFoto[p.id] && (
+        {j?.sumber !== "foto" && state.catatanFoto[p.id] && !j && (
+          // AI tidak bisa memastikan: tampil sebagai "Jawaban AI: Belum tahu" dengan langkah periksa sendiri (dari Cara Verifikasi di sheet).
+          // Tombol lanjut tetap nonaktif sampai pengguna memilih jawabannya sendiri.
+          <div className="mt-4 rounded-kartu border border-garis bg-putih p-3 text-kecil" role="status">
+            <p className="font-semibold text-info">✦ {T.aiBelumTahu}</p>
+            <p className="mt-1 text-info">{state.catatanFoto[p.id]}</p>
+            <p className="mt-3 font-semibold">{T.periksaSendiri}</p>
+            <p className="mt-1 text-redup">{p.cara_verifikasi}</p>
+            <p className="mt-3 text-redup">{T.setelahPeriksa}</p>
+          </div>
+        )}
+        {j?.sumber !== "foto" && state.catatanFoto[p.id] && j && (
           <div className="mt-4 rounded-kartu border border-garis bg-putih p-3 text-kecil text-info" role="status">
             <p className="font-semibold">✦ {T.catatanFoto}</p>
             <p className="mt-1">{state.catatanFoto[p.id]}</p>
-            <p className="mt-1 text-redup">{T.catatanFotoBatas}</p>
           </div>
         )}
 

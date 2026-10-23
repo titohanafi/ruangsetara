@@ -5,6 +5,7 @@ Aturan (ikut sheet, bukan tebakan):
 - ada ukur / uji / simulasi / konfirmasi / kekokohan / genangan / langsung -> sebagian  (hanya "Tidak" yang boleh terisi dari foto)
 - selain itu (observasi atau foto saja)           -> bisa      (Ya dan Tidak boleh terisi)
 Klausa yang berisi "bila diperlukan" atau "bila memungkinkan" dianggap opsional dan tidak dihitung.
+Pengecualian per pertanyaan ada di PENGECUALIAN (dengan alasan tertulis).
 Jalankan setelah scripts/impor_xlsx.py: python3 scripts/aturan_foto.py  (tambah --cek untuk hanya membandingkan)
 """
 import json
@@ -25,6 +26,17 @@ TAK_BISA_DARI_FOTO = re.compile(r"\b(ukur|uji|simulasi|simulasikan|konfirmasi|ke
 OPSIONAL = re.compile(r"bila (diperlukan|memungkinkan)", re.I)
 
 
+# Pengecualian tertulis atas keputusan pemilik: pertanyaan yang hambatan utamanya kelihatan di foto dan sheet menyebut "foto"
+# pada Cara Verifikasi-nya. Tiap pengecualian wajib punya alasan, ikut tertulis di pindai.json, dan perlu ditinjau peneliti.
+PENGECUALIAN = {
+    ("kamar-mandi", "M-08"): (
+        "bisa",
+        "Cara Verifikasi di sheet diawali 'Foto area mandi', dan hambatan utamanya (ambang, bibir bak) kelihatan di foto. "
+        "Foto tidak membuktikan ambang kecil, ruang pendekatan, atau metode mandi, jadi jawabannya tetap bertanda 'Terisi dari foto' dan bisa diubah.",
+    ),
+}
+
+
 def aturan(cara) -> str:
     klausa = [k for k in re.split(r"[;\n]", cara or "") if k.strip() and not OPSIONAL.search(k)]
     teks = "; ".join(klausa)
@@ -39,7 +51,8 @@ def turunkan() -> dict:
     hasil: dict = {"catatan": CATATAN}
     for a in AREA:
         d = json.loads((ROOT / "content" / "pertanyaan" / f"{a}.json").read_text(encoding="utf-8"))
-        hasil[a] = {p["id"]: aturan(p["cara_verifikasi"]) for p in d["pertanyaan"]}
+        hasil[a] = {p["id"]: PENGECUALIAN.get((a, p["id"]), (aturan(p["cara_verifikasi"]),))[0] for p in d["pertanyaan"]}
+    hasil["pengecualian"] = {f"{a}/{i}": alasan for (a, i), (_, alasan) in PENGECUALIAN.items()}
     return hasil
 
 

@@ -165,6 +165,9 @@ export function FotoScreen() {
               <>
                 <p className="mt-2 font-semibold">{isi(T.hasilTerisi, { n: state.baca.terisi, total: state.baca.total })}</p>
                 <p className="mt-1 text-redup">{isi(T.hasilSisa, { n: state.baca.total - state.baca.terisi })}</p>
+                {Object.keys(state.catatanFoto).length > 0 && (
+                  <p className="mt-1 text-redup">{isi(T.hasilBelumTahu, { n: Object.keys(state.catatanFoto).length })}</p>
+                )}
                 <p className="mt-2 text-kecil text-redup">{UI.tanya.dariFotoCatatan}</p>
               </>
             )}

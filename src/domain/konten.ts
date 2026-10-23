@@ -31,8 +31,9 @@ const PINDAI = SkemaPindaiKonten.parse(pindaiJson);
 
 /** Aturan foto per pertanyaan untuk satu area; kosong bila area itu tidak dibaca AI. */
 export function aturanFoto(areaId: string): Record<string, AturanFoto> {
+  if (areaId === "catatan" || areaId === "pengecualian") return {};
   const b = PINDAI[areaId];
-  return b && typeof b === "object" ? b : {};
+  return b && typeof b === "object" ? (b as Record<string, AturanFoto>) : {};
 }
 
 export function cariArea(id: string | null | undefined): Area | undefined {

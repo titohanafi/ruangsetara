@@ -183,11 +183,14 @@ var pindai_default = {
     "M-05": "sebagian",
     "M-06": "sebagian",
     "M-07": "sebagian",
-    "M-08": "sebagian",
+    "M-08": "bisa",
     "M-09": "sebagian",
     "M-10": "sebagian",
     "M-11": "sebagian",
     "M-12": "tidak"
+  },
+  pengecualian: {
+    "kamar-mandi/M-08": "Cara Verifikasi di sheet diawali 'Foto area mandi', dan hambatan utamanya (ambang, bibir bak) kelihatan di foto. Foto tidak membuktikan ambang kecil, ruang pendekatan, atau metode mandi, jadi jawabannya tetap bertanda 'Terisi dari foto' dan bisa diubah."
   }
 };
 
@@ -20576,7 +20579,7 @@ var SkemaHasilKonten = external_exports.object({
   catatan_acuan: external_exports.string().nullable()
 });
 var ATURAN_FOTO = ["bisa", "sebagian", "tidak"];
-var SkemaPindaiKonten = external_exports.object({ catatan: external_exports.string() }).catchall(external_exports.union([external_exports.string(), external_exports.record(external_exports.string(), external_exports.enum(ATURAN_FOTO))]));
+var SkemaPindaiKonten = external_exports.object({ catatan: external_exports.string(), pengecualian: external_exports.record(external_exports.string(), external_exports.string()).optional() }).catchall(external_exports.record(external_exports.string(), external_exports.enum(ATURAN_FOTO)));
 
 // src/domain/konten.ts
 var DAFTAR_AREA = SkemaArea.parse(area_default).area;
@@ -20588,6 +20591,7 @@ var PERTANYAAN = Object.fromEntries(
 );
 var PINDAI = SkemaPindaiKonten.parse(pindai_default);
 function aturanFoto(areaId) {
+  if (areaId === "catatan" || areaId === "pengecualian") return {};
   const b = PINDAI[areaId];
   return b && typeof b === "object" ? b : {};
 }

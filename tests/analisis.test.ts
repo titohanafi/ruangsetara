@@ -3,8 +3,6 @@ import { POST, bersihkan, susun } from "../server/analisis";
 import { DAFTAR_AREA, PERTANYAAN } from "../src/domain/konten";
 
 const kamarMandi = susun("kamar-mandi")!;
-// Jalur pertanyaan 'bisa' diuji dengan aturan buatan, karena kini tidak ada pertanyaan yang 'bisa'.
-const denganBisa = { ...kamarMandi, aturan: { ...kamarMandi.aturan, "M-09": "bisa" as const } };
 
 describe("susun (prompt dan skema per area)", () => {
   it("kamar mandi: memuat pertanyaan peneliti dan hanya 11 id (tanpa M-12)", () => {
@@ -18,10 +16,16 @@ describe("susun (prompt dan skema per area)", () => {
   it("menandai pertanyaan 'sebagian' sebagai tidak boleh dijawab Ya dari foto", () => {
     const m01 = kamarMandi.prompt.split("\n").find((l) => l.startsWith("- M-01"));
     expect(m01).toContain('answer "tidak" only');
-    // Sejak aturan diturunkan dari Cara Verifikasi di sheet, tidak ada lagi pertanyaan kamar mandi yang 'bisa'.
+    // M-09 'sebagian' (genangan tidak bisa dari foto); M-08 satu-satunya yang 'bisa' (pengecualian tertulis).
     const m09 = kamarMandi.prompt.split("\n").find((l) => l.startsWith("- M-09"));
     expect(m09).toContain('answer "tidak" only');
-    expect(Object.values(kamarMandi.aturan)).not.toContain("bisa");
+    const m08 = kamarMandi.prompt.split("\n").find((l) => l.startsWith("- M-08"));
+    expect(m08).toContain('both "ya" and "tidak"');
+    expect(
+      Object.entries(kamarMandi.aturan)
+        .filter(([, a]) => a === "bisa")
+        .map(([id]) => id),
+    ).toEqual(["M-08"]);
   });
 
   it("kamar mandi tetap memakai aturan jangkauan yang sudah teruji; area lain memakai versi umum", () => {
@@ -60,18 +64,18 @@ describe("bersihkan", () => {
         kamar_mandi: true,
         jawaban: [
           { id: "M-01", nilai: "ya", alasan: "pintu lebar" },
-          { id: "M-09", nilai: "ya", alasan: "ada ruang" },
-          { id: "M-09", nilai: "tidak", alasan: "ganda" },
+          { id: "M-08", nilai: "ya", alasan: "ada ruang" },
+          { id: "M-08", nilai: "tidak", alasan: "ganda" },
           { id: "M-12", nilai: "ya", alasan: "bukan ditanya" },
           { id: "G-05", nilai: "ya", alasan: "id area lain" },
           { id: "M-10", nilai: "ngawur", alasan: 5 },
         ],
       },
-      denganBisa,
+      kamarMandi,
     );
     expect(r.jawaban).toEqual([
       { id: "M-01", nilai: "tidak_jelas", alasan: "pintu lebar" },
-      { id: "M-09", nilai: "ya", alasan: "ada ruang" },
+      { id: "M-08", nilai: "ya", alasan: "ada ruang" },
       { id: "M-10", nilai: "tidak_jelas", alasan: "" },
     ]);
   });

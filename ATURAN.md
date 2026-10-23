@@ -39,7 +39,9 @@ Aturan ini **diturunkan dari kolom "Cara Verifikasi" di sheet** (keputusan pemil
 
 Klausa yang berisi "bila diperlukan" atau "bila memungkinkan" dianggap opsional dan tidak dihitung.
 
-**Penafsiran saya sebagai pembangun, perlu diperiksa peneliti:** kata "ukur", "uji", "simulasi", "konfirmasi", dan "kekokohan" saya anggap sebagai hal yang tidak bisa dipastikan dari foto. Kata "genangan" (air menggenang, kemiringan ke saluran) dan "langsung" (diperiksa di tempat) juga saya anggap tidak bisa dipastikan dari foto. Kata "observasi" dan "foto" saya anggap bisa dilihat dari foto. **Dengan penafsiran ini tidak ada lagi pertanyaan berstatus `bisa`**: AI hanya boleh menandai hambatan (Tidak), tidak pernah menyatakan sesuatu sudah sesuai (Ya).
+**Satu pengecualian tertulis, atas keputusan pemilik: M-08 (akses area mandi) = `bisa`.** Alasannya: Cara Verifikasi M-08 di sheet diawali "Foto area mandi", dan hambatan utamanya (ambang, bibir bak) kelihatan di foto. Foto **tidak** membuktikan ambang kecil, ruang pendekatan, atau metode mandi, jadi jawabannya tetap bertanda "Terisi dari foto" dan bisa diubah. Alasan lengkap ada di `content/pindai.json` (kunci `pengecualian`). **Perlu ditinjau peneliti.**
+
+**Penafsiran saya sebagai pembangun, perlu diperiksa peneliti:** kata "ukur", "uji", "simulasi", "konfirmasi", dan "kekokohan" saya anggap sebagai hal yang tidak bisa dipastikan dari foto. Kata "genangan" (air menggenang, kemiringan ke saluran) dan "langsung" (diperiksa di tempat) juga saya anggap tidak bisa dipastikan dari foto. Kata "observasi" dan "foto" saya anggap bisa dilihat dari foto. Dengan penafsiran ini, selain M-08, AI hanya boleh menandai hambatan (Tidak), tidak pernah menyatakan sesuatu sudah sesuai (Ya).
 
 
 ### Mobilitas di rumah (tahap uji, belum diuji dengan foto sama sekali)
@@ -96,7 +98,7 @@ Klausa yang berisi "bila diperlukan" atau "bila memungkinkan" dianggap opsional 
 | M-05 | Apakah tersedia pegangan bantu yang sesuai? | Foto pegangan; ukur posisi dan dimensi; periksa kekokohan oleh pihak kompeten. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | M-06 | Apakah wastafel dapat digunakan dari posisi duduk? | Ukur tinggi wastafel dan ruang bawah; uji jangkauan keran. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | M-07 | Apakah keran dan perlengkapan mandi mudah dioperasikan? | Ukur ketinggian dan jangkauan; uji pengoperasian; konfirmasi pengguna. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
-| M-08 | Apakah area mandi dapat diakses tanpa hambatan? | Foto area mandi; ukur ambang dan ruang pendekatan; konfirmasi metode mandi. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
+| M-08 | Apakah area mandi dapat diakses tanpa hambatan? | Foto area mandi; ukur ambang dan ruang pendekatan; konfirmasi metode mandi. | **bisa** (pengecualian): AI boleh mengisi Ya atau Tidak |
 | M-09 | Apakah lantai kamar mandi aman untuk kursi roda? | Observasi permukaan; periksa genangan; ukur kemiringan bila diperlukan. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | M-10 | Apakah tersedia tempat duduk mandi yang aman? | Foto dudukan; periksa kekokohan; konfirmasi kenyamanan dan metode transfer. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | M-11 | Apakah barang mandi dapat dijangkau? | Ukur ketinggian rak dan gantungan; uji jangkauan; konfirmasi pengguna. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
@@ -133,7 +135,7 @@ Sumber seluruh bagian ini: **tim produk / pembangun** (dengan pelajaran dari Tra
 
 Sumber: tim produk / pembangun. Tempat: `src/domain/pindai.ts`, `server/analisis.ts`.
 
-- "Tidak jelas" dari AI **tidak pernah mengisi** jawaban. Catatan AI-nya disimpan dan tampil sebagai "Catatan AI dari foto" (bukan jawaban) di langkah Pertanyaan dan di kartu hasil "Belum tahu". "Ya" yang tidak boleh dari foto dibuang **tanpa** catatan, karena kalimatnya ditulis AI sebagai kesimpulan dan bisa terbaca seperti jawaban.
+- "Tidak jelas" dari AI **tidak pernah mengisi** jawaban. Di langkah Pertanyaan ia tampil sebagai **"Jawaban AI: Belum tahu"** dengan catatan AI (apa yang terlihat dan kenapa belum cukup) dan langkah **"Periksa sendiri"** yang diambil dari Cara Verifikasi di sheet. Tombol lanjut tetap nonaktif sampai pengguna memilih jawaban sendiri, jadi pengguna tidak bisa menekan lanjut berulang tanpa membaca. Catatan juga tampil di kartu hasil "Belum tahu". "Ya" yang tidak boleh dari foto dibuang **tanpa** catatan, karena kalimatnya ditulis AI sebagai kesimpulan dan bisa terbaca seperti jawaban.
 - Pertanyaan berstatus `sebagian`: jawaban "Ya" dari AI **diturunkan menjadi "tidak jelas"**, di server dan di klien (dua lapis).
 - Hanya ID pertanyaan yang memang ditanyakan yang diterima. Yang lain dibuang.
 - Bila foto **bukan** ruangan yang dipilih, tidak ada jawaban yang terisi.

@@ -48,7 +48,8 @@
     "terlaluSering": "Layanan pembaca foto sedang ramai. Coba lagi sebentar lagi, atau lanjut dan jawab sendiri.",
     "wajibFotoArea": "Pilih area terlebih dulu.",
     "areaUji": "Bisa dibaca AI (tahap uji)",
-    "bukanRuangan": "Foto ini tampaknya bukan {area}, jadi tidak ada jawaban yang diisi. Anda bisa mengganti foto atau menjawab sendiri."
+    "bukanRuangan": "Foto ini tampaknya bukan {area}, jadi tidak ada jawaban yang diisi. Anda bisa mengganti foto atau menjawab sendiri.",
+    "hasilBelumTahu": "{n} pertanyaan ditandai \"Belum tahu\" oleh AI. Anda akan diminta memeriksanya sendiri."
   },
   "profil": {
     "label": "Mengenal kebutuhan Anda",
@@ -87,7 +88,9 @@
     "pilihJawaban": "Pilih satu jawaban untuk lanjut.",
     "belumTahuBantu": "Pilih \"Belum tahu\" bila Anda belum bisa memastikan. Hasilnya akan meminta pengukuran atau foto tambahan.",
     "catatanFoto": "Catatan AI dari foto",
-    "catatanFotoBatas": "Ini bukan jawaban. Foto belum cukup untuk memastikan; periksa sendiri lalu pilih jawaban."
+    "aiBelumTahu": "Jawaban AI: Belum tahu",
+    "periksaSendiri": "Periksa sendiri (cara dari sheet peneliti):",
+    "setelahPeriksa": "Setelah memeriksa, pilih jawaban Anda di atas untuk lanjut. Pertanyaan berikutnya baru aktif setelah Anda memilih."
   },
   "hasil": {
     "label": "Rekomendasi",

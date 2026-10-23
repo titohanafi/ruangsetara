@@ -49,5 +49,5 @@ export const SkemaHasilKonten = z.object({
 
 export const ATURAN_FOTO = ["bisa", "sebagian", "tidak"] as const;
 export const SkemaPindaiKonten = z
-  .object({ catatan: z.string() })
-  .catchall(z.union([z.string(), z.record(z.string(), z.enum(ATURAN_FOTO))]));
+  .object({ catatan: z.string(), pengecualian: z.record(z.string(), z.string()).optional() })
+  .catchall(z.record(z.string(), z.enum(ATURAN_FOTO)));

@@ -3,8 +3,8 @@ import { aturanFoto, PERTANYAAN } from "../src/domain/konten";
 import { bacaHasilFoto, isiDariFoto, pertanyaanUntukAI, type HasilFoto } from "../src/domain/pindai";
 
 const daftar = PERTANYAAN["kamar-mandi"].pertanyaan;
-// Jalur 'bisa' diuji dengan M-09 sebagai 'bisa' buatan: aturan dari sheet kini tidak memuat pertanyaan 'bisa' di kamar mandi.
-const aturan = { ...aturanFoto("kamar-mandi"), "M-09": "bisa" as const };
+// M-08 satu-satunya pertanyaan kamar mandi yang 'bisa' (pengecualian tertulis di pindai.json).
+const aturan = aturanFoto("kamar-mandi");
 
 const hasil = (jawaban: HasilFoto["jawaban"], ruang_sesuai = true): HasilFoto => ({ ruang_sesuai, jawaban });
 
@@ -22,13 +22,13 @@ describe("isiDariFoto", () => {
       daftar,
       aturan,
       hasil([
-        { id: "M-09", nilai: "ya", alasan: "ada ruang kaki" },
+        { id: "M-08", nilai: "ya", alasan: "ada ruang kaki" },
         { id: "M-05", nilai: "tidak" },
       ]),
       {},
     );
     expect(r.terisi).toBe(2);
-    expect(r.jawaban["M-09"]).toEqual({ nilai: "ya", sumber: "foto", alasan: "ada ruang kaki" });
+    expect(r.jawaban["M-08"]).toEqual({ nilai: "ya", sumber: "foto", alasan: "ada ruang kaki" });
     expect(r.jawaban["M-05"]?.nilai).toBe("tidak");
   });
 
@@ -71,25 +71,25 @@ describe("isiDariFoto", () => {
 
   it("tidak menimpa jawaban pengguna, tetapi boleh memperbarui jawaban foto sebelumnya", () => {
     const sudah = {
-      "M-09": { nilai: "tidak" as const, sumber: "pengguna" as const },
+      "M-08": { nilai: "tidak" as const, sumber: "pengguna" as const },
       "M-11": { nilai: "ya" as const, sumber: "foto" as const },
     };
     const r = isiDariFoto(
       daftar,
       aturan,
       hasil([
-        { id: "M-09", nilai: "ya" },
+        { id: "M-08", nilai: "ya" },
         { id: "M-11", nilai: "tidak" },
       ]),
       sudah,
     );
-    expect(r.jawaban["M-09"]?.nilai).toBe("tidak");
+    expect(r.jawaban["M-08"]?.nilai).toBe("tidak");
     expect(r.jawaban["M-11"]?.nilai).toBe("tidak");
   });
 
   it("alasan dipotong dan dirapikan", () => {
-    const r = isiDariFoto(daftar, aturan, hasil([{ id: "M-09", nilai: "ya", alasan: `  ${"a".repeat(300)}  ` }]), {});
-    expect(r.jawaban["M-09"]?.alasan?.length).toBe(160);
+    const r = isiDariFoto(daftar, aturan, hasil([{ id: "M-08", nilai: "ya", alasan: `  ${"a".repeat(300)}  ` }]), {});
+    expect(r.jawaban["M-08"]?.alasan?.length).toBe(160);
   });
 });
 

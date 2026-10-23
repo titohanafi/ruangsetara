@@ -45,7 +45,7 @@ export function PertanyaanScreen() {
                 checked={dipilih}
                 onChange={() => kirim({ jenis: "jawab", id: p.id, nilai: o.nilai })}
               />
-              {o.nilai === "belum" && tindakLanjut ? T.tetapBelumTahu : o.label}
+              {o.label}
             </label>
           );
         })}

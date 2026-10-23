@@ -93,8 +93,7 @@
     "catatanKosong": "AI belum bisa memastikan dari foto.",
     "temuanLabel": "Hasil pemeriksaan Anda (boleh dikosongkan)",
     "temuanContoh": "Tulis temuan Anda, misalnya angka hasil ukur: lebar bukaan pintu 85 cm",
-    "jawabanAkhir": "Jawaban akhir Anda",
-    "tetapBelumTahu": "Tetap belum tahu"
+    "jawabanAkhir": "Jawaban akhir Anda"
   },
   "hasil": {
     "label": "Rekomendasi",

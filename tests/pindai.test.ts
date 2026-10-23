@@ -3,7 +3,8 @@ import { aturanFoto, PERTANYAAN } from "../src/domain/konten";
 import { bacaHasilFoto, isiDariFoto, pertanyaanUntukAI, type HasilFoto } from "../src/domain/pindai";
 
 const daftar = PERTANYAAN["kamar-mandi"].pertanyaan;
-const aturan = aturanFoto("kamar-mandi");
+// Jalur 'bisa' diuji dengan M-09 sebagai 'bisa' buatan: aturan dari sheet kini tidak memuat pertanyaan 'bisa' di kamar mandi.
+const aturan = { ...aturanFoto("kamar-mandi"), "M-09": "bisa" as const };
 
 const hasil = (jawaban: HasilFoto["jawaban"], ruang_sesuai = true): HasilFoto => ({ ruang_sesuai, jawaban });
 

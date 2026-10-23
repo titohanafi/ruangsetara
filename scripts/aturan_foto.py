@@ -2,7 +2,7 @@
 
 Aturan (ikut sheet, bukan tebakan):
 - ada wawancara                                   -> tidak     (tidak ditanyakan ke AI)
-- ada ukur / uji / simulasi / konfirmasi / kekokohan -> sebagian  (hanya "Tidak" yang boleh terisi dari foto)
+- ada ukur / uji / simulasi / konfirmasi / kekokohan / genangan / langsung -> sebagian  (hanya "Tidak" yang boleh terisi dari foto)
 - selain itu (observasi atau foto saja)           -> bisa      (Ya dan Tidak boleh terisi)
 Klausa yang berisi "bila diperlukan" atau "bila memungkinkan" dianggap opsional dan tidak dihitung.
 Jalankan setelah scripts/impor_xlsx.py: python3 scripts/aturan_foto.py  (tambah --cek untuk hanya membandingkan)
@@ -21,7 +21,7 @@ CATATAN = (
     "'tidak': verifikasi butuh wawancara, jadi tidak ditanyakan ke AI. Aturan ini belum ditinjau peneliti."
 )
 WAWANCARA = re.compile(r"wawancara", re.I)
-TAK_BISA_DARI_FOTO = re.compile(r"\b(ukur|uji|simulasi|simulasikan|konfirmasi|kekokohan)\b", re.I)
+TAK_BISA_DARI_FOTO = re.compile(r"\b(ukur|uji|simulasi|simulasikan|konfirmasi|kekokohan|genangan|langsung)\b", re.I)
 OPSIONAL = re.compile(r"bila (diperlukan|memungkinkan)", re.I)
 
 

@@ -146,7 +146,7 @@ var pindai_default = {
     "G-02": "sebagian",
     "G-03": "sebagian",
     "G-04": "sebagian",
-    "G-05": "bisa",
+    "G-05": "sebagian",
     "G-06": "sebagian",
     "G-07": "sebagian",
     "G-08": "sebagian",
@@ -184,7 +184,7 @@ var pindai_default = {
     "M-06": "sebagian",
     "M-07": "sebagian",
     "M-08": "sebagian",
-    "M-09": "bisa",
+    "M-09": "sebagian",
     "M-10": "sebagian",
     "M-11": "sebagian",
     "M-12": "tidak"

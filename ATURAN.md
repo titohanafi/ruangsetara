@@ -34,12 +34,12 @@ Aturan ini **diturunkan dari kolom "Cara Verifikasi" di sheet** (keputusan pemil
 | Bila Cara Verifikasi di sheet berisi... | Aturan | Artinya |
 |---|---|---|
 | **wawancara** | `tidak` | Tidak ditanyakan ke AI sama sekali |
-| **ukur, uji, simulasi, konfirmasi**, atau **kekokohan** | `sebagian` | AI hanya boleh mengisi **Tidak** (hambatan yang jelas terlihat). "Ya" tidak pernah terisi dari foto |
+| **ukur, uji, simulasi, konfirmasi, kekokohan, genangan**, atau **langsung** (diperiksa di tempat) | `sebagian` | AI hanya boleh mengisi **Tidak** (hambatan yang jelas terlihat). "Ya" tidak pernah terisi dari foto |
 | hanya **observasi** atau **foto** | `bisa` | AI boleh mengisi Ya atau Tidak |
 
 Klausa yang berisi "bila diperlukan" atau "bila memungkinkan" dianggap opsional dan tidak dihitung.
 
-**Penafsiran saya sebagai pembangun, perlu diperiksa peneliti:** kata "ukur", "uji", "simulasi", "konfirmasi", dan "kekokohan" saya anggap sebagai hal yang tidak bisa dipastikan dari foto. Kata "periksa" dan "observasi" saya anggap bisa dilihat dari foto.
+**Penafsiran saya sebagai pembangun, perlu diperiksa peneliti:** kata "ukur", "uji", "simulasi", "konfirmasi", dan "kekokohan" saya anggap sebagai hal yang tidak bisa dipastikan dari foto. Kata "genangan" (air menggenang, kemiringan ke saluran) dan "langsung" (diperiksa di tempat) juga saya anggap tidak bisa dipastikan dari foto. Kata "observasi" dan "foto" saya anggap bisa dilihat dari foto. **Dengan penafsiran ini tidak ada lagi pertanyaan berstatus `bisa`**: AI hanya boleh menandai hambatan (Tidak), tidak pernah menyatakan sesuatu sudah sesuai (Ya).
 
 
 ### Mobilitas di rumah (tahap uji, belum diuji dengan foto sama sekali)
@@ -50,7 +50,7 @@ Klausa yang berisi "bila diperlukan" atau "bila memungkinkan" dianggap opsional 
 | G-02 | Apakah pengguna dapat berputar dengan kursi roda? | Ukur diameter atau dimensi area bebas; uji manuver langsung bila memungkinkan. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | G-03 | Apakah pintu dapat dilewati dengan mudah? | Ukur bukaan bersih ketika pintu terbuka; periksa pegangan dan posisi daun pintu. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | G-04 | Apakah terdapat ambang yang menghambat? | Foto ambang; ukur tinggi perbedaan level dan kemiringan transisi. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
-| G-05 | Apakah permukaan lantai aman dilalui? | Observasi foto; periksa sambungan, kerusakan, dan kondisi permukaan langsung. | **bisa**: AI boleh mengisi Ya atau Tidak |
+| G-05 | Apakah permukaan lantai aman dilalui? | Observasi foto; periksa sambungan, kerusakan, dan kondisi permukaan langsung. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | G-06 | Apakah pengguna dapat berpindah antarruang tanpa hambatan? | Telusuri rute pada denah atau foto; ukur titik tersempit. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | G-07 | Apakah furnitur menghalangi pergerakan? | Observasi foto; ukur jarak bebas di antara furnitur. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | G-08 | Apakah fasilitas penting dapat dijangkau? | Ukur ketinggian dan jarak jangkauan; konfirmasi kepada pengguna. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
@@ -97,7 +97,7 @@ Klausa yang berisi "bila diperlukan" atau "bila memungkinkan" dianggap opsional 
 | M-06 | Apakah wastafel dapat digunakan dari posisi duduk? | Ukur tinggi wastafel dan ruang bawah; uji jangkauan keran. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | M-07 | Apakah keran dan perlengkapan mandi mudah dioperasikan? | Ukur ketinggian dan jangkauan; uji pengoperasian; konfirmasi pengguna. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | M-08 | Apakah area mandi dapat diakses tanpa hambatan? | Foto area mandi; ukur ambang dan ruang pendekatan; konfirmasi metode mandi. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
-| M-09 | Apakah lantai kamar mandi aman untuk kursi roda? | Observasi permukaan; periksa genangan; ukur kemiringan bila diperlukan. | **bisa**: AI boleh mengisi Ya atau Tidak |
+| M-09 | Apakah lantai kamar mandi aman untuk kursi roda? | Observasi permukaan; periksa genangan; ukur kemiringan bila diperlukan. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | M-10 | Apakah tersedia tempat duduk mandi yang aman? | Foto dudukan; periksa kekokohan; konfirmasi kenyamanan dan metode transfer. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | M-11 | Apakah barang mandi dapat dijangkau? | Ukur ketinggian rak dan gantungan; uji jangkauan; konfirmasi pengguna. | **sebagian**: AI hanya boleh mengisi Tidak (hambatan yang jelas terlihat) |
 | M-12 | Apakah pengguna dapat menjaga privasi dan keselamatan? | Observasi mekanisme pintu; wawancara pengguna; tinjau skenario bantuan darurat. | **tidak**: tidak ditanyakan ke AI |
@@ -170,7 +170,7 @@ Sumber: `CLAUDE.md`.
 
 ## 7. Yang perlu diputuskan atau diperiksa peneliti
 
-1. Apakah penafsiran kata kunci di bagian 2 benar (ukur, uji, simulasi, konfirmasi, kekokohan = tidak bisa dari foto)? Khususnya M-09 (`bisa`: "observasi permukaan; periksa genangan"), G-05, dan G-06.
+1. Apakah penafsiran kata kunci di bagian 2 benar (ukur, uji, simulasi, konfirmasi, kekokohan = tidak bisa dari foto)? Khususnya M-09 ("observasi permukaan; periksa genangan"), G-05 ("periksa ... kondisi permukaan langsung"), dan G-06.
 2. Apakah rentang jangkauan di sheet (38 sampai 122 cm, M-07 dan M-11) boleh dijadikan dasar kalimat "jangkauan" di prompt AI? Saat ini prompt memakai "setinggi pinggang ke bawah".
 3. Angka yang dicatat di `riset/koreksi-untuk-tim-riset.md` perlu dikoreksi di sheet.
 4. Apakah gambar tiap modifikasi (pegangan di belakang dan samping kloset, kursi lipat, area shower rata dengan saluran, ruang putar, area bebas) sudah mewakili teks Modifikasi di sheet?

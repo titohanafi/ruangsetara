@@ -3,7 +3,7 @@ import { aturanFoto, DAFTAR_AREA, PERTANYAAN } from "../src/domain/konten";
 
 // Aturan baca foto mengikuti kolom "Cara Verifikasi" di sheet peneliti (lihat scripts/aturan_foto.py). Tes ini menjaga
 // agar content/pindai.json tidak menyimpang dari sheet bila diedit tangan.
-const TAK_BISA_DARI_FOTO = /\b(ukur|uji|simulasi|simulasikan|konfirmasi|kekokohan)\b/i;
+const TAK_BISA_DARI_FOTO = /\b(ukur|uji|simulasi|simulasikan|konfirmasi|kekokohan|genangan|langsung)\b/i;
 const OPSIONAL = /bila (diperlukan|memungkinkan)/i;
 
 describe("aturan foto mengikuti Cara Verifikasi di sheet", () => {

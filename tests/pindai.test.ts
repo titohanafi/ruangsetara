@@ -150,9 +150,9 @@ describe("'Belum tahu' dari AI dan catatannya", () => {
 });
 
 describe("pertanyaanUntukAI", () => {
-  it("memuat 11 pertanyaan kamar mandi (tanpa M-12)", () => {
+  it("memuat 10 pertanyaan kamar mandi (tanpa M-03 dan M-12)", () => {
     const ids = pertanyaanUntukAI(daftar, aturan).map((p) => p.id);
-    expect(ids).toHaveLength(11);
+    expect(ids).toHaveLength(10);
     expect(ids).not.toContain("M-12");
   });
 });

@@ -137,20 +137,6 @@
         "https://www.sralab.org/lifecenter/resources/considerations-adapting-home-wheelchair-accessibility"
       ],
       "status_validasi": "draf"
-    },
-    {
-      "id": "G-10",
-      "elemen": "Kemandirian dan keselamatan",
-      "pertanyaan": "Apakah pengguna merasa aman dan dapat bergerak mandiri?",
-      "indikator": "Tidak ada hambatan yang memaksa pengguna meminta bantuan untuk aktivitas mobilitas rutin. Risiko terguling, tergelincir, atau terjepit diminimalkan.",
-      "cara_verifikasi": "Wawancara pengguna; observasi aktivitas; catat bantuan yang masih diperlukan.",
-      "referensi": "Prinsip desain universal dan asesmen kebutuhan individual; bukan satu persyaratan dimensi tunggal.",
-      "hack": "Pasang lampu sensor gerak di jalur malam hari, rapikan kabel dengan klip dinding, dan pastikan ponsel selalu terjangkau. Sepakati rencana darurat dengan anggota rumah, termasuk siapa yang dihubungi dan bagaimana keluar rumah kalau terjadi kebakaran atau gempa.",
-      "modifikasi": "Pasang pegangan rambat di titik-titik rawan (ramp, undakan, area transfer), dan pastikan minimal ada satu jalur keluar rumah tanpa undakan. Tambahkan detektor asap atau gas.",
-      "referensi_rekomendasi": [
-        "Prinsip keselamatan dan kemandirian dalam Desain Universal (PUPR Lampiran I A.2 & A.5) · PUPR Lampiran II C.4.b (sistem peringatan bahaya)"
-      ],
-      "status_validasi": "draf"
     }
   ]
 }

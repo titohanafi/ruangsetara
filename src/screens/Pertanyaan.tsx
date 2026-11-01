@@ -54,7 +54,7 @@ export function PertanyaanScreen() {
     </fieldset>
   );
 
-  const mundur = () => (i > 0 ? kirim({ jenis: "ke_pertanyaan", indeks: i - 1 }) : pindah("/prioritas"));
+  const mundur = () => (i > 0 ? kirim({ jenis: "ke_pertanyaan", indeks: i - 1 }) : pindah("/foto"));
   const maju = () => (terakhir ? pindah("/hasil") : kirim({ jenis: "ke_pertanyaan", indeks: i + 1 }));
 
   return (

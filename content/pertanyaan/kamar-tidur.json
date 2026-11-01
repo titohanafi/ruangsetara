@@ -63,21 +63,6 @@
       "status_validasi": "draf"
     },
     {
-      "id": "B-05",
-      "elemen": "Ruang transfer",
-      "pertanyaan": "Apakah pengguna dapat berpindah antara kursi roda dan tempat tidur?",
-      "indikator": "Ruang transfer tidak terhalang nakas, kaki tempat tidur, atau furnitur. Jika menggunakan papan transfer atau bantuan orang lain, ruang untuk metode tersebut tersedia.",
-      "cara_verifikasi": "Observasi posisi furnitur; ukur area transfer; konfirmasi metode transfer.",
-      "referensi": "Prinsip desain universal dan asesmen kebutuhan individual.",
-      "hack": "Singkirkan nakas atau barang yang menghalangi ruang transfer, dan pindahkan nakas ke kepala tempat tidur. Gunakan papan transfer (transfer board) kalau diperlukan, dan pastikan kursi roda bisa dikunci di posisi sejajar tempat tidur.",
-      "modifikasi": "Pasang pegangan (grab bar) atau rel di samping tempat tidur. Alternatif tanpa bor adalah tiang dari lantai ke langit-langit yang dipasang dengan sistem tekanan seperti tiang gorden kamar mandi.",
-      "referensi_rekomendasi": [
-        "Homezada: https://zen.homezada.com/2025/02/26/15-ways-to-adapt-bedroom-spaces-for-accessibility-and-safety/",
-        "Bob Vila: https://www.bobvila.com/slideshow/easy-ways-to-make-your-home-more-disability-friendly-580317"
-      ],
-      "status_validasi": "draf"
-    },
-    {
       "id": "B-06",
       "elemen": "Aksesibilitas lemari",
       "pertanyaan": "Apakah lemari pakaian dapat digunakan dari posisi duduk?",
@@ -120,21 +105,6 @@
       "referensi_rekomendasi": [
         "PUPR Pasal 48",
         "ADA §308, §309"
-      ],
-      "status_validasi": "draf"
-    },
-    {
-      "id": "B-09",
-      "elemen": "Ruang aktivitas pribadi",
-      "pertanyaan": "Apakah tersedia ruang untuk berpakaian dan merawat diri?",
-      "indikator": "Pengguna dapat mengambil pakaian, berpakaian, dan melakukan perawatan diri dengan ruang gerak yang sesuai. Peralatan yang dibutuhkan tersedia dalam jangkauan.",
-      "cara_verifikasi": "Simulasikan urutan aktivitas; ukur area yang digunakan; wawancara pengguna.",
-      "referensi": "Asesmen aktivitas sehari-hari dan rekomendasi desain universal.",
-      "hack": "Siapkan area berpakaian di dekat lemari dengan ruang kosong yang cukup, dan letakkan kursi atau bangku yang kokoh di dekat lemari untuk memudahkan berpakaian. Simpan perlengkapan perawatan diri dalam satu keranjang atau troli yang mudah dijangkau.",
-      "modifikasi": "Pasang cermin yang dimulai dari ketinggian rendah, atau cermin penuh, supaya bisa dipakai dari posisi duduk.",
-      "referensi_rekomendasi": [
-        "ADA §603.3",
-        "Homezada: https://zen.homezada.com/2025/02/26/15-ways-to-adapt-bedroom-spaces-for-accessibility-and-safety/"
       ],
       "status_validasi": "draf"
     },

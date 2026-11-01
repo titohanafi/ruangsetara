@@ -5,11 +5,11 @@ import { DAFTAR_AREA, PERTANYAAN } from "../src/domain/konten";
 const kamarMandi = susun("kamar-mandi")!;
 
 describe("susun (prompt dan skema per area)", () => {
-  it("kamar mandi: memuat pertanyaan peneliti dan hanya 11 id (tanpa M-12)", () => {
+  it("kamar mandi: memuat pertanyaan peneliti dan hanya 10 id (tanpa M-03 dan M-12)", () => {
     expect(kamarMandi.prompt).toContain("M-07");
     expect(kamarMandi.prompt).toContain("Apakah wastafel dapat digunakan dari posisi duduk?");
     expect(kamarMandi.prompt).not.toContain("M-12");
-    expect(kamarMandi.ids).toHaveLength(11);
+    expect(kamarMandi.ids).toHaveLength(10);
     expect(kamarMandi.skema.properties.jawaban.items.properties.id.enum).toEqual(kamarMandi.ids);
   });
 

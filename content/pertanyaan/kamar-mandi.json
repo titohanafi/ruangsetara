@@ -31,21 +31,6 @@
       "status_validasi": "draf"
     },
     {
-      "id": "M-03",
-      "elemen": "Ruang pendekatan toilet",
-      "pertanyaan": "Apakah toilet dapat didekati dari kursi roda?",
-      "indikator": "Tersedia ruang pada sisi atau bagian depan toilet sesuai metode transfer pengguna. Tempat sampah, kabinet, atau perlengkapan lain tidak menghalangi area transfer.",
-      "cara_verifikasi": "Ukur jarak bebas di depan dan samping toilet; konfirmasi metode transfer.",
-      "referensi": "Permen PUPR No. 14/PRT/M/2017, ketentuan toilet aksesibel; ADA §604 sebagai pembanding.",
-      "hack": "Pindahkan tempat sampah, rak, atau ember dari samping dan depan kloset. Tentukan sisi transfer sesuai sisi tubuh pengguna yang lebih kuat.",
-      "modifikasi": "Sediakan ruang bebas di samping kloset untuk kursi roda parkir sejajar. Area bebas 152,5 cm lebar x 142 cm dalam di sekitar kloset, dengan kloset berjarak 40,5 - 45,5 cm dari dinding samping.",
-      "referensi_rekomendasi": [
-        "PUPR Lampiran III (Toilet)",
-        "ADA §604.2 (posisi kloset), §604.3 (ruang bebas)"
-      ],
-      "status_validasi": "draf"
-    },
-    {
       "id": "M-04",
       "elemen": "Ketinggian dudukan toilet",
       "pertanyaan": "Apakah tinggi toilet mendukung transfer yang aman?",
@@ -157,20 +142,6 @@
       "modifikasi": "Pasang rak dan gantungan handuk pada ketinggian 38 - 122 cm dari lantai, dekat area mandi dan wastafel.",
       "referensi_rekomendasi": [
         "ADA §308 (jangkauan), §603.4 (perlengkapan kamar mandi)"
-      ],
-      "status_validasi": "draf"
-    },
-    {
-      "id": "M-12",
-      "elemen": "Keamanan dan kemandirian",
-      "pertanyaan": "Apakah pengguna dapat menjaga privasi dan keselamatan?",
-      "indikator": "Pintu dapat digunakan tanpa menghambat bantuan darurat; lantai dan pegangan mendukung keselamatan; pengguna dapat mengakses perlengkapan darurat atau meminta pertolongan bila dibutuhkan.",
-      "cara_verifikasi": "Observasi mekanisme pintu; wawancara pengguna; tinjau skenario bantuan darurat.",
-      "referensi": "Prinsip desain universal, keselamatan hunian, dan asesmen kebutuhan individual.",
-      "hack": "Gunakan kunci pintu yang bisa dibuka dari luar saat darurat, dan selalu bawa ponsel dalam kantong tahan air atau gantung di dekat kloset. Sepakati dengan anggota rumah tanda atau waktu cek kalau pengguna terlalu lama di kamar mandi.",
-      "modifikasi": "Pasang bel atau tombol panggil darurat di dekat kloset dan area mandi, pada ketinggian yang bisa dijangkau termasuk dari lantai. Pintu yang membuka ke luar juga memudahkan bantuan darurat karena tidak terhalang jika pengguna jatuh di dekat pintu.",
-      "referensi_rekomendasi": [
-        "PUPR Lampiran III (pintu toilet membuka ke luar) · prinsip keselamatan dan kemandirian dalam Desain Universal (PUPR Lampiran I A.2 & A.5)"
       ],
       "status_validasi": "draf"
     }

@@ -160,3 +160,9 @@ Saat menggeneralisasi, field `kamar_mandi` diganti `ruang_sesuai` (prompt lain t
 **Batas:** lencana nomor 1 (pintu di dinding depan) tidak tampak dari sudut awal (benda tersembunyi); pada tata letak padat, lencana bisa dekat dengan benda lain; belum diuji dengan foto nyata.
 
 **Catatan tambahan butir 24 (keputusan pemilik):** perluasan ruang tetap dipertahankan walau belum ada aturan yang menyatakan ruang putar dan area shower tidak boleh tumpang tindih (itu pilihan desain konservatif saya, bukan kutipan aturan; teks pasal PerMen dan ADA belum dibaca). Sebagai gantinya, di aplikasi tampil catatan "Untuk ditanyakan ke peneliti" di bawah gambar ringkasan (`ruang.ruangDiperluasCatatan`, berlatar kuning draf) dan butir 7 di bagian "Yang perlu diputuskan atau diperiksa peneliti" di `ATURAN.md`. Bila peneliti memastikan tumpang tindih diperbolehkan, hapus `ruangIdeal`.
+
+## 2026-10-30 — Desain peneliti dan enam pertanyaan dihapus
+
+Atas permintaan Tiara, aplikasi utama mengikuti desain situs ChatGPT: tipografi serif, jarak, sidebar, kartu tema, serta alur profil → tema/aktivitas → foto → pertanyaan → hasil. Fitur baca foto opsional dan ilustrasi yang sudah ada tetap tersedia.
+
+G-10, K-07, B-05, B-09, M-03, M-12 dihapus dari pertanyaan aktif. Jumlah baru: 9/7/8/10 (34 total). Berkas pertanyaan-dihapus.json mencatat keputusan peneliti; importir mengabaikan ID ini agar sheet lama tidak mengembalikannya. File XLSX lokal tidak tersedia di checkout ini. Aturan foto diturunkan ulang. Uji foto Gemini nyata belum diulang; tinjau sebelum merge.

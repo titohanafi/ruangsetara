@@ -50,7 +50,6 @@ export function PertanyaanScreen() {
           );
         })}
       </div>
-      {!tindakLanjut && <p className="mt-2 text-kecil text-redup">{T.belumTahuBantu}</p>}
     </fieldset>
   );
 
@@ -68,9 +67,6 @@ export function PertanyaanScreen() {
       </div>
 
       <section className="kartu mt-2" aria-labelledby="pertanyaan-id">
-        <p className="label-mikro">
-          {p.id} · {p.elemen}
-        </p>
         <h2 id="pertanyaan-id" className="mt-2 text-subjudul">
           {p.pertanyaan}
         </h2>
@@ -96,7 +92,7 @@ export function PertanyaanScreen() {
                 placeholder={T.temuanContoh}
                 value={state.temuan[p.id] ?? ""}
                 onChange={(e) => kirim({ jenis: "isi_temuan", id: p.id, teks: e.target.value })}
-                className="mt-2 w-full rounded-tombol border border-garisKontrol bg-putih p-3"
+                className="mt-2 w-full rounded-tombol border bg-putih p-3"
               />
             </div>
             <p className="mt-4 font-semibold">{T.jawabanAkhir}</p>
@@ -130,12 +126,7 @@ export function PertanyaanScreen() {
             <summary className="font-semibold">{T.kondisi}</summary>
             <p className="mt-2 text-redup">{p.indikator}</p>
           </details>
-          {p.referensi && (
-            <details className="rounded-tombol border border-garis p-3">
-              <summary className="font-semibold">{T.referensi}</summary>
-              <p className="mt-2 text-redup">{p.referensi}</p>
-            </details>
-          )}
+
         </div>
       </section>
 

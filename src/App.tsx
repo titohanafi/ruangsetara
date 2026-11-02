@@ -17,8 +17,8 @@ export function App() {
       <Route path="/" element={<ProfilScreen />} />
       <Route path="/profil" element={<ProfilScreen />} />
       <Route path="/prioritas" element={<PrioritasScreen />} />
-      <Route path="/foto" element={state.areaId && state.aktivitas ? <FotoScreen /> : <Navigate to="/prioritas" replace />} />
-      <Route path="/pertanyaan" element={state.areaId && state.aktivitas ? <PertanyaanScreen /> : <Navigate to="/" replace />} />
+      <Route path="/foto" element={state.areaId ? <FotoScreen /> : <Navigate to="/prioritas" replace />} />
+      <Route path="/pertanyaan" element={state.areaId ? <PertanyaanScreen /> : <Navigate to="/" replace />} />
       <Route path="/hasil" element={state.areaId ? <HasilScreen /> : <Navigate to="/" replace />} />
       {RUTE_DEV && <Route path="/dev/hasil" element={<DevHasilScreen />} />}
       <Route path="*" element={<Navigate to="/" replace />} />

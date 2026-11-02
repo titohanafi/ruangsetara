@@ -52,7 +52,7 @@ export function Layout({ langkah, label, children }: { langkah: number; label: s
           <p className="label-mikro">{UI.samping.label}</p>
           <h2 className="mt-3 text-judul">{UI.samping.judul}</h2>
           <p className="mt-4 text-kecil text-redup">{UI.samping.isi}</p>
-          <ol className="mt-8 space-y-4">
+          <ol className="mt-8">
             {UI.langkah.map((nama, i) => (
               <li key={nama} aria-current={i === langkah ? "step" : undefined} className="flex items-center gap-3">
                 <span

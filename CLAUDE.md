@@ -1,6 +1,6 @@
 # Ruang Setara
 
-Asesmen aksesibilitas rumah untuk pengguna kursi roda dan caregiver. Alur: foto ruangan → profil → prioritas → pertanyaan → rekomendasi.
+Asesmen aksesibilitas rumah untuk pengguna kursi roda dan caregiver. Alur: profil awal → pilih tema (area dan aktivitas) → foto ruangan → pertanyaan → rekomendasi.
 Foto dibaca AI (Gemini) untuk mengisi sebagian jawaban otomatis; pengguna selalu bisa mengubahnya. Semua area (mobilitas, dapur, kamar tidur, kamar mandi) bisa dibaca, tetapi **hanya kamar mandi yang sudah diuji dengan foto asli**; area lain berstatus tahap uji (`foto_teruji: false` di `content/area.json`) dan menampilkan disclaimer.
 
 Proyek ini menyatukan situs asesmen tim peneliti (isi pertanyaan dan rekomendasi) dengan fitur baca foto yang dikembangkan di proyek Transisi (`../transisi`).

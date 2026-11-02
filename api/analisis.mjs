@@ -150,8 +150,7 @@ var pindai_default = {
     "G-06": "sebagian",
     "G-07": "sebagian",
     "G-08": "sebagian",
-    "G-09": "sebagian",
-    "G-10": "tidak"
+    "G-09": "sebagian"
   },
   dapur: {
     "K-01": "sebagian",
@@ -160,7 +159,6 @@ var pindai_default = {
     "K-04": "sebagian",
     "K-05": "sebagian",
     "K-06": "sebagian",
-    "K-07": "sebagian",
     "K-08": "tidak"
   },
   "kamar-tidur": {
@@ -168,17 +166,14 @@ var pindai_default = {
     "B-02": "sebagian",
     "B-03": "sebagian",
     "B-04": "sebagian",
-    "B-05": "sebagian",
     "B-06": "sebagian",
     "B-07": "sebagian",
     "B-08": "sebagian",
-    "B-09": "tidak",
     "B-10": "sebagian"
   },
   "kamar-mandi": {
     "M-01": "sebagian",
     "M-02": "sebagian",
-    "M-03": "sebagian",
     "M-04": "sebagian",
     "M-05": "sebagian",
     "M-06": "sebagian",
@@ -186,8 +181,7 @@ var pindai_default = {
     "M-08": "bisa",
     "M-09": "sebagian",
     "M-10": "sebagian",
-    "M-11": "sebagian",
-    "M-12": "tidak"
+    "M-11": "sebagian"
   },
   pengecualian: {
     "kamar-mandi/M-08": "Cara Verifikasi di sheet diawali 'Foto area mandi', dan hambatan utamanya (ambang, bibir bak) kelihatan di foto. Foto tidak membuktikan ambang kecil, ruang pendekatan, atau metode mandi, jadi jawabannya tetap bertanda 'Terisi dari foto' dan bisa diubah."
@@ -334,20 +328,6 @@ var mobilitas_default = {
         "https://www.sralab.org/lifecenter/resources/considerations-adapting-home-wheelchair-accessibility"
       ],
       status_validasi: "draf"
-    },
-    {
-      id: "G-10",
-      elemen: "Kemandirian dan keselamatan",
-      pertanyaan: "Apakah pengguna merasa aman dan dapat bergerak mandiri?",
-      indikator: "Tidak ada hambatan yang memaksa pengguna meminta bantuan untuk aktivitas mobilitas rutin. Risiko terguling, tergelincir, atau terjepit diminimalkan.",
-      cara_verifikasi: "Wawancara pengguna; observasi aktivitas; catat bantuan yang masih diperlukan.",
-      referensi: "Prinsip desain universal dan asesmen kebutuhan individual; bukan satu persyaratan dimensi tunggal.",
-      hack: "Pasang lampu sensor gerak di jalur malam hari, rapikan kabel dengan klip dinding, dan pastikan ponsel selalu terjangkau. Sepakati rencana darurat dengan anggota rumah, termasuk siapa yang dihubungi dan bagaimana keluar rumah kalau terjadi kebakaran atau gempa.",
-      modifikasi: "Pasang pegangan rambat di titik-titik rawan (ramp, undakan, area transfer), dan pastikan minimal ada satu jalur keluar rumah tanpa undakan. Tambahkan detektor asap atau gas.",
-      referensi_rekomendasi: [
-        "Prinsip keselamatan dan kemandirian dalam Desain Universal (PUPR Lampiran I A.2 & A.5) \xB7 PUPR Lampiran II C.4.b (sistem peringatan bahaya)"
-      ],
-      status_validasi: "draf"
     }
   ]
 };
@@ -449,21 +429,6 @@ var dapur_default = {
       status_validasi: "draf"
     },
     {
-      id: "K-07",
-      elemen: "Ruang persiapan dan manuver",
-      pertanyaan: "Apakah tersedia area untuk menyiapkan makanan?",
-      indikator: "Terdapat ruang bebas untuk mendekati permukaan kerja, meletakkan bahan makanan, dan berpindah antara wastafel, area persiapan, serta kompor.",
-      cara_verifikasi: "Ukur area bebas dan jarak antarelemen; simulasi urutan menyiapkan makanan.",
-      referensi: "Prinsip desain universal; pendekatan aktivitas dalam asesmen aksesibilitas.",
-      hack: "Dekatkan kulkas, wastafel, dan kompor, dan gunakan troli sebagai meja persiapan yang bisa berpindah. Kalau dapur terlalu sempit, pindahkan sebagian aktivitas ke ruang lain dengan alat masak portable.",
-      modifikasi: "Sediakan jarak minimal 101,5 cm antar elemen berhadapan (dapur memanjang) atau 152,5 mm (dapur bentuk U), plus ruang bebas 76 x 122 cm di depan tiap alat.",
-      referensi_rekomendasi: [
-        "ADA \xA7804.2, \xA7305",
-        "PUPR Lampiran I B.3"
-      ],
-      status_validasi: "draf"
-    },
-    {
       id: "K-08",
       elemen: "Keselamatan dan kontrol risiko",
       pertanyaan: "Apakah dapur aman digunakan dari posisi duduk?",
@@ -547,21 +512,6 @@ var kamar_tidur_default = {
       status_validasi: "draf"
     },
     {
-      id: "B-05",
-      elemen: "Ruang transfer",
-      pertanyaan: "Apakah pengguna dapat berpindah antara kursi roda dan tempat tidur?",
-      indikator: "Ruang transfer tidak terhalang nakas, kaki tempat tidur, atau furnitur. Jika menggunakan papan transfer atau bantuan orang lain, ruang untuk metode tersebut tersedia.",
-      cara_verifikasi: "Observasi posisi furnitur; ukur area transfer; konfirmasi metode transfer.",
-      referensi: "Prinsip desain universal dan asesmen kebutuhan individual.",
-      hack: "Singkirkan nakas atau barang yang menghalangi ruang transfer, dan pindahkan nakas ke kepala tempat tidur. Gunakan papan transfer (transfer board) kalau diperlukan, dan pastikan kursi roda bisa dikunci di posisi sejajar tempat tidur.",
-      modifikasi: "Pasang pegangan (grab bar) atau rel di samping tempat tidur. Alternatif tanpa bor adalah tiang dari lantai ke langit-langit yang dipasang dengan sistem tekanan seperti tiang gorden kamar mandi.",
-      referensi_rekomendasi: [
-        "Homezada: https://zen.homezada.com/2025/02/26/15-ways-to-adapt-bedroom-spaces-for-accessibility-and-safety/",
-        "Bob Vila: https://www.bobvila.com/slideshow/easy-ways-to-make-your-home-more-disability-friendly-580317"
-      ],
-      status_validasi: "draf"
-    },
-    {
       id: "B-06",
       elemen: "Aksesibilitas lemari",
       pertanyaan: "Apakah lemari pakaian dapat digunakan dari posisi duduk?",
@@ -604,21 +554,6 @@ var kamar_tidur_default = {
       referensi_rekomendasi: [
         "PUPR Pasal 48",
         "ADA \xA7308, \xA7309"
-      ],
-      status_validasi: "draf"
-    },
-    {
-      id: "B-09",
-      elemen: "Ruang aktivitas pribadi",
-      pertanyaan: "Apakah tersedia ruang untuk berpakaian dan merawat diri?",
-      indikator: "Pengguna dapat mengambil pakaian, berpakaian, dan melakukan perawatan diri dengan ruang gerak yang sesuai. Peralatan yang dibutuhkan tersedia dalam jangkauan.",
-      cara_verifikasi: "Simulasikan urutan aktivitas; ukur area yang digunakan; wawancara pengguna.",
-      referensi: "Asesmen aktivitas sehari-hari dan rekomendasi desain universal.",
-      hack: "Siapkan area berpakaian di dekat lemari dengan ruang kosong yang cukup, dan letakkan kursi atau bangku yang kokoh di dekat lemari untuk memudahkan berpakaian. Simpan perlengkapan perawatan diri dalam satu keranjang atau troli yang mudah dijangkau.",
-      modifikasi: "Pasang cermin yang dimulai dari ketinggian rendah, atau cermin penuh, supaya bisa dipakai dari posisi duduk.",
-      referensi_rekomendasi: [
-        "ADA \xA7603.3",
-        "Homezada: https://zen.homezada.com/2025/02/26/15-ways-to-adapt-bedroom-spaces-for-accessibility-and-safety/"
       ],
       status_validasi: "draf"
     },
@@ -669,21 +604,6 @@ var kamar_mandi_default = {
       modifikasi: "Targetkan ruang putar 1,5 x 1,5 m untuk kursi roda manual dan 1,8 x 1,8 m untuk kursi roda listrik",
       referensi_rekomendasi: [
         "ADA \xA7304 (ruang putar 152,5 cm)"
-      ],
-      status_validasi: "draf"
-    },
-    {
-      id: "M-03",
-      elemen: "Ruang pendekatan toilet",
-      pertanyaan: "Apakah toilet dapat didekati dari kursi roda?",
-      indikator: "Tersedia ruang pada sisi atau bagian depan toilet sesuai metode transfer pengguna. Tempat sampah, kabinet, atau perlengkapan lain tidak menghalangi area transfer.",
-      cara_verifikasi: "Ukur jarak bebas di depan dan samping toilet; konfirmasi metode transfer.",
-      referensi: "Permen PUPR No. 14/PRT/M/2017, ketentuan toilet aksesibel; ADA \xA7604 sebagai pembanding.",
-      hack: "Pindahkan tempat sampah, rak, atau ember dari samping dan depan kloset. Tentukan sisi transfer sesuai sisi tubuh pengguna yang lebih kuat.",
-      modifikasi: "Sediakan ruang bebas di samping kloset untuk kursi roda parkir sejajar. Area bebas 152,5 cm lebar x 142 cm dalam di sekitar kloset, dengan kloset berjarak 40,5 - 45,5 cm dari dinding samping.",
-      referensi_rekomendasi: [
-        "PUPR Lampiran III (Toilet)",
-        "ADA \xA7604.2 (posisi kloset), \xA7604.3 (ruang bebas)"
       ],
       status_validasi: "draf"
     },
@@ -799,20 +719,6 @@ var kamar_mandi_default = {
       modifikasi: "Pasang rak dan gantungan handuk pada ketinggian 38 - 122 cm dari lantai, dekat area mandi dan wastafel.",
       referensi_rekomendasi: [
         "ADA \xA7308 (jangkauan), \xA7603.4 (perlengkapan kamar mandi)"
-      ],
-      status_validasi: "draf"
-    },
-    {
-      id: "M-12",
-      elemen: "Keamanan dan kemandirian",
-      pertanyaan: "Apakah pengguna dapat menjaga privasi dan keselamatan?",
-      indikator: "Pintu dapat digunakan tanpa menghambat bantuan darurat; lantai dan pegangan mendukung keselamatan; pengguna dapat mengakses perlengkapan darurat atau meminta pertolongan bila dibutuhkan.",
-      cara_verifikasi: "Observasi mekanisme pintu; wawancara pengguna; tinjau skenario bantuan darurat.",
-      referensi: "Prinsip desain universal, keselamatan hunian, dan asesmen kebutuhan individual.",
-      hack: "Gunakan kunci pintu yang bisa dibuka dari luar saat darurat, dan selalu bawa ponsel dalam kantong tahan air atau gantung di dekat kloset. Sepakati dengan anggota rumah tanda atau waktu cek kalau pengguna terlalu lama di kamar mandi.",
-      modifikasi: "Pasang bel atau tombol panggil darurat di dekat kloset dan area mandi, pada ketinggian yang bisa dijangkau termasuk dari lantai. Pintu yang membuka ke luar juga memudahkan bantuan darurat karena tidak terhalang jika pengguna jatuh di dekat pintu.",
-      referensi_rekomendasi: [
-        "PUPR Lampiran III (pintu toilet membuka ke luar) \xB7 prinsip keselamatan dan kemandirian dalam Desain Universal (PUPR Lampiran I A.2 & A.5)"
       ],
       status_validasi: "draf"
     }

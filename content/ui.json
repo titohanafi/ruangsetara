@@ -12,7 +12,13 @@
     "privasiJudul": "Privasi Anda terjaga",
     "privasiIsi": "Jawaban hanya ada di tab ini dan hilang saat halaman dimuat ulang. Foto baru dikirim ke layanan AI bila Anda menekan \"Baca foto dengan AI\"."
   },
-  "langkah": ["Foto ruangan", "Profil awal", "Prioritas", "Pertanyaan", "Rekomendasi"],
+  "langkah": [
+    "Profil awal",
+    "Pilih tema",
+    "Foto ruangan",
+    "Pertanyaan",
+    "Rekomendasi"
+  ],
   "langkahLabel": "Langkah {n} / {total}",
   "tanpaAkun": "Tanpa akun. Tanpa menyimpan data.",
   "tombol": {
@@ -23,8 +29,8 @@
   },
   "foto": {
     "label": "Foto ruangan",
-    "judul": "Mulai dari foto ruangan.",
-    "isi": "Foto membantu mengisi sebagian jawaban untuk Anda. Anda tetap bisa mengubah setiap jawaban nanti.",
+    "judul": "Lihat ruang dari beberapa sudut.",
+    "isi": "Tambahkan foto area secara keseluruhan, jalur masuk, dan bagian yang terasa sulit digunakan.",
     "areaTanya": "Foto ini untuk area mana?",
     "areaDipindai": "Bisa dibaca AI",
     "tips": "Ambil 1–6 foto yang cukup terang: seluruh ruangan, jalur masuk, dan bagian yang terasa sulit digunakan. Hindari wajah dan informasi pribadi.",
@@ -55,17 +61,17 @@
     "label": "Mengenal kebutuhan Anda",
     "judul": "Setiap orang, kebutuhan berbeda.",
     "pilih": "Pilih jawaban",
-    "lanjut": "Pilih prioritas →"
+    "lanjut": "Pilih area rumah →"
   },
   "prioritas": {
     "label": "Satu area dalam satu asesmen",
-    "judul": "Mulai dari yang penting.",
-    "isi": "Pertanyaan yang tampil hanya untuk area yang Anda pilih di langkah foto.",
+    "judul": "Mulai dari area yang penting.",
+    "isi": "Pilih area yang ingin diperiksa terlebih dahulu. Anda hanya akan menjawab pertanyaan untuk area ini.",
     "ubahArea": "Ganti area",
     "aktivitasTanya": "Aktivitas apa yang paling ingin dipermudah?",
     "aktivitasBantu": "Pilih satu aktivitas prioritas.",
     "pertanyaanJumlah": "{n} pertanyaan",
-    "lanjut": "Mulai pertanyaan →"
+    "lanjut": "Tambahkan foto →"
   },
   "tanya": {
     "label": "Periksa satu hal, selangkah demi selangkah",
@@ -158,5 +164,9 @@
     "zonaMati": "Zona lantai (ruang putar, area bebas, keramik) dimatikan dulu supaya gambar tidak penuh; nyalakan lewat nomornya.",
     "ruangDiperluas": "Ruang digambar lebih luas ({lebar} × {dalam} cm) supaya ruang putar dan area shower tidak tumpang tindih. Itu ukuran ideal, bukan ukuran ruang Anda.",
     "ruangDiperluasCatatan": "Untuk ditanyakan ke peneliti: belum dipastikan apakah ruang putar boleh tumpang tindih dengan area shower tanpa undakan. Ukuran ini penafsiran dari dua angka tabel, belum acuan resmi."
+  },
+  "footer": {
+    "nama": "Ruang Setara",
+    "isi": "Ruang untuk bergerak. Kesempatan untuk mandiri."
   }
 }

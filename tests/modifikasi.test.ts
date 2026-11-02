@@ -166,10 +166,10 @@ describe("ringkasModifikasi", () => {
     expect(id(ringkasModifikasi(daftar, tidak("M-07"), denah({ varianShower: "shower_tetap" })).belumDigambar)).toEqual(["M-07"]);
   });
 
-  it("rak dan handuk (M-11) tetap digambar bila salah satu bendanya terlihat; tombol darurat (M-12) bila salah satu dari tiga", () => {
+  it("rak dan handuk (M-11) tetap digambar bila salah satu bendanya terlihat", () => {
     expect(id(ringkasModifikasi(daftar, tidak("M-11"), denah({}, ["area_mandi"])).digambar)).toEqual(["M-11"]);
     expect(id(ringkasModifikasi(daftar, tidak("M-11"), denah({}, ["area_mandi", "wastafel"])).bendaTakTerlihat)).toEqual(["M-11"]);
-    expect(id(ringkasModifikasi(daftar, tidak("M-12"), denah({}, ["kloset", "area_mandi"])).digambar)).toEqual(["M-12"]);
+    expect(id(ringkasModifikasi(daftar, tidak("M-12"), denah({}, ["kloset", "area_mandi"])).digambar)).toEqual([]);
   });
 
   it("lantai bertekstur (M-09) dan ruang putar (M-02) digambar walau semua benda tidak terbaca", () => {
@@ -177,16 +177,16 @@ describe("ringkasModifikasi", () => {
     expect(id(r.digambar)).toEqual(["M-02", "M-09"]);
   });
 
-  it("semua 12 pertanyaan kamar mandi kini punya gambar (tidak ada yang belum digambar)", () => {
+  it("semua 10 pertanyaan kamar mandi kini punya gambar (tidak ada yang belum digambar)", () => {
     const r = ringkasModifikasi(daftar, tidak(...daftar.map((p) => p.id)), denah());
     expect(id(r.belumDigambar)).toEqual([]);
-    expect(id(r.digambar)).toHaveLength(12);
+    expect(id(r.digambar)).toHaveLength(10);
   });
 
   it("kloset tidak terbaca: M-03, M-04, M-05 tidak digambar, M-02 tetap (tidak bergantung benda)", () => {
     const r = ringkasModifikasi(daftar, tidak("M-02", "M-03", "M-04", "M-05"), denah({}, ["kloset"]));
     expect(id(r.digambar)).toEqual(["M-02"]);
-    expect(id(r.bendaTakTerlihat)).toEqual(["M-03", "M-04", "M-05"]);
+    expect(id(r.bendaTakTerlihat)).toEqual(["M-04", "M-05"]);
   });
 });
 

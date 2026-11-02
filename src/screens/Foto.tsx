@@ -1,7 +1,7 @@
 import { useRef, useState, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
-import { aturanFoto, cariArea, DAFTAR_AREA, isi, PERTANYAAN, UI } from "../domain/konten";
+import { aturanFoto, cariArea, isi, PERTANYAAN, UI } from "../domain/konten";
 import { isiDariFoto, MAKS_FOTO } from "../domain/pindai";
 import { analisisFoto, GalatAnalisis } from "../lib/analisis";
 import { bacaDenah } from "../lib/denah";
@@ -61,40 +61,11 @@ export function FotoScreen() {
   const belumTahuAI = Object.values(state.jawaban).filter((j) => j.perluTinjau).length;
   const selesai = state.baca.status === "selesai";
   return (
-    <Layout langkah={0} label={T.label}>
+    <Layout langkah={2} label={T.label}>
       <h1 className="mt-2 text-judul">{T.judul}</h1>
       <p className="mt-3 text-redup">{T.isi}</p>
 
-      <fieldset className="mt-8">
-        <legend className="font-semibold">{T.areaTanya}</legend>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
-          {DAFTAR_AREA.map((a) => (
-            <label
-              key={a.id}
-              className={`flex min-h-sentuh cursor-pointer items-start gap-3 rounded-kartu border p-4 ${
-                state.areaId === a.id ? "border-utama bg-utama-muda" : "border-garis bg-putih"
-              }`}
-            >
-              <input
-                type="radio"
-                name="area"
-                className="mt-1 h-5 w-5 accent-utama"
-                checked={state.areaId === a.id}
-                onChange={() => kirim({ jenis: "pilih_area", areaId: a.id })}
-              />
-              <span>
-                <span className="block font-semibold">
-                  <span aria-hidden>{a.ikon} </span>
-                  {a.nama}
-                </span>
-                <span className="mt-0.5 block text-kecil text-redup">{a.foto_teruji ? T.areaDipindai : T.areaUji}</span>
-              </span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-
-      <section className="mt-8" aria-labelledby="judul-foto">
+      <section className="photo-upload mt-8" aria-labelledby="judul-foto">
         <h2 id="judul-foto" className="text-subjudul">
           {T.label}
         </h2>
@@ -175,17 +146,18 @@ export function FotoScreen() {
       </div>
 
       <div className="tanpa-cetak mt-8 flex flex-wrap items-center gap-3 border-t border-garis pt-5">
+        <button type="button" className="tombol-tipis" disabled={membaca} onClick={() => pindah("/prioritas")}>{UI.tombol.kembali}</button>
         {bisaDibaca && state.fotos.length > 0 && !selesai ? (
           <>
             <button type="button" className="tombol-utama" disabled={membaca} onClick={baca}>
               {T.baca}
             </button>
-            <button type="button" className="tombol-tipis" disabled={membaca} onClick={() => pindah("/profil")}>
+            <button type="button" className="tombol-tipis" disabled={membaca} onClick={() => pindah("/pertanyaan")}>
               {T.lewati}
             </button>
           </>
         ) : (
-          <button type="button" className="tombol-utama" disabled={!area} onClick={() => pindah("/profil")}>
+          <button type="button" className="tombol-utama" disabled={!area} onClick={() => pindah("/pertanyaan")}>
             {state.fotos.length === 0 || !bisaDibaca || selesai ? UI.tombol.lanjut : T.lanjutTanpaBaca}
           </button>
         )}

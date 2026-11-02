@@ -232,7 +232,7 @@ export function HasilScreen() {
           className="tombol-utama"
           onClick={() => {
             kirim({ jenis: "area_lain" });
-            pindah("/");
+            pindah("/prioritas");
           }}
         >
           {T.areaLain}

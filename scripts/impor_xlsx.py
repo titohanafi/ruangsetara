@@ -11,6 +11,7 @@ from pathlib import Path
 import openpyxl
 
 ROOT = Path(__file__).resolve().parent.parent
+DIHAPUS = set(json.loads((ROOT / "content" / "pertanyaan-dihapus.json").read_text(encoding="utf-8"))["ids"])
 wb = openpyxl.load_workbook(ROOT / "riset" / "checklist-peneliti.xlsx", data_only=True)
 
 AREA = {
@@ -48,7 +49,7 @@ for r in ws.iter_rows(min_row=6, values_only=True):
     if sekarang is None or not r[2]:
         continue
     m = re.match(r"^([A-Z]-\d+)\.\s*(.+)$", str(r[2]).strip())
-    if not m:
+    if not m or m.group(1) in DIHAPUS:
         continue
     if r[0] and per_area[sekarang]["fokus"] is None:
         per_area[sekarang]["fokus"] = teks(r[0])

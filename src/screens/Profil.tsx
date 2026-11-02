@@ -10,12 +10,12 @@ export function ProfilScreen() {
   const pindah = useNavigate();
   const lengkap = PROFIL.pertanyaan.every((p) => state.profil[p.id]);
   return (
-    <Layout langkah={1} label={T.label}>
+    <Layout langkah={0} label={T.label}>
       <h1 className="mt-2 text-judul">{T.judul}</h1>
       <p className="mt-3 text-redup">{PROFIL.pengantar}</p>
       <p className="mt-4 rounded-kartu bg-utama-muda p-3 text-kecil">{PROFIL.catatan_caregiver}</p>
 
-      <div className="mt-6 grid gap-5 sm:grid-cols-2">
+      <div className="profile-fields mt-6 grid gap-5 sm:grid-cols-2">
         {PROFIL.pertanyaan.map((p) => (
           <div key={p.id}>
             <label htmlFor={`profil-${p.id}`} className="block text-kecil font-semibold">
@@ -41,9 +41,7 @@ export function ProfilScreen() {
       </div>
 
       <div className="tanpa-cetak mt-8 flex flex-wrap items-center gap-3 border-t border-garis pt-5">
-        <button type="button" className="tombol-tipis" onClick={() => pindah("/")}>
-          {UI.tombol.kembali}
-        </button>
+
         <button type="button" className="tombol-utama" disabled={!lengkap} onClick={() => pindah("/prioritas")}>
           {T.lanjut}
         </button>

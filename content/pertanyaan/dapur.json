@@ -94,21 +94,6 @@
       "status_validasi": "draf"
     },
     {
-      "id": "K-07",
-      "elemen": "Ruang persiapan dan manuver",
-      "pertanyaan": "Apakah tersedia area untuk menyiapkan makanan?",
-      "indikator": "Terdapat ruang bebas untuk mendekati permukaan kerja, meletakkan bahan makanan, dan berpindah antara wastafel, area persiapan, serta kompor.",
-      "cara_verifikasi": "Ukur area bebas dan jarak antarelemen; simulasi urutan menyiapkan makanan.",
-      "referensi": "Prinsip desain universal; pendekatan aktivitas dalam asesmen aksesibilitas.",
-      "hack": "Dekatkan kulkas, wastafel, dan kompor, dan gunakan troli sebagai meja persiapan yang bisa berpindah. Kalau dapur terlalu sempit, pindahkan sebagian aktivitas ke ruang lain dengan alat masak portable.",
-      "modifikasi": "Sediakan jarak minimal 101,5 cm antar elemen berhadapan (dapur memanjang) atau 152,5 mm (dapur bentuk U), plus ruang bebas 76 x 122 cm di depan tiap alat.",
-      "referensi_rekomendasi": [
-        "ADA §804.2, §305",
-        "PUPR Lampiran I B.3"
-      ],
-      "status_validasi": "draf"
-    },
-    {
       "id": "K-08",
       "elemen": "Keselamatan dan kontrol risiko",
       "pertanyaan": "Apakah dapur aman digunakan dari posisi duduk?",

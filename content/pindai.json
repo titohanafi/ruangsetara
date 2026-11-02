@@ -9,8 +9,7 @@
     "G-06": "sebagian",
     "G-07": "sebagian",
     "G-08": "sebagian",
-    "G-09": "sebagian",
-    "G-10": "tidak"
+    "G-09": "sebagian"
   },
   "dapur": {
     "K-01": "sebagian",
@@ -19,7 +18,6 @@
     "K-04": "sebagian",
     "K-05": "sebagian",
     "K-06": "sebagian",
-    "K-07": "sebagian",
     "K-08": "tidak"
   },
   "kamar-tidur": {
@@ -27,17 +25,14 @@
     "B-02": "sebagian",
     "B-03": "sebagian",
     "B-04": "sebagian",
-    "B-05": "sebagian",
     "B-06": "sebagian",
     "B-07": "sebagian",
     "B-08": "sebagian",
-    "B-09": "tidak",
     "B-10": "sebagian"
   },
   "kamar-mandi": {
     "M-01": "sebagian",
     "M-02": "sebagian",
-    "M-03": "sebagian",
     "M-04": "sebagian",
     "M-05": "sebagian",
     "M-06": "sebagian",
@@ -45,8 +40,7 @@
     "M-08": "bisa",
     "M-09": "sebagian",
     "M-10": "sebagian",
-    "M-11": "sebagian",
-    "M-12": "tidak"
+    "M-11": "sebagian"
   },
   "pengecualian": {
     "kamar-mandi/M-08": "Cara Verifikasi di sheet diawali 'Foto area mandi', dan hambatan utamanya (ambang, bibir bak) kelihatan di foto. Foto tidak membuktikan ambang kecil, ruang pendekatan, atau metode mandi, jadi jawabannya tetap bertanda 'Terisi dari foto' dan bisa diubah."

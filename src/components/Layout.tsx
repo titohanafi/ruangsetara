@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { isi, UI } from "../domain/konten";
 import { useStore } from "../state/store";
 
-export const JALUR = ["/", "/profil", "/prioritas", "/pertanyaan", "/hasil"] as const;
+export const JALUR = ["/", "/prioritas", "/foto", "/pertanyaan", "/hasil"] as const;
 
 function Merek() {
   return (
@@ -11,8 +11,8 @@ function Merek() {
       <span aria-hidden className="mr-2.5 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-utama text-[1.4rem] text-putih">
         ⌂
       </span>
-      <span>{UI.merek.nama.slice(0, 4)}</span>
-      <span className="font-normal">{UI.merek.nama.slice(4)}</span>
+      <span>{UI.merek.nama.slice(0, 5)}</span>
+      <span className="font-normal">{UI.merek.nama.slice(5)}</span>
     </a>
   );
 }
@@ -27,7 +27,7 @@ export function Layout({ langkah, label, children }: { langkah: number; label: s
     pindah("/");
   };
   return (
-    <div className="min-h-screen">
+    <div className="site-shell min-h-screen">
       <a
         href="#isi"
         className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-10 focus:rounded focus:bg-putih focus:p-2"
@@ -47,8 +47,8 @@ export function Layout({ langkah, label, children }: { langkah: number; label: s
           {UI.merek.mulaiUlang} ↗
         </button>
       </header>
-      <div className="lg:grid lg:grid-cols-[320px_1fr]">
-        <aside className="tanpa-cetak hidden border-r border-garis bg-utama-muda px-8 py-10 lg:block">
+      <div className="site-layout">
+        <aside className="site-sidebar tanpa-cetak">
           <p className="label-mikro">{UI.samping.label}</p>
           <h2 className="mt-3 text-judul">{UI.samping.judul}</h2>
           <p className="mt-4 text-kecil text-redup">{UI.samping.isi}</p>
@@ -75,8 +75,8 @@ export function Layout({ langkah, label, children }: { langkah: number; label: s
             <p className="mt-1 text-redup">{UI.samping.privasiIsi}</p>
           </div>
         </aside>
-        <main id="isi" className="mx-auto w-full max-w-3xl px-[5%] py-6 lg:px-10 lg:py-10">
-          <div className="tanpa-cetak mb-5 lg:hidden" role="group" aria-label={isi(UI.langkahLabel, { n: langkah + 1, total })}>
+        <main id="isi" className="site-main">
+          <div className="sr-only" role="group" aria-label={isi(UI.langkahLabel, { n: langkah + 1, total })}>
             <div className="h-1.5 overflow-hidden rounded-full bg-garis">
               <div className="h-full bg-utama" style={{ width: `${((langkah + 1) / total) * 100}%` }} />
             </div>
@@ -87,6 +87,7 @@ export function Layout({ langkah, label, children }: { langkah: number; label: s
           {children}
         </main>
       </div>
+      <footer className="site-footer tanpa-cetak"><span>{UI.footer.nama}</span><span>{UI.footer.isi}</span></footer>
     </div>
   );
 }

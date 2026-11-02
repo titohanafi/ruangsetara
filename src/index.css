@@ -55,3 +55,64 @@
     box-shadow: none;
   }
 }
+
+/* Match the researcher’s ChatGPT Site; keep React and optional photo analysis. */
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.6; }
+.site-shell > header { min-height: 92px; padding: 0 5%; gap: 30px; }
+.site-shell > header > a { font-size: 25px; letter-spacing: -1px; }
+.site-shell > header > span { font-size: 10px; letter-spacing: 1.5px; }
+.site-layout { max-width: 1440px; display: grid; grid-template-columns: 370px 1fr; margin: auto; min-height: calc(100vh - 155px); }
+.site-sidebar { padding: 52px 38px; background: #eff3e8; border-right: 1px solid #dbe2d8; }
+.site-sidebar h2 { font: 400 34px/1.2 Georgia, serif; letter-spacing: -.8px; margin: 22px 0; }
+.site-sidebar > p:not(.label-mikro) { font-size: 15px; }
+.site-sidebar ol { display: grid; gap: 9px; margin-top: 32px; }
+.site-sidebar ol > li { margin: 0; padding: 10px 0; font-size: 14px; }
+.site-sidebar li > span:first-child { width: 30px; height: 30px; font-size: 12px; }
+.site-sidebar > div { margin-top: 35px; padding-top: 25px; font-size: 12px; }
+.site-main { padding: 48px 64px 60px; max-width: 1000px; width: 100%; min-width: 0; }
+.site-main > h1 { font: 400 38px/1.15 Georgia, serif; letter-spacing: -.6px; margin: 14px 0; }
+.site-main > p.text-redup { font-size: 15px; margin-bottom: 28px; }
+.label-mikro { font-size: 10px; letter-spacing: 1.8px; }
+.profile-fields { gap: 22px 20px; margin-top: 26px; }
+.site-main select { width: 100%; padding: 12px 34px 12px 13px; min-height: 50px; border: 1px solid #bdcbbd; border-radius: 8px; background: white; color: #183f37; }
+.tombol { border-radius: 8px; padding: 13px 22px; min-height: 48px; }
+.site-main > .tanpa-cetak > .tombol-utama { margin-left: auto; }
+.site-main > .tanpa-cetak > span { order: -1; margin-left: 0; }
+.theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+.theme-card { position: relative; text-align: left; background: white; border: 1px solid #dbe2d8; border-radius: 14px; padding: 23px; }
+.theme-card.selected { border: 2px solid #245c4c; padding: 22px; background: #f2f6e8; }
+.theme-card.selected::after { content: '✓'; position: absolute; right: 20px; top: 20px; }
+.theme-symbol { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 12px; background: #edf2e3; font-size: 25px; }
+.theme-card strong { display: block; font-size: 18px; margin-top: 14px; }
+.theme-card p { font-size: 13px; color: #586b62; margin: 6px 0 20px; }
+.theme-card small { font-size: 11px; text-transform: uppercase; }
+.photo-upload { border: 1.5px dashed #93ac93; border-radius: 14px; background: #f2f6ec; text-align: center; padding: 30px 20px; }
+.photo-upload > .flex { justify-content: center; }
+.site-footer { border-top: 1px solid #dbe2d8; padding: 18px 5%; font-size: 12px; display: flex; justify-content: space-between; color: #586b62; }
+@media(max-width:1050px) {
+ .site-layout { grid-template-columns: 300px 1fr; }
+ .site-sidebar { padding: 35px 25px; }
+ .site-sidebar h2 { font-size: 30px; }
+ .site-main { padding: 35px 30px; }
+ .profile-fields { grid-template-columns: 1fr; }
+}
+@media(max-width:720px) {
+ .site-shell > header { min-height: 75px; padding: 0 20px; gap: 10px; }
+ .site-shell > header > a { font-size: 22px; }
+ .site-shell > header > span { display: none; }
+ .site-layout { display: block; }
+ .site-sidebar { padding: 18px 20px; border-right: 0; border-bottom: 1px solid #dbe2d8; }
+ .site-sidebar > p, .site-sidebar h2, .site-sidebar > div { display: none; }
+ .site-sidebar ol { display: flex; justify-content: space-between; gap: 6px; margin: 0; }
+ .site-sidebar ol > li { font-size: 10px; flex-direction: column; gap: 6px; padding: 0; }
+ .site-sidebar li > span:first-child { width: 25px; height: 25px; }
+ .site-main { padding: 30px 20px 40px; }
+ .site-main > h1 { font-size: 32px; }
+ .theme-grid { gap: 12px; }
+ .theme-card { padding: 18px; }
+ .theme-card.selected { padding: 17px; }
+ .theme-card strong { font-size: 16px; }
+ .site-footer span:last-child { display: none; }
+ .photo-upload > .flex { flex-direction: column; }
+}
+@media print { .site-layout { display: block; } .site-main { padding: 0; max-width: none; } }

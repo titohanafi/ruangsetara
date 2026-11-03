@@ -17,26 +17,17 @@ export function ProfilScreen() {
 
       <div className="profile-fields mt-6 grid gap-5 sm:grid-cols-2">
         {PROFIL.pertanyaan.map((p) => (
-          <div key={p.id}>
-            <label htmlFor={`profil-${p.id}`} className="block text-kecil font-semibold">
-              {p.pertanyaan}
-            </label>
-            <select
-              id={`profil-${p.id}`}
-              value={state.profil[p.id] ?? ""}
-              onChange={(e) => kirim({ jenis: "isi_profil", id: p.id, nilai: e.target.value })}
-              className="mt-1.5 min-h-sentuh w-full rounded-tombol border border-garisKontrol bg-putih px-3"
-            >
-              <option value="" disabled>
-                {T.pilih}
-              </option>
+          <fieldset key={p.id} className="min-w-0">
+            <legend className="text-lg font-semibold">{p.pertanyaan}</legend>
+            <div className="mt-3 grid gap-2">
               {p.pilihan.map((o) => (
-                <option key={o} value={o}>
-                  {o}
-                </option>
+                <label key={o} className={`flex min-h-sentuh cursor-pointer items-center gap-3 rounded-tombol p-3 ${state.profil[p.id] === o ? "bg-utama-muda" : "bg-transparent"}`}>
+                  <input type="radio" name={`profil-${p.id}`} value={o} checked={state.profil[p.id] === o} onChange={() => kirim({ jenis: "isi_profil", id: p.id, nilai: o })} className="h-4 w-4 shrink-0 accent-utama" />
+                  <span>{o}</span>
+                </label>
               ))}
-            </select>
-          </div>
+            </div>
+          </fieldset>
         ))}
       </div>
 

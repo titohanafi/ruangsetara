@@ -21,17 +21,9 @@ export function PrioritasScreen() {
           </button>
         ))}
       </div>
-      {area && <div className="mt-6">
-        <label className="block text-kecil font-semibold" htmlFor="aktivitas">{T.aktivitasTanya}</label>
-        <select id="aktivitas" value={state.aktivitas ?? ""} onChange={(e) => kirim({ jenis: "pilih_aktivitas", aktivitas: e.target.value })}>
-          <option value="" disabled>{UI.profil.pilih}</option>
-          {area.aktivitas.map((a) => <option key={a} value={a}>{a}</option>)}
-        </select>
-        <p className="text-kecil text-redup">{T.aktivitasBantu}</p>
-      </div>}
       <div className="tanpa-cetak mt-8 flex flex-wrap items-center gap-3 border-t border-garis pt-5">
         <button type="button" className="tombol-tipis" onClick={() => pindah("/")}>{UI.tombol.kembali}</button>
-        <button type="button" className="tombol-utama" disabled={!area || !state.aktivitas} onClick={() => { kirim({ jenis: "ke_pertanyaan", indeks: 0 }); pindah("/foto"); }}>{T.lanjut}</button>
+        <button type="button" className="tombol-utama" disabled={!area} onClick={() => { kirim({ jenis: "ke_pertanyaan", indeks: 0 }); pindah("/foto"); }}>{T.lanjut}</button>
       </div>
     </Layout>
   );

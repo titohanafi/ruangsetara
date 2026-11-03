@@ -104,7 +104,7 @@
   "hasil": {
     "label": "Rekomendasi",
     "judul": "Ruang yang lebih mendukung Anda.",
-    "prioritas": "Prioritas Anda: {aktivitas}. Berikut hasil berdasarkan jawaban asesmen.",
+    "prioritas": "Berikut hasil asesmen untuk area yang Anda pilih.",
     "ringkas": "{n}/{total}",
     "ringkasLabel": "aspek membutuhkan penyesuaian",
     "ringkasSisa": "{n} aspek tidak menunjukkan hambatan berdasarkan jawaban Anda.",

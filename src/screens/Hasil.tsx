@@ -42,19 +42,12 @@ function KartuButir({
   return (
     <li className="kartu">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="label-mikro">
-          {String(nomor).padStart(2, "0")} · {p.id} · {p.elemen}
-        </span>
-        <span
-          className={`rounded-full px-2.5 py-0.5 text-mikro font-semibold ${belum ? "bg-draf-muda text-draf" : "bg-perhatian-muda text-perhatian"}`}
-        >
-          {belum ? T.jawabanBelum : T.jawabanTidak}
-        </span>
+        <span className="text-kecil text-redup">{String(nomor).padStart(2, "0")}</span>
+        <h3 className="text-lg font-semibold">{p.elemen}</h3>
         {b.jawaban.sumber === "foto" && (
           <span className="rounded-full bg-info-muda px-2.5 py-0.5 text-mikro font-semibold text-info">✦ {T.dariFoto}</span>
         )}
       </div>
-      <h3 className="mt-2 text-lg font-semibold">{p.pertanyaan}</h3>
       {b.jawaban.alasan && b.jawaban.sumber === "foto" && (
         <p className="mt-1 text-kecil text-redup">
           {UI.tanya.alasanFoto}
@@ -89,16 +82,7 @@ function KartuButir({
               <GambarModifikasiKartu id={p.id} denah={denah} />
             </Suspense>
           )}
-          {p.referensi_rekomendasi.length > 0 && (
-            <div className="mt-3">
-              <h4 className="label-mikro">{T.rujukan}</h4>
-              <ul className="mt-1 list-disc pl-5 text-kecil text-redup">
-                {p.referensi_rekomendasi.map((r) => (
-                  <li key={r}>{r}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+
         </>
       )}
     </li>
@@ -129,19 +113,15 @@ export function HasilScreen() {
   return (
     <Layout langkah={4} label={T.label}>
       <h1 className="mt-2 text-judul">{area.nama}</h1>
-      <h2 className="mt-1 text-subjudul">{T.judul}</h2>
-      {state.aktivitas && <p className="mt-3 text-redup">{isi(T.prioritas, { aktivitas: state.aktivitas.toLowerCase() })}</p>}
+      <p className="mt-3 text-redup">{T.prioritas}</p>
 
       <div className="kartu mt-6">
         <p className="text-4xl font-bold">{isi(T.ringkas, { n: r.penyesuaian, total: r.total })}</p>
         <p className="font-semibold">{T.ringkasLabel}</p>
-        <p className="mt-2 text-kecil text-redup">{isi(T.ringkasSisa, { n: r.sesuai })}</p>
-        {r.belum > 0 && <p className="text-kecil text-redup">{isi(T.ringkasBelum, { n: r.belum })}</p>}
       </div>
 
       <p className="mt-4 rounded-kartu bg-draf-muda p-3 text-kecil text-draf">{T.draf}</p>
       {r.dariFoto > 0 && <p className="mt-3 rounded-kartu bg-info-muda p-3 text-kecil text-info">{T.aturanFoto}</p>}
-      {HASIL.aturan_penting && (r.belum > 0 || r.dariFoto > 0) && <p className="mt-3 text-kecil text-redup">{HASIL.aturan_penting}</p>}
 
       {state.fotos.length > 0 && (
         <section className="mt-6" aria-labelledby="foto-hasil">
@@ -155,7 +135,6 @@ export function HasilScreen() {
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-kecil text-redup">{T.fotoCatatan}</p>
         </section>
       )}
 

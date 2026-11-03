@@ -58,7 +58,6 @@ export function FotoScreen() {
     }
   }
 
-  const belumTahuAI = Object.values(state.jawaban).filter((j) => j.perluTinjau).length;
   const selesai = state.baca.status === "selesai";
   return (
     <Layout langkah={2} label={T.label}>
@@ -128,20 +127,8 @@ export function FotoScreen() {
         {membaca && <p className="kartu">{T.membaca}</p>}
         {state.baca.status === "sering" && <p className="rounded-kartu bg-perhatian-muda p-4 text-perhatian">{T.terlaluSering}</p>}
         {state.baca.status === "gagal" && <p className="rounded-kartu bg-perhatian-muda p-4 text-perhatian">{T.gagalAnalisis}</p>}
-        {selesai && (
-          <div className="kartu">
-            <h2 className="text-subjudul">{T.hasilJudul}</h2>
-            {state.baca.bukanRuangan ? (
-              <p className="mt-2">{isi(T.bukanRuangan, { area: area?.nama.toLowerCase() ?? "" })}</p>
-            ) : (
-              <>
-                <p className="mt-2 font-semibold">{isi(T.hasilTerisi, { n: state.baca.terisi, total: state.baca.total })}</p>
-                <p className="mt-1 text-redup">{isi(T.hasilSisa, { n: state.baca.total - state.baca.terisi })}</p>
-                {belumTahuAI > 0 && <p className="mt-1 text-redup">{isi(T.hasilBelumTahu, { n: belumTahuAI })}</p>}
-                <p className="mt-2 text-kecil text-redup">{UI.tanya.dariFotoCatatan}</p>
-              </>
-            )}
-          </div>
+        {selesai && state.baca.bukanRuangan && (
+          <p className="kartu">{isi(T.bukanRuangan, { area: area?.nama.toLowerCase() ?? "" })}</p>
         )}
       </div>
 

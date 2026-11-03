@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
 import { butirHasil, ringkas, type Butir } from "../domain/asesmen";
@@ -11,7 +11,6 @@ const T = UI.hasil;
 // Dimuat hanya bila ada hasil baca denah: gambar dan tabel ukurannya tidak ikut dimuat di halaman lain.
 const GambarModifikasiKartu = lazy(() => import("../components/GambarModifikasiKartu").then((m) => ({ default: m.GambarModifikasiKartu })));
 const RingkasanModifikasi = lazy(() => import("../components/RingkasanModifikasi").then((m) => ({ default: m.RingkasanModifikasi })));
-const RuangAnda = lazy(() => import("../components/RuangAnda").then((m) => ({ default: m.RuangAnda })));
 const KATEGORI_D = HASIL.kategori.find((k) => k.nilai === "D");
 
 function Teks({ judul, teks }: { judul: string; teks: string | null }) {
@@ -92,6 +91,7 @@ function KartuButir({
 export function HasilScreen() {
   const { state, kirim } = useStore();
   const pindah = useNavigate();
+  const [pilihanModifikasi, setPilihanModifikasi] = useState<string | undefined>(undefined);
   const area = cariArea(state.areaId);
   if (!area) return null;
   const daftar = PERTANYAAN[area.id].pertanyaan;
@@ -104,6 +104,10 @@ export function HasilScreen() {
       ? ringkasModifikasi(daftar, state.jawaban, state.denah).digambar.map((p) => p.id)
       : [],
   );
+
+  const aktifModifikasi = pilihanModifikasi && digambar.has(pilihanModifikasi) ? pilihanModifikasi : [...digambar][0];
+  const mati = new Set([...digambar].filter((id) => id !== aktifModifikasi));
+  const gantiModifikasi = (id: string) => setPilihanModifikasi(id);
 
   const ubah = (id: string) => {
     kirim({ jenis: "ke_pertanyaan", indeks: daftar.findIndex((p) => p.id === id) });
@@ -138,9 +142,10 @@ export function HasilScreen() {
         </section>
       )}
 
-      {area.id === "kamar-mandi" && state.denah?.kamarMandi && (
+
+      {area.id === "kamar-mandi" && state.denah?.kamarMandi && digambar.size > 0 && (
         <Suspense fallback={null}>
-          <RuangAnda denah={state.denah} />
+          <RingkasanModifikasi jawaban={state.jawaban} denah={state.denah} mati={mati} onToggle={gantiModifikasi} />
         </Suspense>
       )}
 
@@ -151,7 +156,7 @@ export function HasilScreen() {
         </div>
       ) : (
         <ol className="mt-6 space-y-4">
-          {perlu.map((b, i) => (
+          {perlu.map((b, i) => (digambar.size === 0 || (digambar.has(b.pertanyaan.id) && !mati.has(b.pertanyaan.id))) && (
             <KartuButir
               key={b.pertanyaan.id}
               b={b}
@@ -164,11 +169,6 @@ export function HasilScreen() {
         </ol>
       )}
 
-      {area.id === "kamar-mandi" && state.denah?.kamarMandi && digambar.size > 0 && (
-        <Suspense fallback={null}>
-          <RingkasanModifikasi jawaban={state.jawaban} denah={state.denah} />
-        </Suspense>
-      )}
 
       <details className="mt-6 rounded-kartu border border-garis bg-putih p-4">
         <summary className="font-semibold">{isi(T.tinjau, { n: daftar.length })}</summary>

@@ -1,23 +1,16 @@
 import { useState } from "react";
 import { butirHasil, type PetaJawaban } from "../domain/asesmen";
 import { letakDariDenah, tidakTerlihatDariDenah, type HasilDenah } from "../domain/denahPindai";
-import { BERGAMBAR } from "../domain/bergambar";
-import { DIM } from "../domain/dimensiGambar";
-import { isi, PERTANYAAN, UI } from "../domain/konten";
+import { PERTANYAAN, UI } from "../domain/konten";
 import { PERTANYAAN_SHOWER, ringkasModifikasi } from "../domain/modifikasi";
 import { ruangIdeal, sudutAwal } from "../domain/ruang";
-import { bendaTersembunyi, PratinjauRuangIso3D } from "./PratinjauRuangIso3D";
+import { PratinjauRuangIso3D } from "./PratinjauRuangIso3D";
 
 const T = UI.ruang;
 type Sudut = "kiri" | "kanan";
 
-// Zona di lantai (ruang putar, area bebas, keramik) mati dulu di ringkasan supaya tidak menyilang dengan benda lain; menyala lewat nomornya.
-const ZONA_LANTAI = ["M-02", "M-03", "M-09"];
-
-const daftarNama = (daftar: { elemen: string | null; id: string }[]): string => daftar.map((p) => p.elemen ?? p.id).join(", ");
-
 /** Gambar semua modifikasi dalam satu ruangan, di akhir halaman hasil: bernomor sama dengan kartu, tiap nomor bisa dimatikan. */
-export function RingkasanModifikasi({ jawaban, denah }: { jawaban: PetaJawaban; denah: HasilDenah }) {
+export function RingkasanModifikasi({ jawaban, denah, mati, onToggle }: { jawaban: PetaJawaban; denah: HasilDenah; mati: ReadonlySet<string>; onToggle: (id: string) => void }) {
   const letak = letakDariDenah(denah.objek);
   const tidakTerlihat = tidakTerlihatDariDenah(denah.objek);
   const daftar = PERTANYAAN["kamar-mandi"].pertanyaan;
@@ -28,26 +21,12 @@ export function RingkasanModifikasi({ jawaban, denah }: { jawaban: PetaJawaban; 
       .filter((b) => b.status !== "sesuai")
       .map((b, i) => [b.pertanyaan.id, i + 1]),
   );
-  const [sudut, setSudut] = useState<Sudut>(() => sudutAwal(letak, tidakTerlihat));
-  const [semua, setSemua] = useState(false);
-  const [mati, setMati] = useState<ReadonlySet<string>>(() => new Set(ZONA_LANTAI));
+  const [sudut] = useState<Sudut>(() => sudutAwal(letak, tidakTerlihat));
+  const [semua, setSemua] = useState(true);
   if (ringkas.digambar.length === 0) return null;
 
   const aktif = ringkas.digambar.map((p) => p.id).filter((id) => !mati.has(id));
   const ruang = ruangIdeal(letak, aktif);
-  const diperluas = ruang.lebar !== DIM.ruang.lebar || ruang.dalam !== DIM.ruang.dalam;
-  const sembunyi = semua ? [] : bendaTersembunyi(letak, sudut, tidakTerlihat);
-  const dariSudut = ringkas.digambar.filter((p) => {
-    const perlu = p.id === PERTANYAAN_SHOWER ? (["area_mandi"] as const) : (BERGAMBAR[p.id] ?? []);
-    return aktif.includes(p.id) && perlu.length > 0 && perlu.every((o) => sembunyi.includes(o) || tidakTerlihat.includes(o));
-  });
-  const ganti = (id: string) =>
-    setMati((lama) => {
-      const baru = new Set(lama);
-      if (baru.has(id)) baru.delete(id);
-      else baru.add(id);
-      return baru;
-    });
 
   return (
     <section className="mt-8" aria-labelledby="ringkasan-modifikasi">
@@ -75,12 +54,15 @@ export function RingkasanModifikasi({ jawaban, denah }: { jawaban: PetaJawaban; 
           />
         </div>
         <div className="mt-2 flex flex-wrap gap-2">
-          <button type="button" className="tombol-tipis" onClick={() => setSudut(sudut === "kanan" ? "kiri" : "kanan")}>
-            {T.putar}
-          </button>
-          <button type="button" className="tombol-tipis" aria-pressed={semua} onClick={() => setSemua(!semua)}>
-            {semua ? T.sembunyikanLagi : T.tampilkanSemua}
-          </button>
+          <label className="flex min-h-sentuh cursor-pointer items-center gap-3 font-semibold">
+            <input
+              type="checkbox"
+              checked={semua}
+              onChange={(event) => setSemua(event.target.checked)}
+              className="h-5 w-5 accent-utama"
+            />
+            {T.tampilkanSemua}
+          </label>
         </div>
       </div>
 
@@ -94,31 +76,17 @@ export function RingkasanModifikasi({ jawaban, denah }: { jawaban: PetaJawaban; 
                 key={p.id}
                 type="button"
                 aria-pressed={nyala}
-                onClick={() => ganti(p.id)}
-                className={`min-h-sentuh rounded-tombol border px-3 text-kecil font-semibold ${nyala ? "border-utama bg-utama text-putih" : "border-garis bg-putih text-tinta"}`}
+                aria-label={`${nomor[p.id]}. ${p.elemen ?? p.id}`}
+                title={p.elemen ?? p.id}
+                onClick={() => onToggle(p.id)}
+                className={`min-h-sentuh min-w-[44px] rounded-tombol border px-3 text-kecil font-semibold ${nyala ? "border-utama bg-utama text-putih" : "border-garis bg-putih text-tinta"}`}
               >
-                {nomor[p.id]}. {p.elemen ?? p.id}
+                {nomor[p.id]}
               </button>
             );
           })}
         </div>
-        <p className="mt-2 text-kecil text-redup">{T.legenda}</p>
-        {ZONA_LANTAI.some((id) => ringkas.digambar.some((p) => p.id === id)) && <p className="mt-1 text-kecil text-redup">{T.zonaMati}</p>}
-        {diperluas && (
-          <>
-            <p className="mt-1 text-kecil text-redup">
-              {isi(T.ruangDiperluas, { lebar: String(ruang.lebar).replace(".", ","), dalam: String(ruang.dalam).replace(".", ",") })}
-            </p>
-            <p className="mt-1 rounded-tombol bg-draf-muda p-2 text-kecil text-draf">{T.ruangDiperluasCatatan}</p>
-          </>
-        )}
-        {dariSudut.length > 0 && <p className="mt-1 text-kecil text-redup">{isi(T.tersembunyiSudut, { daftar: daftarNama(dariSudut) })}</p>}
-        {ringkas.bendaTakTerlihat.length > 0 && (
-          <p className="mt-1 text-kecil text-redup">{isi(T.bendaTakTerlihat, { daftar: daftarNama(ringkas.bendaTakTerlihat) })}</p>
-        )}
       </fieldset>
-      <p className="mt-2 text-kecil text-redup">{T.catatan}</p>
-      <p className="mt-1 text-kecil text-info">✦ {T.dariFoto}</p>
     </section>
   );
 }

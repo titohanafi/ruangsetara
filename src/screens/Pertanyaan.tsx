@@ -22,9 +22,6 @@ export function PertanyaanScreen() {
   const j = state.jawaban[p.id];
   const terakhir = i === daftar.length - 1;
   const { terjawab } = ringkas(daftar, state.jawaban);
-  // Catatan AI hanya ada bila AI menandai pertanyaan ini "Belum tahu" (belum bisa dipastikan dari foto).
-  const catatan = state.catatanFoto[p.id];
-  const tindakLanjut = catatan !== undefined;
   const perluTinjau = j?.perluTinjau === true;
   const pilihan = (
     <fieldset className="mt-3" aria-labelledby="pertanyaan-id">
@@ -71,50 +68,9 @@ export function PertanyaanScreen() {
           {p.pertanyaan}
         </h2>
 
-        {tindakLanjut ? (
-          // AI belum bisa memastikan dari foto: jawaban AI "Belum tahu", pertanyaan lanjutan dari Cara Verifikasi di sheet,
-          // lalu pengguna menjawab sendiri. Tombol lanjut nonaktif sampai pengguna memilih jawaban akhir.
-          <>
-            <div className="mt-4 rounded-kartu border border-garis bg-putih p-3 text-kecil" role="status">
-              <p className="font-semibold text-info">✦ {T.aiBelumTahu}</p>
-              <p className="mt-1 text-info">{catatan || T.catatanKosong}</p>
-              <p className="mt-3 font-semibold">{T.periksaSendiri}</p>
-              <p className="mt-1 text-redup">{p.cara_verifikasi}</p>
-            </div>
-            <div className="mt-4">
-              <label htmlFor={`temuan-${p.id}`} className="font-semibold">
-                {T.temuanLabel}
-              </label>
-              <textarea
-                id={`temuan-${p.id}`}
-                rows={2}
-                maxLength={300}
-                placeholder={T.temuanContoh}
-                value={state.temuan[p.id] ?? ""}
-                onChange={(e) => kirim({ jenis: "isi_temuan", id: p.id, teks: e.target.value })}
-                className="mt-2 w-full rounded-tombol border bg-putih p-3"
-              />
-            </div>
-            <p className="mt-4 font-semibold">{T.jawabanAkhir}</p>
-            {pilihan}
-            {perluTinjau && <p className="mt-2 text-kecil text-redup">{T.setelahPeriksa}</p>}
-          </>
-        ) : (
-          <>
-            {pilihan}
-            {j?.sumber === "foto" && (
-              <div className="mt-4 rounded-kartu bg-info-muda p-3 text-kecil text-info" role="status">
-                <p className="font-semibold">✦ {T.dariFoto}</p>
-                {j.alasan && (
-                  <p className="mt-1">
-                    {T.alasanFoto}
-                    {j.alasan}
-                  </p>
-                )}
-                <p className="mt-1">{T.dariFotoCatatan}</p>
-              </div>
-            )}
-          </>
+        {pilihan}
+        {!perluTinjau && j?.sumber === "foto" && (
+          <p className="mt-4 text-kecil text-info">✦ {T.dariFoto}</p>
         )}
 
         <div className="mt-5 space-y-2">

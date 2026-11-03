@@ -166,3 +166,11 @@ Saat menggeneralisasi, field `kamar_mandi` diganti `ruang_sesuai` (prompt lain t
 Atas permintaan Tiara, aplikasi utama mengikuti desain situs ChatGPT: tipografi serif, jarak, sidebar, kartu tema, serta alur profil → tema/aktivitas → foto → pertanyaan → hasil. Fitur baca foto opsional dan ilustrasi yang sudah ada tetap tersedia.
 
 G-10, K-07, B-05, B-09, M-03, M-12 dihapus dari pertanyaan aktif. Jumlah baru: 9/7/8/10 (34 total). Berkas pertanyaan-dihapus.json mencatat keputusan peneliti; importir mengabaikan ID ini agar sheet lama tidak mengembalikannya. File XLSX lokal tidak tersedia di checkout ini. Aturan foto diturunkan ulang. Uji foto Gemini nyata belum diulang; tinjau sebelum merge.
+
+## 2026-11-03 — Penyederhanaan bagian setelah foto
+
+Atas permintaan Tiara, sembunyikan ringkasan hasil pembacaan foto, panel Jawaban AI/Periksa sendiri, isian temuan, dan bagian Ruang Anda. Pengguna tetap memilih jawaban untuk hasil AI yang belum pasti. Cara memeriksa tetap tersedia pada setiap pertanyaan. Gambar modifikasi per kartu dan ringkasan modifikasi dipertahankan. Pratinjau lokal memakai VITE_PINDAI_MOCK=true; tidak mengirim foto ke Gemini.
+
+## 2026-11-03 — Interaksi rekomendasi yang disederhanakan
+
+Ringkasan modifikasi dipindahkan tepat setelah foto. Tombol hanya menampilkan nomor, dengan nama kategori tetap tersedia untuk pembaca layar. Hanya satu modifikasi aktif dan kartu terkait ditampilkan; nomor pertama aktif secara bawaan dan nomor aktif tidak dapat dinonaktifkan tanpa memilih nomor lain. Tombol putar dihapus; checkbox Tampilkan semua benda aktif secara bawaan. Teks di antara nomor dan kartu dihapus. Keterangan ilustrasi kartu menjadi "Angka ini masih perkiraan". Logika analisis foto dan ukuran rekomendasi tidak diubah. Foto tiruan dan pengaturan pratinjau lokal tidak disertakan dalam perubahan GitHub.

@@ -60,4 +60,19 @@ describe("bukaan pintu", () => {
       }
     }
   });
+
+  it("kusen berada di dalam ketebalan dinding, tidak menonjol ke ruangan (paling banyak list 2 cm)", () => {
+    // Proyeksi sederhana: (x, y) tetap, sehingga y = kedalaman dari permukaan dinding (n positif = ke dalam ruangan).
+    const k = {
+      dinding: "belakang" as const,
+      sepanjang: 0,
+      bidang: 0,
+      proyeksi: (x: number, y: number): [number, number] => [x, y],
+      skala: 1,
+    };
+    const kusen = gambarBenda("pintu_tanpa_daun", k);
+    const ys = poligon(kusen).flatMap((p) => p.titik.map((t) => t[1]));
+    expect(Math.max(...ys)).toBeLessThanOrEqual(2 + 1e-6);
+    expect(Math.min(...ys)).toBeGreaterThanOrEqual(-10 - 1e-6);
+  });
 });

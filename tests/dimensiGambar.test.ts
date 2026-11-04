@@ -62,9 +62,9 @@ describe("dimensi nyata gambar (1 satuan = 1 cm)", () => {
 
   it("pintu: bukaan bersih 90 cm di antara kusen, tinggi mengikuti perkiraan tercatat", () => {
     const puncak = gambarBenda("pintu", k).filter(
-      (p) => p.jenis === "poligon" && p.titik.every((t) => Math.abs(-t[1] - (DIM.pintu.tinggi + 8)) < 1e-6),
+      (p) => p.jenis === "poligon" && p.titik.every((t) => Math.abs(-t[1] - (DIM.pintu.tinggi + 4)) < 1e-6),
     );
-    // Sisi atas kusen: ambang atas selebar bukaan ditambah dua tiang (4 cm masing-masing).
+    // Sisi atas kusen (di dalam ketebalan dinding): ambang atas selebar bukaan ditambah dua tiang (4 cm masing-masing).
     expect(Math.max(...puncak.map((p) => lebarX([p])))).toBeCloseTo(DIM.pintu.bukaanBersih + 8, 1);
   });
 

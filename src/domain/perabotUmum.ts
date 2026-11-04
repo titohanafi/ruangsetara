@@ -566,8 +566,8 @@ export function pintuPocket(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
     ...bukaanDinding(k),
     ...gambarBenda("pintu_tanpa_daun", k, "netral"),
-    ...kotak(k, 0, 45, 1, 4, 2, 208, peran),
-    ...kotak(k, 45, 135, -9, -5, 2, 208, "hantu"),
+    ...kotak(k, 0, 45, -5, -2, 2, 208, peran),
+    ...kotak(k, 45, 135, -5, -2, 2, 208, "hantu"),
   ];
 }
 

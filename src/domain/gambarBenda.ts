@@ -148,10 +148,16 @@ const SUDUT_BUKA = (55 * Math.PI) / 180;
 function kusenPintu(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const s2 = DIM.pintu.bukaanBersih / 2;
   const tinggi = DIM.pintu.tinggi;
+  const tebal = DIM.ruang.tebalDinding;
   return [
-    ...kotak(k, -s2 - 4, -s2, 0, 8, 0, tinggi + 8, peran),
-    ...kotak(k, s2, s2 + 4, 0, 8, 0, tinggi + 8, peran),
-    ...kotak(k, -s2 - 4, s2 + 4, 0, 8, tinggi, tinggi + 8, peran),
+    // Kusen terpasang di dalam ketebalan dinding (rata dengan permukaan dinding), bukan menonjol ke dalam ruangan.
+    ...kotak(k, -s2 - 4, -s2, -tebal, 0, 0, tinggi + 4, peran),
+    ...kotak(k, s2, s2 + 4, -tebal, 0, 0, tinggi + 4, peran),
+    ...kotak(k, -s2 - 4, s2 + 4, -tebal, 0, tinggi, tinggi + 4, peran),
+    // List tipis (2 cm) di sisi dalam yang menutup sambungan kusen dan dinding.
+    ...kotak(k, -s2 - 7, -s2 - 4, 0, 2, 0, tinggi + 7, peran),
+    ...kotak(k, s2 + 4, s2 + 7, 0, 2, 0, tinggi + 7, peran),
+    ...kotak(k, -s2 - 7, s2 + 7, 0, 2, tinggi + 4, tinggi + 7, peran),
   ];
 }
 
@@ -209,7 +215,7 @@ function pintuAyun(k: Kerangka, arah: 1 | -1, peran: Peran = "netral"): Primitif
   const bukaan = DIM.pintu.bukaanBersih;
   const tinggi = DIM.pintu.tinggi;
   const sudut = SUDUT_BUKA * arah;
-  const engsel: [number, number] = [-bukaan / 2, 4];
+  const engsel: [number, number] = [-bukaan / 2, 2];
   const panjang = bukaan;
   const vektor: [number, number] = [Math.cos(sudut), Math.sin(sudut)];
   const tengah: [number, number] = [engsel[0] + (vektor[0] * panjang) / 2, engsel[1] + (vektor[1] * panjang) / 2];

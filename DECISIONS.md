@@ -244,3 +244,6 @@ Atas permintaan pemilik: daun dan rel pintu geser digambar di **sisi luar** dind
 
 ## 2026-11-04 — Area di balik lubang pintu abu-abu polos
 Atas permintaan pemilik: area di balik lubang pintu (luar ruangan) diisi **abu-abu rata yang lebih gelap dari lantai** (token baru `balikPintu` #BFBFBF di `tailwind.config.ts`, bidang `luar` di `LapisPrimitif`), menggantikan lubang putih. Tetap tanpa garis tepi, tanpa lantai atau garis keramik di dalamnya. Nama token sengaja bukan `luar` karena kelas `stroke-luar` sudah dipakai (tanpa warna) untuk jalur selang di `LapisPrimitif`.
+
+## 2026-11-04 — Kusen pintu di dalam ketebalan dinding
+Kusen sebelumnya digambar menonjol 8 cm ke dalam ruangan, padahal kusen terpasang di dalam ketebalan dinding (10 cm) dan rata dengan permukaan. Kini kusen (`kusenPintu`) berada di dalam ketebalan dinding (n dari -10 sampai 0) dengan list tipis 2 cm di sisi dalam; engsel pintu ayun bergeser dari 4 ke 2 cm; daun pocket door berada di bidang dinding. Bukaan bersih 90 cm tidak berubah. Tes baru: kusen tidak menonjol lebih dari 2 cm (`tests/bukaanPintu.test.ts`); tes dimensi menyesuaikan tinggi puncak kusen (tinggi pintu + 4 cm).

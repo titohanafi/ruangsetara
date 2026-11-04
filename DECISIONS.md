@@ -255,3 +255,4 @@ Atas permintaan pemilik: oval kloset duduk hijau harus polos. Penyebabnya warna 
 - Keluhan pemilik: di beberapa tampilan tangki air dan dudukan kloset tampak tidak menyatu. Penyebab: tangki melayang di ketinggian 38 cm dengan ruang kosong di bawahnya, hanya disambung satu garis tipis ke mangkuk.
 - Perbaikan: balok kaki tangki (60% lebar tangki) dari lantai sampai dasar tangki, menyentuh kaki mangkuk. Garis penyambung dihapus karena tidak diperlukan lagi. Tidak ada angka baru yang ditulis di gambar; ukuran kaki hanya turunan visual dari lebar tangki.
 - Mangkuk tetap pada posisi "Versi E" yang disetujui.
+- Revisi atas permintaan pemilik (gambar terlalu kompleks): kloset duduk disederhanakan menjadi dua bentuk, satu balok tangki dari lantai dan satu badan mangkuk oval dengan cekungan. Tutup tangki, tombol, kaki terpisah, dan garis penyambung dihapus.

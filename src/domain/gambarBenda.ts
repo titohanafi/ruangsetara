@@ -67,13 +67,9 @@ function klosetDuduk(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const setengah = DIM.kloset.lebar / 2;
   const tinggiDudukan = DIM.kloset.tinggiDudukan;
   return [
-    ...kotak(k, -setengah, setengah, 0, 18, 38, 80, peran),
-    // Kaki tangki: tangki tidak melayang, turun ke lantai dan bertemu kaki mangkuk (n 18 sampai 22 menimpa kaki).
-    ...kotak(k, -setengah * 0.6, setengah * 0.6, 0, 22, 0, 38, peran),
-    ...kotak(k, -setengah - 2, setengah + 2, -1, 19.5, 80, 85, peran),
-    ...ekstrusi(k, footprintOval(0, 9.25, 3.5, 3.5, 12), 85, 88, peran, true),
-    ...ekstrusi(k, footprintOval(a, pusatN, 11, 17, 24), 0, 28, peran, true),
-    ...ekstrusi(k, footprintOval(a, pusatN, 18, 26, 32), 28, tinggiDudukan, peran, true),
+    // Disederhanakan: tangki satu balok dari lantai (menempel ke mangkuk) dan mangkuk satu badan oval.
+    ...kotak(k, -setengah, setengah, 0, 22, 0, 80, peran),
+    ...ekstrusi(k, footprintOval(a, pusatN, 18, 26, 32), 0, tinggiDudukan, peran, true),
     poligon("rongga", oval(k, a, pusatN, 12, 19, tinggiDudukan), peran),
   ];
 }

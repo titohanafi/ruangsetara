@@ -74,7 +74,10 @@ describe("benda dasar dan angka yang tampak keliru", () => {
     expect(ids("K-04")).not.toContain("kompor");
     expect(ids("K-03")).not.toContain("wastafel");
     expect(ids("K-01")).not.toContain("pintu");
-    expect(ids(null)).toEqual(expect.arrayContaining(["kulkas", "meja", "kompor", "wastafel", "pintu"]));
+    expect(ids(null)).toEqual(expect.arrayContaining(["meja", "kompor", "wastafel", "pintu"]));
+    // Kulkas tidak digambar kecuali pada K-06 dan ruang terisi lengkap.
+    expect(ids(null)).not.toContain("kulkas");
+    expect(ids("LENGKAP")).toContain("kulkas");
   });
 
   it("dapur K-04 tidak menulis 12,2 (tampak salah ketik di sheet)", () => {

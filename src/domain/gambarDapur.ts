@@ -208,7 +208,8 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
   const by = xyBelakang(0, 0)[1];
 
   // Benda dasar (abu-abu); yang diganti modifikasi digambar ulang hijau di bawah.
-  if (diganti !== "kulkas") tambah("kulkas", kulkas(kB, "netral", false), (kA0 + kA1) / 2, by);
+  // Kulkas hanya digambar pada pertanyaan K-06 (versi hijau di bawah) dan pada ruang terisi lengkap; tidak semua dapur punya kulkas.
+  if (kode === "LENGKAP") tambah("kulkas", kulkas(kB, "netral", false), (kA0 + kA1) / 2, by);
   if (diganti !== "meja") tambah("meja", kabinet(kB, mA0, mA1, tMeja, "netral", "pintu"), (mA0 + mA1) / 2, by);
   if (diganti !== "kompor") tambah("kompor", kompor(kB, "netral", tMeja), (pA0 + pA1) / 2, by);
   if (diganti !== "wastafel") tambah("wastafel", wastafel(kB, "netral", false, tMeja), (wA0 + wA1) / 2, by);

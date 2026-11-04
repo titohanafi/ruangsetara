@@ -37,7 +37,6 @@ export const UKURAN = {
   mejaBelajar: { lebar: 110, dalam: 55, tinggi: 75 },
   ranjangMedis: { lebar: 95, panjang: 200, tinggiKasur: 55 },
   waterHeater: { jari: 18, tinggi: 60, dasar: 150 },
-  tiraiShower: { lebar: 110, tinggi: 190 },
   keranjangCucian: { jari: 20, tinggi: 50 },
   tempatSampah: { jari: 14, tinggi: 38 },
 } as const;
@@ -460,20 +459,6 @@ export function waterHeater(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   ];
 }
 
-/** Tirai shower: batang di atas dan kain bergaris lipatan. */
-export function tiraiShower(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  const { lebar, tinggi } = UKURAN.tiraiShower;
-  const [a0, a1] = [-lebar / 2, lebar / 2];
-  const lipatan = [-0.66, -0.33, 0, 0.33, 0.66].map((f): Primitif => ({
-    jenis: "garis",
-    dari: titik(k, f * a1, 6, 10),
-    ke: titik(k, f * a1, 6, tinggi - 4),
-    gaya: "tegas",
-    peran,
-  }));
-  return [...kotak(k, a0 - 4, a1 + 4, 2, 8, tinggi, tinggi + 3, peran), ...kotak(k, a0, a1, 5, 7, 6, tinggi, peran), ...lipatan];
-}
-
 /** Keranjang cucian bulat bertutup. */
 export function keranjangCucian(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const { jari, tinggi } = UKURAN.keranjangCucian;
@@ -817,7 +802,6 @@ export const KATALOG_OBJEK: readonly ObjekKatalog[] = [
     kata: /water heater/i,
     gambar: waterHeater,
   },
-  { id: "tirai-shower", nama: "Tirai shower", sumber: "sheet", ruang: ["kamar-mandi"], kata: /tirai/i, gambar: tiraiShower },
   {
     id: "ranjang-medis",
     nama: "Ranjang perawatan yang tingginya bisa diatur",

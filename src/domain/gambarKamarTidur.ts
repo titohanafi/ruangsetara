@@ -19,6 +19,7 @@ import {
   type Lapisan,
   type PeranBenda as Peran,
 } from "./gambarRuang";
+import { lemari } from "./perabotRuang";
 import { footprintOval, kotak, poligon, titik, type Kerangka, type Primitif } from "./gambarShower";
 
 /** Ukuran ilustratif kamar tidur (cm). Perkiraan untuk proporsi, BUKAN acuan dan tidak ditulis di gambar; dilaporkan ke peneliti. */
@@ -31,7 +32,7 @@ export const KAMAR_TIDUR = {
     tempatTidur: [-130, -30],
     nakas: [-178, -133],
     lemari: [-130, -10],
-    pintu: 105,
+    pintu: 80,
   },
 } as const;
 
@@ -42,6 +43,7 @@ const SHEET = {
   ruangPutar: 150,
   jalurMin: 92,
   sisiTempatTidur: 91,
+  bebas: 152.5,
   tinggiMin: 43,
   tinggiMaks: 58,
   gantunganMin: 90,
@@ -89,39 +91,22 @@ export function rakDinding(k: Kerangka, a0: number, a1: number, u: number, peran
   ];
 }
 
-/** Lemari pakaian di dinding `k`: `tertutup` dengan dua pintu, atau `terbuka` tanpa pintu dengan batang gantungan setinggi `gantungan`. */
-export function lemari(
-  k: Kerangka,
-  a0: number,
-  a1: number,
-  peran: Peran,
-  mode: "tertutup" | "terbuka",
-  gantungan: number = KAMAR_TIDUR.lemari.gantunganKondisi,
-): Primitif[] {
-  const { dalam, tinggi } = KAMAR_TIDUR.lemari;
-  const tengah = (a0 + a1) / 2;
-  if (mode === "tertutup") {
-    return [
-      ...kotak(k, a0, a1, 0, dalam, 0, tinggi, peran),
-      { jenis: "garis", dari: titik(k, tengah, dalam, 4), ke: titik(k, tengah, dalam, tinggi - 4), gaya: "tegas", peran },
-      ...kotak(k, tengah - 9, tengah - 6, dalam, dalam + 2, 95, 115, peran),
-      ...kotak(k, tengah + 6, tengah + 9, dalam, dalam + 2, 95, 115, peran),
-    ];
-  }
-  const hasil: Primitif[] = [
-    ...kotak(k, a0, a1, 0, 2, 0, tinggi, peran),
-    ...kotak(k, a0, a0 + 3, 0, dalam, 0, tinggi, peran),
-    ...kotak(k, a1 - 3, a1, 0, dalam, 0, tinggi, peran),
-    ...kotak(k, a0, a1, 0, dalam, tinggi - 3, tinggi, peran),
-    ...kotak(k, a0, a1, 0, dalam, 0, 3, peran),
-    ...kotak(k, a0 + 3, a1 - 3, dalam / 2 - 1.5, dalam / 2 + 1.5, gantungan, gantungan + 3, peran),
+/** Tirai pengganti daun pintu: kain menggantung dari batang di atas bukaan, dengan lipatan. */
+export function tirai(k: Kerangka, peran: Peran): Primitif[] {
+  const s2 = DIM.pintu.bukaanBersih / 2;
+  const tinggi = DIM.pintu.tinggi;
+  const lipatan: Primitif[] = [-0.6, -0.2, 0.2, 0.6].map((f) => ({
+    jenis: "garis",
+    dari: titik(k, f * s2, 4, 8),
+    ke: titik(k, f * s2, 4, tinggi - 8),
+    gaya: "tegas",
+    peran,
+  }));
+  return [
+    ...kotak(k, -s2 - 6, s2 + 6, 2, 8, tinggi + 4, tinggi + 7, peran),
+    ...kotak(k, -s2 + 2, s2 - 2, 3, 5, 6, tinggi, peran),
+    ...lipatan,
   ];
-  const jarak = (a1 - a0 - 16) / 5;
-  for (let i = 0; i < 6; i++) {
-    const a = a0 + 8 + i * jarak;
-    hasil.push(...kotak(k, a - 2, a + 2, dalam / 2 - 9, dalam / 2 + 9, gantungan - 62, gantungan, peran));
-  }
-  return hasil;
 }
 
 /** Kursi toilet portable (commode): dudukan berlubang di atas rangka empat kaki, bersandaran. */
@@ -152,7 +137,9 @@ const lampu = (k: Kerangka, a: number, u: number, peran: Peran): Primitif[] => k
 export function susunKamarTidur(id: string | null, c: KonteksRuang): HasilRuang {
   const kB = c.kerangka("belakang");
   const kK = c.kerangka("kanan");
-  const diganti = id ? DIGANTI[id] : undefined;
+  // Id bisa memuat alternatif dari sheet, mis. "B-01~tirai".
+  const [kode = null, varian] = id ? id.split("~") : [];
+  const diganti = kode ? DIGANTI[kode] : undefined;
   const lapisan: Lapisan[] = [];
   const anotasi: Primitif[] = [];
   const tambah = (nama: string, daftar: Primitif[], x: number, y: number, aksen = false) =>
@@ -172,19 +159,31 @@ export function susunKamarTidur(id: string | null, c: KonteksRuang): HasilRuang 
   if (diganti !== "tempatTidur")
     tambah("tempatTidur", tempatTidur(kB, tA0, tA1, KAMAR_TIDUR.tempatTidur.tinggiKondisi, "netral"), (tA0 + tA1) / 2, yKakiTidur);
   tambah("nakas", nakas(kB, nA0, nA1, "netral"), (nA0 + nA1) / 2, yBelakang + KAMAR_TIDUR.nakas.dalam);
-  if (diganti !== "lemari") tambah("lemari", lemari(kK, lA0, lA1, "netral", "tertutup"), L / 2, (lA0 + lA1) / 2);
+  if (diganti !== "lemari") tambah("lemari", lemari(kK, lA0, lA1, "netral", "tertutup", KAMAR_TIDUR.lemari), L / 2, (lA0 + lA1) / 2);
   if (diganti !== "pintu") tambah("pintu", pintuTetap(c, "kanan", pintuPusat, "pintu", "netral"), L / 2, pintuPusat);
   if (diganti !== "saklar") {
     // Kondisi contoh: saklar tinggi di dinding belakang, stopkontak rendah.
     tambah("saklar", [...pelat(kB, 110, 140, "netral"), ...pelat(kB, 135, 30, "netral")], 120, yBelakang);
   }
 
-  switch (id) {
+  switch (kode) {
     case "B-01": {
+      const s2 = DIM.pintu.bukaanBersih / 2;
+      if (varian === "tirai") {
+        // Alternatif sheet: lepas daun pintu dan ganti dengan tirai.
+        tambah("pintu-mod", pintuTetap(c, "kanan", pintuPusat, "pintu_tanpa_daun", "aksen"), L / 2, pintuPusat, true);
+        tambah("tirai-mod", tirai(kPintu, "aksen"), L / 2, pintuPusat, true);
+        if (T) {
+          anotasi.push(
+            ukur(titik(kPintu, -s2, 10, DIM.pintu.tinggi + 12), titik(kPintu, s2, 10, DIM.pintu.tinggi + 12), `min. ${SHEET.pintuMin} cm`),
+          );
+          anotasi.push(label(titik(kPintu, 0, 12, 110), "Tirai"));
+        }
+        break;
+      }
       tambah("pintu-mod", pintuTetap(c, "kanan", pintuPusat, "pintu_ayun_luar", "aksen"), L / 2, pintuPusat, true);
       tambah("tuas-mod", tuas(kPintu, 32, 100, "aksen"), L / 2, pintuPusat, true);
       if (T) {
-        const s2 = DIM.pintu.bukaanBersih / 2;
         anotasi.push(
           ukur(titik(kPintu, -s2, 10, DIM.pintu.tinggi + 12), titik(kPintu, s2, 10, DIM.pintu.tinggi + 12), `min. ${SHEET.pintuMin} cm`),
         );
@@ -194,10 +193,14 @@ export function susunKamarTidur(id: string | null, c: KonteksRuang): HasilRuang 
       break;
     }
     case "B-02": {
-      lapisan.push(...lingkaranLantai(c, "putar", 30, 20, SHEET.ruangPutar / 2));
+      lapisan.push(...lingkaranLantai(c, "putar", 10, -40, SHEET.ruangPutar / 2));
+      // Ruang bebas di depan pintu, tanpa perabot.
+      lapisan.push(...zonaLantai(c, "bebas", L / 2 - SHEET.bebas, pintuPusat - SHEET.bebas / 2, L / 2, pintuPusat + SHEET.bebas / 2));
       if (T) {
-        anotasi.push(label(c.proyeksi(30, 20, 0), `ø sekitar ${SHEET.ruangPutar} cm`));
+        anotasi.push(label(c.proyeksi(10, -40, 0), `ø sekitar ${SHEET.ruangPutar} cm`));
         anotasi.push(ukur(c.proyeksi(xLemari, -75, 0), c.proyeksi(xLemari - SHEET.jalurMin, -75, 0), `min. ${SHEET.jalurMin} cm`));
+        const [lb, ls] = [String(SHEET.bebas).replace(".", ","), String(SHEET.bebas).replace(".", ",")];
+        anotasi.push(label(c.proyeksi(L / 2 - SHEET.bebas / 2, pintuPusat, 0), `${lb} × ${ls} cm`));
       }
       break;
     }
@@ -222,7 +225,13 @@ export function susunKamarTidur(id: string | null, c: KonteksRuang): HasilRuang 
       break;
     }
     case "B-06": {
-      tambah("lemari-mod", lemari(kK, lA0, lA1, "aksen", "terbuka", KAMAR_TIDUR.lemari.gantunganModifikasi), L / 2, (lA0 + lA1) / 2, true);
+      tambah(
+        "lemari-mod",
+        lemari(kK, lA0, lA1, "aksen", "terbuka", KAMAR_TIDUR.lemari, KAMAR_TIDUR.lemari.gantunganModifikasi),
+        L / 2,
+        (lA0 + lA1) / 2,
+        true,
+      );
       if (T) {
         anotasi.push(
           ukurTegak(

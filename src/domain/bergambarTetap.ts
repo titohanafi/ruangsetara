@@ -6,3 +6,9 @@ export const BERGAMBAR_TETAP: Readonly<Record<string, ReadonlySet<string>>> = {
   "kamar-tidur": new Set(["B-01", "B-02", "B-03", "B-04", "B-06", "B-07", "B-08", "B-10"]),
   mobilitas: new Set(["G-01", "G-02", "G-03", "G-04", "G-05", "G-06", "G-07", "G-08", "G-09"]),
 };
+
+/** Alternatif dari teks Modifikasi sheet yang digambar sebagai gambar tambahan di kartu (kunci = id pertanyaan, nilai = id gambar "ID~alternatif"). */
+export const VARIAN_TETAP: Readonly<Record<string, readonly string[]>> = {
+  "B-01": ["B-01~tirai"],
+  "G-03": ["G-03~geser"],
+};

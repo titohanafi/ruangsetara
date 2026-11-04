@@ -179,6 +179,10 @@
     "altKartuRuang": "Ilustrasi isometrik {ruang} dengan modifikasi {nama}.",
     "catatanDapur": "Ilustrasi umum dapur dengan tata letak contoh, bukan hasil baca foto Anda. Letak benda di dapur Anda bisa berbeda.",
  "catatanKamarTidur": "Ilustrasi umum kamar tidur dengan tata letak contoh, bukan hasil baca foto Anda. Letak benda di kamar Anda bisa berbeda.",
+ "varian": {
+  "B-01~tirai": "Alternatif dari sheet: ganti daun pintu dengan tirai",
+  "G-03~geser": "Alternatif dari sheet: pintu geser untuk ruang sempit"
+ },
  "catatanMobilitas": "Ilustrasi umum ruang depan dengan tata letak contoh, bukan hasil baca foto Anda. Letak benda di rumah Anda bisa berbeda.",
     "altKartu": "Ilustrasi isometrik kamar mandi dengan modifikasi {nama}.",
     "catatanKondisi": "Kondisi ruang sekarang, digambar dari foto pertama. Gambar setelah modifikasi ada di kartu tiap pertanyaan dan di ringkasan akhir halaman ini.",

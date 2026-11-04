@@ -19,6 +19,7 @@ import {
   type Lapisan,
   type PeranBenda as Peran,
 } from "./gambarRuang";
+import { lemari } from "./perabotRuang";
 import { kotak, poligon, titik, type Kerangka, type Primitif } from "./gambarShower";
 
 /** Ukuran ilustratif ruang depan (cm). Perkiraan untuk proporsi, BUKAN acuan dan tidak ditulis di gambar; dilaporkan ke peneliti. */
@@ -48,15 +49,15 @@ const SHEET = {
 };
 
 /** Benda dasar yang diganti oleh gambar modifikasi pertanyaan itu (tidak digambar ganda). */
-const DIGANTI: Record<string, "pintu" | "undakan" | "meja" | "lemariTanam" | "saklar" | "karpet"> = {
-  "G-01": "lemariTanam",
-  "G-02": "meja",
-  "G-03": "pintu",
-  "G-04": "undakan",
-  "G-05": "karpet",
-  "G-07": "meja",
-  "G-08": "saklar",
-  "G-09": "pintu",
+const DIGANTI: Record<string, readonly string[]> = {
+  "G-01": ["lemariTanam"],
+  "G-02": ["meja"],
+  "G-03": ["pintu"],
+  "G-04": ["undakan"],
+  "G-05": ["karpet", "retak"],
+  "G-07": ["meja"],
+  "G-08": ["saklar"],
+  "G-09": ["pintu"],
 };
 
 /** Meja besar yang berdiri bebas di lantai (empat kaki dan papan), sebagai contoh furnitur yang menyempitkan jalur. */
@@ -85,23 +86,6 @@ export function mejaLipatDinding(k: Kerangka, a0: number, a1: number, peran: Per
   ];
 }
 
-/** Lemari tanam di dinding belakang: kotak penuh dengan dua pintu; `dalam` boleh lebih dangkal pada gambar modifikasi. */
-export function lemariTanam(k: Kerangka, a0: number, a1: number, dalam: number, peran: Peran): Primitif[] {
-  const tengah = (a0 + a1) / 2;
-  return [
-    ...kotak(k, a0, a1, 0, dalam, 0, MOBILITAS.lemariTanam.tinggi, peran),
-    {
-      jenis: "garis",
-      dari: titik(k, tengah, dalam, 4),
-      ke: titik(k, tengah, dalam, MOBILITAS.lemariTanam.tinggi - 4),
-      gaya: "tegas",
-      peran,
-    },
-    ...kotak(k, tengah - 10, tengah - 7, dalam, dalam + 2, 95, 115, peran),
-    ...kotak(k, tengah + 7, tengah + 10, dalam, dalam + 2, 95, 115, peran),
-  ];
-}
-
 /** Undakan di dasar pintu (perbedaan level): balok rendah selebar bukaan pintu. */
 export function undakan(c: KonteksRuang, xTengah: number, peran: Peran): Primitif[] {
   const { tinggi, dalam } = MOBILITAS.undakan;
@@ -110,7 +94,7 @@ export function undakan(c: KonteksRuang, xTengah: number, peran: Peran): Primiti
   return kotakDunia(c, xTengah - s, xTengah + s, y0, y0 + dalam, 0, tinggi, peran);
 }
 
-/** Ramp: bagian datar di pintu (`datar`), lalu turun dengan kelandaian 1:10 (naik `tinggi`, panjang miring 10 kali) sejauh `miring`. */
+/** Ramp dengan pegangan rambat: bagian datar di pintu (`datar`), lalu turun dengan kelandaian 1:10 (naik `tinggi`, panjang miring 10 kali) sejauh `miring`. */
 export function ramp(c: KonteksRuang, xTengah: number, lebar: number, datar: number, peran: Peran): Primitif[] {
   const tinggi = MOBILITAS.undakan.tinggi;
   const miring = tinggi * 10;
@@ -119,10 +103,28 @@ export function ramp(c: KonteksRuang, xTengah: number, lebar: number, datar: num
   const P = (x: number, y: number, u: number) => c.proyeksi(x, y, u);
   const yA = y0 + datar;
   const yB = yA + miring;
+  // Pegangan rambat di sisi dekat kamera, sepanjang bagian datar dan miring (tinggi pegangan hanya perkiraan gambar).
+  const xr = x0 - 2;
+  const tinggiPegangan = 85;
+  const tanah = (y: number) => (y <= yA ? tinggi : tinggi * (1 - (y - yA) / miring));
+  const tiang = [y0 + 8, yA, (yA + yB) / 2, yB - 8].map((y): Primitif => ({
+    jenis: "garis",
+    dari: P(xr, y, tanah(y)),
+    ke: P(xr, y, tanah(y) + tinggiPegangan),
+    gaya: "tegas",
+    peran,
+  }));
+  const rel: Primitif = {
+    jenis: "garisPoli",
+    titik: [P(xr, y0 + 8, tinggi + tinggiPegangan), P(xr, yA, tinggi + tinggiPegangan), P(xr, yB - 8, tanah(yB - 8) + tinggiPegangan)],
+    peran,
+  };
   return [
     ...kotakDunia(c, x0, x1, y0, yA, 0, tinggi, peran),
     poligon("kiri", [P(x0, yA, tinggi), P(x0, yB, 0), P(x0, yA, 0)], peran),
     poligon("atas", [P(x0, yA, tinggi), P(x1, yA, tinggi), P(x1, yB, 0), P(x0, yB, 0)], peran),
+    ...tiang,
+    rel,
   ];
 }
 
@@ -145,7 +147,9 @@ function lantaiTekstur(c: KonteksRuang): Primitif[] {
 export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
   const kB = c.kerangka("belakang");
   const kK = c.kerangka("kanan");
-  const diganti = id ? DIGANTI[id] : undefined;
+  // Id bisa memuat alternatif dari sheet, mis. "G-03~geser".
+  const [kode = null, varian] = id ? id.split("~") : [];
+  const diganti = (kode && DIGANTI[kode]) || [];
   const lapisan: Lapisan[] = [];
   const anotasi: Primitif[] = [];
   const tambah = (nama: string, daftar: Primitif[], x: number, y: number, aksen = false) =>
@@ -164,18 +168,36 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
   const aSaklar = MOBILITAS.letak.saklar;
 
   // Benda dasar (abu-abu); yang diganti modifikasi digambar ulang hijau di bawah.
-  if (diganti !== "pintu") tambah("pintu", pintuTetap(c, "belakang", xPintu, "pintu", "netral"), xPintu, yB);
-  if (diganti !== "undakan") tambah("undakan", undakan(c, xPintu, "netral"), xPintu, yB + MOBILITAS.undakan.dalam);
-  if (diganti !== "lemariTanam")
-    tambah("lemariTanam", lemariTanam(kB, lA0, lA1, MOBILITAS.lemariTanam.dalam, "netral"), (lA0 + lA1) / 2, yDepanLemari);
-  if (diganti !== "meja") tambah("meja", mejaBesar(c, mX0, mX1, mY0, mY1, "netral"), (mX0 + mX1) / 2, mY1);
-  if (diganti !== "saklar") tambah("saklar", [...pelat(kB, aSaklar, 150, "netral"), ...pelat(kB, aSaklar + 25, 30, "netral")], aSaklar, yB);
-  if (diganti !== "karpet") tambah("karpet", kotakDunia(c, -80, -20, -100, -50, 0, 1.5, "netral"), -50, -50);
+  if (!diganti.includes("pintu")) tambah("pintu", pintuTetap(c, "belakang", xPintu, "pintu", "netral"), xPintu, yB);
+  if (!diganti.includes("undakan")) tambah("undakan", undakan(c, xPintu, "netral"), xPintu, yB + MOBILITAS.undakan.dalam);
+  if (!diganti.includes("lemariTanam"))
+    tambah("lemariTanam", lemari(kB, lA0, lA1, "netral", "tertutup", MOBILITAS.lemariTanam), (lA0 + lA1) / 2, yDepanLemari);
+  if (!diganti.includes("meja")) tambah("meja", mejaBesar(c, mX0, mX1, mY0, mY1, "netral"), (mX0 + mX1) / 2, mY1);
+  if (!diganti.includes("saklar"))
+    tambah("saklar", [...pelat(kB, aSaklar, 150, "netral"), ...pelat(kB, aSaklar + 25, 30, "netral")], aSaklar, yB);
+  if (!diganti.includes("retak")) {
+    // Keramik retak di tengah lantai (kondisi contoh).
+    const retak = [
+      [-60, 60],
+      [-30, 75],
+      [-36, 95],
+      [0, 110],
+      [22, 132],
+    ].map(([x, y]) => c.proyeksi(x, y, 0));
+    tambah("retak", [{ jenis: "garisPoli", titik: retak, peran: "netral" }], -20, 100);
+  }
+  if (!diganti.includes("karpet")) tambah("karpet", kotakDunia(c, -80, -20, -100, -50, 0, 1.5, "netral"), -50, -50);
 
-  switch (id) {
+  switch (kode) {
     case "G-01": {
       const dalam = MOBILITAS.lemariTanam.dalam / 2;
-      tambah("lemariTanam-mod", lemariTanam(kB, lA0, lA1, dalam, "aksen"), (lA0 + lA1) / 2, yB + dalam, true);
+      tambah(
+        "lemariTanam-mod",
+        lemari(kB, lA0, lA1, "aksen", "tertutup", { dalam, tinggi: MOBILITAS.lemariTanam.tinggi }),
+        (lA0 + lA1) / 2,
+        yB + dalam,
+        true,
+      );
       if (T) {
         const x = (mX0 + mX1) / 2;
         const y0 = yB + dalam;
@@ -195,16 +217,23 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
       break;
     }
     case "G-03": {
+      const s2 = DIM.pintu.bukaanBersih / 2;
+      const ukurBukaan = () =>
+        ukur(titik(kPintu, -s2, 10, DIM.pintu.tinggi + 12), titik(kPintu, s2, 10, DIM.pintu.tinggi + 12), `min. ${SHEET.pintuMin} cm`);
+      if (varian === "geser") {
+        // Alternatif sheet: pintu geser untuk ruang sempit.
+        tambah("pintu-mod", pintuTetap(c, "belakang", xPintu, "pintu_geser", "aksen"), xPintu, yB, true);
+        if (T) {
+          anotasi.push(ukurBukaan());
+          anotasi.push(label(titik(kPintu, s2 + 30, 12, 110), "Pintu geser"));
+        }
+        break;
+      }
       tambah("pintu-mod", pintuTetap(c, "belakang", xPintu, "pintu_ayun_luar", "aksen"), xPintu, yB, true);
-      const engsel = [-DIM.pintu.bukaanBersih / 2 - 3, DIM.pintu.bukaanBersih / 2 + 3].flatMap((a) =>
-        [20, 150].flatMap((u) => kotak(kPintu, a - 2, a + 2, 0, 5, u, u + 12, "aksen")),
-      );
+      const engsel = [-s2 - 3, s2 + 3].flatMap((a) => [20, 150].flatMap((u) => kotak(kPintu, a - 2, a + 2, 0, 5, u, u + 12, "aksen")));
       tambah("engsel-mod", engsel, xPintu, yB, true);
       if (T) {
-        const s2 = DIM.pintu.bukaanBersih / 2;
-        anotasi.push(
-          ukur(titik(kPintu, -s2, 10, DIM.pintu.tinggi + 12), titik(kPintu, s2, 10, DIM.pintu.tinggi + 12), `min. ${SHEET.pintuMin} cm`),
-        );
+        anotasi.push(ukurBukaan());
         anotasi.push(label(titik(kPintu, -s2 - 40, 8, 160), "Engsel offset"));
       }
       break;
@@ -219,6 +248,7 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
           ukur(c.proyeksi(xPintu - SHEET.rampLebar / 2, yA + 214, 0), c.proyeksi(x1, yA + 214, 0), `min. ${SHEET.rampLebar} cm`),
         );
         anotasi.push(label(c.proyeksi(x1 + 40, yA + 100, 12), "1:10"));
+        anotasi.push(label(c.proyeksi(xPintu - SHEET.rampLebar / 2 - 30, yA + 150, 90), "Pegangan rambat"));
         anotasi.push(label(titik(kPintu, 0, 12, DIM.pintu.tinggi + 14), `Ambang maks. ${SHEET.ambangMaks} cm`));
       }
       break;

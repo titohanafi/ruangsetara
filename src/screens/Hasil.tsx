@@ -2,7 +2,7 @@ import { lazy, Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
 import { butirHasil, ringkas, type Butir } from "../domain/asesmen";
-import { BERGAMBAR_DAPUR } from "../domain/bergambarDapur";
+import { BERGAMBAR_TETAP } from "../domain/bergambarTetap";
 import type { HasilDenah } from "../domain/denahPindai";
 import { ringkasModifikasi } from "../domain/modifikasi";
 import { cariArea, HASIL, isi, PERTANYAAN, UI } from "../domain/konten";
@@ -11,7 +11,7 @@ import { useStore } from "../state/store";
 const T = UI.hasil;
 // Dimuat hanya bila ada hasil baca denah: gambar dan tabel ukurannya tidak ikut dimuat di halaman lain.
 const GambarModifikasiKartu = lazy(() => import("../components/GambarModifikasiKartu").then((m) => ({ default: m.GambarModifikasiKartu })));
-const GambarDapurKartu = lazy(() => import("../components/GambarDapurKartu").then((m) => ({ default: m.GambarDapurKartu })));
+const GambarRuangTetapKartu = lazy(() => import("../components/GambarRuangTetapKartu").then((m) => ({ default: m.GambarRuangTetapKartu })));
 const RingkasanModifikasi = lazy(() => import("../components/RingkasanModifikasi").then((m) => ({ default: m.RingkasanModifikasi })));
 const KATEGORI_D = HASIL.kategori.find((k) => k.nilai === "D");
 
@@ -31,15 +31,17 @@ function KartuButir({
   catatan,
   temuan,
   denah,
-  gambarDapur,
+  gambarTetap,
+  areaId,
 }: {
   b: Butir;
   nomor: number;
   catatan?: string;
   temuan?: string;
   denah?: HasilDenah;
-  /** Dapur: gambar contoh tata letak tetap (tanpa baca denah). */
-  gambarDapur?: boolean;
+  /** Dapur, kamar tidur, mobilitas: gambar contoh tata letak tetap (tanpa baca denah). */
+  gambarTetap?: boolean;
+  areaId?: string;
 }) {
   const { pertanyaan: p } = b;
   const belum = b.status === "belum";
@@ -86,9 +88,9 @@ function KartuButir({
               <GambarModifikasiKartu id={p.id} denah={denah} />
             </Suspense>
           )}
-          {gambarDapur && (
+          {gambarTetap && areaId && (
             <Suspense fallback={null}>
-              <GambarDapurKartu id={p.id} />
+              <GambarRuangTetapKartu areaId={areaId} id={p.id} />
             </Suspense>
           )}
         </>
@@ -199,7 +201,8 @@ export function HasilScreen() {
                   catatan={state.catatanFoto[b.pertanyaan.id]}
                   temuan={state.temuan[b.pertanyaan.id]}
                   denah={digambar.has(b.pertanyaan.id) ? (state.denah ?? undefined) : undefined}
-                  gambarDapur={area.id === "dapur" && BERGAMBAR_DAPUR.has(b.pertanyaan.id)}
+                  gambarTetap={BERGAMBAR_TETAP[area.id]?.has(b.pertanyaan.id) ?? false}
+                  areaId={area.id}
                 />
               ),
           )}

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { titikPrimitif } from "../domain/gambarBenda";
-import type { HasilRuang, KonteksRuang } from "../domain/gambarDapur";
+import type { HasilRuang, KonteksRuang } from "../domain/gambarRuang";
 import {
   garisUbin,
   garisUbinLantai,
@@ -128,12 +128,15 @@ export function PratinjauRuangTetap({
       const xs = titikFokus.map((t) => t[0]);
       const ys = titikFokus.map((t) => t[1]);
       const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
-      const sisa = Math.max(60, 0.45 * Math.max(x1 - x0, y1 - y0));
+      const sisa = Math.max(120, 0.45 * Math.max(x1 - x0, y1 - y0));
       let [w, h] = [x1 - x0 + 2 * sisa, y1 - y0 + 2 * sisa];
       const rasio = ukuran.lebar / ukuran.tinggi;
       if (w / h < rasio) w = h * rasio;
       else h = w / rasio;
-      if (w < ukuran.lebar && h < ukuran.tinggi) tampak = { x: (x0 + x1) / 2 - w / 2, y: (y0 + y1) / 2 - h / 2, w, h };
+      if (w < ukuran.lebar && h < ukuran.tinggi) {
+        const geser = (nilai: number, panjang: number, batas: number) => Math.min(Math.max(nilai, 0), batas - panjang);
+        tampak = { x: geser((x0 + x1) / 2 - w / 2, w, ukuran.lebar), y: geser((y0 + y1) / 2 - h / 2, h, ukuran.tinggi), w, h };
+      }
     }
 
     gambar = (

@@ -2,11 +2,26 @@
 // dapur TETAP (ilustrasi umum, bukan hasil baca foto): prompt Gemini untuk dapur belum diuji dengan foto asli.
 // Ukuran benda hanya untuk proporsi (`DAPUR`, perkiraan). Angka yang TERTULIS di gambar hanya dari teks Modifikasi di sheet
 // peneliti (K-01..K-08); angka yang tampak keliru atau masih ditinjau tidak ditulis (lihat `ANGKA_DAPUR_DITINJAU`).
-import { footprintOval, kotak, poligon, titik, type Dinding, type Kerangka, type Primitif, type Titik } from "./gambarShower";
+import { DIM } from "./dimensiGambar";
+import { footprintOval, kotak, poligon, titik, type Kerangka, type Primitif, type Titik } from "./gambarShower";
+import {
+  angka,
+  garis,
+  label,
+  pelat,
+  pintuTetap,
+  pivot,
+  rentang,
+  ukur,
+  ukurTegak,
+  zonaLantai,
+  type HasilRuang,
+  type KonteksRuang,
+  type Lapisan,
+  type PeranBenda as Peran,
+} from "./gambarRuang";
 
-import { BERGAMBAR_DAPUR } from "./bergambarDapur";
-
-export { BERGAMBAR_DAPUR };
+export type { HasilRuang, KonteksRuang, Lapisan };
 
 /** Gambar yang memuat angka yang masih ditinjau peneliti (tanda * dan keterangan): K-08 memakai 38–122 cm yang juga ditinjau di kamar mandi. */
 export const ANGKA_DAPUR_DITINJAU: ReadonlySet<string> = new Set(["K-08"]);
@@ -26,7 +41,7 @@ export const DAPUR = {
     kulkas: [100, 170],
   },
   // Pintu di dinding kanan: pusatnya sepanjang dinding (cm dari tengah) dan lebar daun yang digambar pada kondisi sekarang.
-  pintuKanan: { pusat: 70, daun: 75 },
+  pintuKanan: { pusat: 70 },
 } as const;
 
 /** Angka dari teks Modifikasi di sheet (hanya yang dipakai di gambar). */
@@ -47,32 +62,6 @@ const SHEET = {
   sakelarMaks: 122,
 } as const;
 
-const angka = (n: number): string => String(n).replace(".", ",");
-const rentang = (a: number, b: number): string => `${angka(a)}–${angka(b)} cm`;
-
-export interface KonteksRuang {
-  kerangka: (dinding: Dinding) => Kerangka;
-  /** Proyeksi koordinat ruangan (cm: x lebar, y dalam, z tinggi) ke kanvas. */
-  proyeksi: (x: number, y: number, z: number) => Titik;
-  /** Tulis ukuran dan nama di gambar. */
-  tampilkanUkuran: boolean;
-}
-
-export interface Lapisan {
-  id: string;
-  daftar: Primitif[];
-  /** Urutan gambar (makin besar makin depan); lantai memakai nilai sangat kecil. */
-  kedalaman: number;
-  /** Bagian modifikasi (hijau), dipakai untuk memperbesar gambar ke bagian itu. */
-  aksen: boolean;
-}
-
-export interface HasilRuang {
-  lapisan: Lapisan[];
-  /** Garis ukur dan teks: digambar di lapisan paling atas supaya tidak tertutup benda. */
-  anotasi: Primitif[];
-}
-
 /** Benda dasar yang diganti oleh gambar modifikasi pertanyaan itu (tidak digambar ganda). */
 const DIGANTI: Record<string, "pintu" | "meja" | "wastafel" | "kompor" | "kulkas"> = {
   "K-01": "pintu",
@@ -83,40 +72,9 @@ const DIGANTI: Record<string, "pintu" | "meja" | "wastafel" | "kompor" | "kulkas
   "K-06": "kulkas",
 };
 
-type Peran = "netral" | "aksen";
-const garis = (dari: Titik, ke: Titik, peran: Peran, gaya: "tegas" | "putus" = "tegas"): Primitif => ({
-  jenis: "garis",
-  dari,
-  ke,
-  gaya,
-  peran,
-});
-const ukur = (dari: Titik, ke: Titik, teks: string, teksDi?: "atas"): Primitif => ({ jenis: "ukur", dari, ke, teks, teksDi });
-const label = (p: Titik, teks: string, dx = 0, dy = 0): Primitif => ({ jenis: "label", x: p[0] + dx, y: p[1] + dy, teks });
-
 const belakang = (c: KonteksRuang): Kerangka => c.kerangka("belakang");
 const kanan = (c: KonteksRuang): Kerangka => c.kerangka("kanan");
-const pivot = (c: KonteksRuang, x: number, y: number): number => c.proyeksi(x, y, 0)[1];
 const xyBelakang = (a: number, n: number): [number, number] => [a, -DAPUR.ruang.dalam / 2 + n];
-
-/** Tegak lurus ke atas di dinding `k`: garis ukur tinggi dari lantai. */
-const ukurTegak = (k: Kerangka, a: number, n: number, u0: number, u1: number, teks: string): Primitif =>
-  ukur(titik(k, a, n, u0), titik(k, a, n, u1), teks);
-
-/** Persegi di lantai (garis putus-putus hijau + isian tipis), dari sudut ruangan (x0,y0) ke (x1,y1). */
-function zonaLantai(c: KonteksRuang, id: string, x0: number, y0: number, x1: number, y1: number): Lapisan[] {
-  const T = (x: number, y: number): Titik => c.proyeksi(x, y, 0);
-  const sudut = [T(x0, y0), T(x1, y0), T(x1, y1), T(x0, y1)];
-  return [
-    { id: `${id}-isi`, daftar: [poligon("zona", sudut, "aksen")], kedalaman: -1e9, aksen: true },
-    {
-      id: `${id}-garis`,
-      daftar: [{ jenis: "garisPoli", titik: [...sudut, sudut[0]], peran: "aksen", putus: true }],
-      kedalaman: -1e9 + 1,
-      aksen: true,
-    },
-  ];
-}
 
 /** Tombol dan pegangan kecil di muka depan lemari (n = bidang depan lemari). */
 function pegangan(k: Kerangka, a: number, n: number, u: number, peran: Peran): Primitif[] {
@@ -197,24 +155,6 @@ function kompor(k: Kerangka, peran: Peran, tinggiAtas: number): Primitif[] {
   return hasil;
 }
 
-function pintuKanan(c: KonteksRuang, peran: Peran, denganDaun: boolean, lebarBukaan: number): Primitif[] {
-  const k = kanan(c);
-  const { pusat } = DAPUR.pintuKanan;
-  const a0 = pusat - lebarBukaan / 2;
-  const a1 = pusat + lebarBukaan / 2;
-  const tinggi = DAPUR.pintu.tinggi;
-  const hasil: Primitif[] = [
-    poligon("rongga", [titik(k, a0, 0, 0), titik(k, a1, 0, 0), titik(k, a1, 0, tinggi), titik(k, a0, 0, tinggi)], "ruang"),
-  ];
-  hasil.push(...kotak(k, a0 - 5, a0, 0, 8, 0, tinggi + 4, peran), ...kotak(k, a1, a1 + 5, 0, 8, 0, tinggi + 4, peran));
-  hasil.push(...kotak(k, a0 - 5, a1 + 5, 0, 8, tinggi, tinggi + 4, peran));
-  if (denganDaun) hasil.push(...kotak(k, a0, a1, 3, 7, 0, tinggi, peran));
-  return hasil;
-}
-
-/** Stopkontak/saklar: pelat kecil di dinding `k` pada tinggi `u`. */
-const pelat = (k: Kerangka, a: number, u: number, peran: Peran): Primitif[] => kotak(k, a - 4, a + 4, 0, 1.5, u, u + 8, peran);
-
 /** Gambar dapur untuk satu pertanyaan (`id`) yang dijawab Tidak; `null` = kondisi dasar tanpa modifikasi. */
 export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
   const kB = belakang(c);
@@ -237,14 +177,14 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
   if (diganti !== "kompor") tambah("kompor", kompor(kB, "netral", tMeja), (pA0 + pA1) / 2, by);
   if (diganti !== "wastafel") tambah("wastafel", wastafel(kB, "netral", false, tMeja), (wA0 + wA1) / 2, by);
   if (diganti !== "pintu")
-    tambah("pintu", pintuKanan(c, "netral", true, DAPUR.pintuKanan.daun), DAPUR.ruang.lebar / 2, DAPUR.pintuKanan.pusat);
+    tambah("pintu", pintuTetap(c, "kanan", DAPUR.pintuKanan.pusat, "pintu", "netral"), DAPUR.ruang.lebar / 2, DAPUR.pintuKanan.pusat);
 
   switch (id) {
     case "K-01": {
       const kK = kanan(c);
       const { pusat } = DAPUR.pintuKanan;
-      const lebar = SHEET.pintuMin + 5;
-      tambah("pintu-mod", pintuKanan(c, "aksen", false, lebar), DAPUR.ruang.lebar / 2, pusat, true);
+      const lebar = DIM.pintu.bukaanBersih;
+      tambah("pintu-mod", pintuTetap(c, "kanan", pusat, "pintu_tanpa_daun", "aksen"), DAPUR.ruang.lebar / 2, pusat, true);
       lapisan.push(...zonaLantai(c, "putar", -SHEET.ruangPutar / 2, -60, SHEET.ruangPutar / 2, -60 + SHEET.ruangPutar));
       if (T) {
         anotasi.push(
@@ -387,9 +327,4 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
       break;
   }
   return { lapisan, anotasi };
-}
-
-/** Semua teks label/ukur sebuah gambar (untuk tes: hanya angka yang diizinkan). */
-export function teksGambar(hasil: HasilRuang): string[] {
-  return hasil.anotasi.flatMap((p) => (p.jenis === "ukur" || p.jenis === "label" ? [p.teks] : []));
 }

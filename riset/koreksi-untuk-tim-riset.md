@@ -44,6 +44,17 @@ Angka di teks Modifikasi dapur yang perlu dicek peneliti. Gambar tidak menulis a
 | K-06 | Freezer: setengah ruang di bawah 137 cm | Ditulis apa adanya dari sheet. |
 | Semua | Ukuran ruang dan benda dapur pada gambar (ruang 360 x 300 cm, meja 90 cm, kulkas 70 x 68 x 170 cm, dll.) | **Perkiraan saya untuk proporsi gambar**, bukan dari sheet dan tidak ditulis di gambar. Daftar di `DAPUR` (`src/domain/gambarDapur.ts`). |
 
+## Kamar tidur dan mobilitas (ilustrasi modifikasi)
+
+| Pertanyaan | Angka di sheet | Catatan |
+|---|---|---|
+| B-04 | Tinggi ranjang 43 - 58 cm | Sheet: "sekitar". Ditulis apa adanya. Tinggi dudukan kursi roda sendiri belum ada di tabel. |
+| B-06 | Gantungan 90 - 120 cm; standar sekitar 150 cm | Ditulis apa adanya; belum dicocokkan dengan sumber. |
+| B-01, G-09 | Tuas paling tinggi 110 cm; G-09 beban pintu paling berat 5 kg | Ditulis apa adanya (110 cm); 5 kg tidak digambar. |
+| G-04 | Ramp 1:10 dalam bangunan, 1:12 di luar; lebar min. 95 cm; datar min. 120 cm; ambang maks. 1,25 cm | Gambar hanya memakai 1:10 (dalam bangunan). Tinggi undakan pada gambar (20 cm) adalah contoh, bukan dari sheet. |
+| G-03 | Pintu masuk utama 90 cm | Tidak digambar. |
+| Semua | Ukuran ruang dan benda kamar tidur (ruang 360 × 320 cm, tempat tidur 100 × 200 cm, lemari 55 cm dalam, dst.) dan ruang depan (420 × 360 cm, undakan 20 cm, lemari tanam 60 cm dalam, dst.) | **Perkiraan saya untuk proporsi gambar**, bukan dari sheet dan tidak ditulis di gambar. Daftar di `KAMAR_TIDUR` dan `MOBILITAS`. |
+
 ## Catatan umum
 
 PerMen No. 14/2017 mengatur toilet dan pancuran **umum** di bangunan gedung, bukan kamar mandi rumah tinggal. Sebaiknya tiap angka diberi label "acuan bangunan gedung" supaya tidak terbaca sebagai syarat untuk rumah.

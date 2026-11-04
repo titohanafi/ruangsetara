@@ -73,10 +73,10 @@ const DIGANTI: Record<string, "pintu" | "tempatTidur" | "lemari" | "saklar"> = {
 
 export function tempatTidur(k: Kerangka, a0: number, a1: number, tinggi: number, peran: Peran): Primitif[] {
   const { panjang } = KAMAR_TIDUR.tempatTidur;
-  const kaki = (a: number, n: number) => bagKotak(k, a, a + 5, n, n + 5, 0, tinggi - 22, peran);
+  const kaki = (a: number, n: number) => bagKotak(k, a, a + 8, n, n + 8, 0, tinggi - 22, peran);
   return urutkanKedalaman(k, [
-    kaki(a0 + 2, panjang - 7),
-    kaki(a1 - 7, panjang - 7),
+    kaki(a0, panjang - 8),
+    kaki(a1 - 8, panjang - 8),
     bagKotak(k, a0, a1, 0, panjang, tinggi - 22, tinggi, peran),
     bagKotak(k, a0, a1, 0, 5, 0, tinggi + 35, peran),
   ]);

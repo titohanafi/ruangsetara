@@ -233,3 +233,5 @@ Ruang tetap punya gambar `LENGKAP` (id "LENGKAP", belum dipakai di aplikasi): ko
 ## 2026-11-04 — Perbaikan lubang pintu (terlihat dinding, bukan ruangan)
 Keluhan pemilik: pintu yang terbuka memperlihatkan dinding, seperti membuka pintu ke tembok. Penyebabnya lubang bukaan (`bukaanDinding`) diisi warna dinding. Kini lubangnya **putih tembus** dan lantai di luar dinding **terlihat lewat bukaan** (dipotong persis sebesar lubang dengan irisan poligon cembung), sehingga terbaca sebagai lorong ke ruang lain. `bukaanDinding` mengembalikan dua bentuk (lubang dan lantai di baliknya). Berlaku untuk kamar mandi, dapur, kamar tidur, dan mobilitas. Tes: `tests/bukaanPintu.test.ts`.
 **Belum:** ruang di balik pintu hanya lantai polos (tanpa dinding atau perabot di baliknya); itu sengaja agar gambar tidak mengarang isi ruang lain.
+
+**Tambahan (lubang pintu di panel benda):** panel benda pintu (lembar tinjauan) dan `pintuPocket` kini juga menggambar lubang bukaan, sehingga garis keramik dinding tidak terlihat lewat bukaan.

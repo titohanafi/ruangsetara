@@ -2,7 +2,7 @@
 // kursi roda (acuan skala), kursi, meja makan, sofa, rak sepatu, galon dan dispenser, kardus, keset, meja dorong, pegboard, tabung gas,
 // APAR, lampu meja, dan bak mandi tembok. Tiap objek digambar berpusat di a = 0 dan bersandar di dinding (n = 0).
 // Ukuran hanya untuk proporsi (`UKURAN`, perkiraan, tidak ditulis di gambar, dilaporkan ke peneliti). Gambar tidak pernah memuat angka.
-import { gambarBenda } from "./gambarBenda";
+import { bukaanDinding, gambarBenda } from "./gambarBenda";
 import { tuas } from "./gambarRuang";
 import { ekstrusi, footprintOval, kotak, poligon, titik, type Kerangka, type Peran, type Primitif } from "./gambarShower";
 
@@ -564,6 +564,7 @@ export function peganganTarik(k: Kerangka, peran: Peran = "netral", daun = true)
 /** Pintu geser masuk dinding (pocket door): daun separuh terbuka, separuhnya tersembunyi di dalam dinding (garis tipis). */
 export function pintuPocket(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
+    ...bukaanDinding(k),
     ...gambarBenda("pintu_tanpa_daun", k, "netral"),
     ...kotak(k, 0, 45, 1, 4, 2, 208, peran),
     ...kotak(k, 45, 135, -9, -5, 2, 208, "hantu"),

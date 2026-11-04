@@ -242,7 +242,7 @@ export function PratinjauRuangIso3D({
     const dindingPintu = titikDinding(letak("pintu")).dinding;
     const bukaan: Primitif[] =
       terlihat.includes("pintu") && !tersembunyi.includes("pintu") && (dindingPintu === "belakang" || dindingPintu === sudutAktif.x)
-        ? [bukaanDinding({ ...kerangkaDinding(dindingPintu), sepanjang: posisi.pintu })]
+        ? bukaanDinding({ ...kerangkaDinding(dindingPintu), sepanjang: posisi.pintu })
         : [];
     const susunBenda = terlihat
       .map((id) => {

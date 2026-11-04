@@ -155,14 +155,49 @@ function kusenPintu(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   ];
 }
 
+/** Irisan dua poligon cembung (Sutherland-Hodgman): bagian `subjek` yang berada di dalam `klip`. */
+function potongCembung(subjek: Titik[], klip: Titik[]): Titik[] {
+  const luas = klip.reduce((jumlah, p, i) => {
+    const q = klip[(i + 1) % klip.length];
+    return jumlah + (p[0] * q[1] - q[0] * p[1]);
+  }, 0);
+  const arah = luas >= 0 ? 1 : -1;
+  let hasil = subjek;
+  for (let i = 0; i < klip.length && hasil.length > 0; i++) {
+    const a = klip[i];
+    const b = klip[(i + 1) % klip.length];
+    const dalam = (p: Titik) => arah * ((b[0] - a[0]) * (p[1] - a[1]) - (b[1] - a[1]) * (p[0] - a[0])) >= 0;
+    const potong = (p: Titik, q: Titik): Titik => {
+      const t =
+        ((a[0] - p[0]) * (b[1] - a[1]) - (a[1] - p[1]) * (b[0] - a[0])) / ((q[0] - p[0]) * (b[1] - a[1]) - (q[1] - p[1]) * (b[0] - a[0]));
+      return [p[0] + t * (q[0] - p[0]), p[1] + t * (q[1] - p[1])];
+    };
+    const masuk = hasil;
+    hasil = [];
+    masuk.forEach((p, j) => {
+      const q = masuk[(j + masuk.length - 1) % masuk.length];
+      if (dalam(p)) {
+        if (!dalam(q)) hasil.push(potong(q, p));
+        hasil.push(p);
+      } else if (dalam(q)) hasil.push(potong(q, p));
+    });
+  }
+  return hasil;
+}
+
 /**
  * Bukaan pintu pada bidang dinding: lubang selebar bukaan bersih setinggi pintu, digambar di atas dinding berkeramik supaya
- * pintu tampak menembus dinding, bukan menempel di permukaannya.
+ * pintu tampak menembus dinding, bukan menempel di permukaannya. Lubangnya putih (tembus, bukan warna dinding) dan lantai ruang di
+ * baliknya terlihat lewat bukaan, supaya membuka pintu terlihat seperti menuju ruangan lain, bukan menghadap dinding.
  */
-export function bukaanDinding(k: Kerangka): Primitif {
+export function bukaanDinding(k: Kerangka): Primitif[] {
   const s2 = DIM.pintu.bukaanBersih / 2;
   const tinggi = DIM.pintu.tinggi;
-  return poligon("kiri", [titik(k, -s2, 0, 0), titik(k, s2, 0, 0), titik(k, s2, 0, tinggi), titik(k, -s2, 0, tinggi)], "ruang");
+  const lubang: Titik[] = [titik(k, -s2, 0, 0), titik(k, s2, 0, 0), titik(k, s2, 0, tinggi), titik(k, -s2, 0, tinggi)];
+  // Lantai di luar dinding (n negatif = menjauhi ruangan), hanya bagian yang tampak lewat lubang.
+  const lantaiLuar: Titik[] = [titik(k, -s2, 0, 0), titik(k, s2, 0, 0), titik(k, s2, -150, 0), titik(k, -s2, -150, 0)];
+  const tampak = potongCembung(lantaiLuar, lubang);
+  return [poligon("latar", lubang, "netral"), ...(tampak.length >= 3 ? [poligon("lantai", tampak, "ruang")] : [])];
 }
 
 /**

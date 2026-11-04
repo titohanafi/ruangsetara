@@ -104,7 +104,7 @@ export function lingkaranLantai(c: KonteksRuang, id: string, cx: number, cy: num
 /** Pintu bersama semua ruang: lubang di dinding + pintu dari `gambarBenda`, di dinding `dinding` pada posisi `sepanjang` (cm dari tengah dinding). */
 export function pintuTetap(c: KonteksRuang, dinding: Dinding, sepanjang: number, jenis: JenisBenda, peran: PeranBenda): Primitif[] {
   const k: Kerangka = { ...c.kerangka(dinding), sepanjang };
-  return [bukaanDinding(k), ...gambarBenda(jenis, k, peran)];
+  return [...bukaanDinding(k), ...gambarBenda(jenis, k, peran)];
 }
 
 /** Tuas pintu (hijau): batang pendek di sisi daun, pada tinggi `u` dari lantai. */

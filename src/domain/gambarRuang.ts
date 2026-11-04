@@ -11,6 +11,11 @@ export interface KonteksRuang {
   proyeksi: (x: number, y: number, z: number) => Titik;
   /** Tulis ukuran dan nama di gambar. */
   tampilkanUkuran: boolean;
+  /**
+   * Benda dasar yang boleh digambar (nama lapisan, mis. "kompor"), dari hasil baca foto. Kosong (undefined) = tata letak contoh
+   * bawaan (hanya untuk pratinjau pengembang dan lembar tinjauan); bila ada, benda dasar yang tidak ada di sini tidak digambar.
+   */
+  ada?: ReadonlySet<string>;
 }
 
 export interface Lapisan {

@@ -83,3 +83,44 @@ describe("bundel fungsi denah untuk Vercel", () => {
     }
   });
 });
+
+describe("bundel fungsi denah dapur untuk Vercel", () => {
+  const berkas = resolve("api/denah-dapur.mjs");
+
+  it("api/denah-dapur.mjs sama dengan hasil bundel server/denahDapur.ts (jalankan `npm run bundel:api` bila berbeda)", async () => {
+    const hasil = await build({
+      entryPoints: [resolve("server/denahDapur.ts")],
+      bundle: true,
+      platform: "node",
+      format: "esm",
+      target: "node22",
+      write: false,
+      logLevel: "silent",
+    });
+    expect(readFileSync(berkas, "utf8")).toBe(hasil.outputFiles[0].text);
+  });
+
+  it("dimuat di Node biasa dan menolak permintaan yang salah tanpa jatuh", async () => {
+    const m = (await import(pathToFileURL(berkas).href)) as { POST: (r: Request) => Promise<Response> };
+    const sebelum = process.env.GEMINI_API_KEY;
+    try {
+      delete process.env.GEMINI_API_KEY;
+      expect((await m.POST(new Request("http://x/api/denah-dapur", { method: "POST", body: "{}" }))).status).toBe(500);
+      process.env.GEMINI_API_KEY = "uji";
+      expect((await m.POST(new Request("http://x/api/denah-dapur", { method: "POST", body: "{}" }))).status).toBe(400);
+      expect(
+        (await m.POST(new Request("http://x/api/denah-dapur", { method: "POST", body: JSON.stringify({ gambar: "x".repeat(900_001) }) })))
+          .status,
+      ).toBe(400);
+      const situsLain = new Request("http://x/api/denah-dapur", {
+        method: "POST",
+        headers: { origin: "https://jahat.example", host: "x" },
+        body: "{}",
+      });
+      expect((await m.POST(situsLain)).status).toBe(403);
+    } finally {
+      if (sebelum === undefined) delete process.env.GEMINI_API_KEY;
+      else process.env.GEMINI_API_KEY = sebelum;
+    }
+  });
+});

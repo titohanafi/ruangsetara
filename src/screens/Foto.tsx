@@ -5,6 +5,7 @@ import { aturanFoto, cariArea, isi, PERTANYAAN, UI } from "../domain/konten";
 import { isiDariFoto, MAKS_FOTO } from "../domain/pindai";
 import { analisisFoto, GalatAnalisis } from "../lib/analisis";
 import { bacaDenah } from "../lib/denah";
+import { bacaDenahDapur } from "../lib/denahDapur";
 import { kecilkanFoto } from "../lib/foto";
 import { useStore } from "../state/store";
 
@@ -44,12 +45,15 @@ export function FotoScreen() {
     kirim({ jenis: "mulai_baca" });
     // Kamar mandi: foto pertama juga dibaca untuk gambar ruang. Berjalan bersamaan dan tidak boleh menggagalkan pembacaan checklist.
     const denah = area.id === "kamar-mandi" ? bacaDenah(state.fotos[0].url) : Promise.resolve(null);
+    // Dapur: foto pertama juga dibaca untuk benda yang digambar (hanya yang terlihat); gagal berarti gambar ruang tidak dibuat.
+    const denahDapur = area.id === "dapur" ? bacaDenahDapur(state.fotos[0].url) : Promise.resolve(null);
     try {
       const hasil = await analisisFoto(
         state.fotos.map((f) => f.url),
         area.id,
       );
       kirim({ jenis: "selesai_denah", denah: await denah });
+      kirim({ jenis: "selesai_denah_dapur", denah: await denahDapur });
       const daftar = PERTANYAAN[area.id].pertanyaan;
       const { jawaban, terisi, catatan } = isiDariFoto(daftar, aturanFoto(area.id), hasil, state.jawaban);
       kirim({ jenis: "selesai_baca", jawaban, terisi, total: daftar.length, bukanRuangan: !hasil.ruang_sesuai, catatan });

@@ -207,13 +207,16 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
   const [kA0, kA1] = DAPUR.letak.kulkas;
   const by = xyBelakang(0, 0)[1];
 
-  // Benda dasar (abu-abu); yang diganti modifikasi digambar ulang hijau di bawah.
-  // Kulkas hanya digambar pada pertanyaan K-06 (versi hijau di bawah) dan pada ruang terisi lengkap; tidak semua dapur punya kulkas.
-  if (kode === "LENGKAP") tambah("kulkas", kulkas(kB, "netral", false), (kA0 + kA1) / 2, by);
-  if (diganti !== "meja") tambah("meja", kabinet(kB, mA0, mA1, tMeja, "netral", "pintu"), (mA0 + mA1) / 2, by);
-  if (diganti !== "kompor") tambah("kompor", kompor(kB, "netral", tMeja), (pA0 + pA1) / 2, by);
-  if (diganti !== "wastafel") tambah("wastafel", wastafel(kB, "netral", false, tMeja), (wA0 + wA1) / 2, by);
-  if (diganti !== "pintu")
+  // Benda dasar (abu-abu). Dengan hasil baca foto (`c.ada`) hanya benda yang terbaca yang digambar, tanpa tata letak contoh;
+  // tanpa hasil baca (pratinjau pengembang) dipakai tata letak contoh dengan kulkas hanya pada ruang terisi lengkap.
+  const ruangLengkap = kode === "LENGKAP";
+  const tampil = (nama: string) => ruangLengkap || (c.ada ? c.ada.has(nama) : nama !== "kulkas");
+  // Yang diganti modifikasi digambar ulang hijau oleh pertanyaannya (tetap digambar walau bendanya tidak terbaca di foto).
+  if (diganti !== "kulkas" && tampil("kulkas")) tambah("kulkas", kulkas(kB, "netral", false), (kA0 + kA1) / 2, by);
+  if (diganti !== "meja" && tampil("meja")) tambah("meja", kabinet(kB, mA0, mA1, tMeja, "netral", "pintu"), (mA0 + mA1) / 2, by);
+  if (diganti !== "kompor" && tampil("kompor")) tambah("kompor", kompor(kB, "netral", tMeja), (pA0 + pA1) / 2, by);
+  if (diganti !== "wastafel" && tampil("wastafel")) tambah("wastafel", wastafel(kB, "netral", false, tMeja), (wA0 + wA1) / 2, by);
+  if (diganti !== "pintu" && tampil("pintu"))
     tambah("pintu", pintuTetap(c, "kanan", DAPUR.pintuKanan.pusat, "pintu", "netral"), DAPUR.ruang.lebar / 2, DAPUR.pintuKanan.pusat);
 
   switch (kode) {

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Layout } from "../components/Layout";
+import { DENAH_DAPUR_TIRUAN } from "../domain/denahDapur";
 import { DENAH_TIRUAN } from "../domain/denahPindai";
 import { aturanFoto, cariArea, PERTANYAAN, UI } from "../domain/konten";
 import { isiDariFoto } from "../domain/pindai";
@@ -42,6 +43,7 @@ export function DevHasilScreen() {
       const { jawaban, terisi } = isiDariFoto(daftar, aturanFoto(AREA), hasil, semuaTidak);
       kirim({ jenis: "selesai_baca", jawaban, terisi, total: daftar.length, bukanRuangan: !hasil.ruang_sesuai });
       if (AREA === AREA_BAWAAN) kirim({ jenis: "selesai_denah", denah: DENAH_TIRUAN });
+      if (AREA === "dapur") kirim({ jenis: "selesai_denah_dapur", denah: DENAH_DAPUR_TIRUAN });
       kirim({ jenis: "pilih_aktivitas", aktivitas: area.aktivitas[0] });
       pindah("/hasil", { replace: true });
     })().catch(() => setPesan(T.gagal));

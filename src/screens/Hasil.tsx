@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
 import { butirHasil, ringkas, type Butir } from "../domain/asesmen";
 import { BERGAMBAR_TETAP } from "../domain/bergambarTetap";
+import { bisaDigambarDapur, lapisanTerbaca, type HasilDenahDapur } from "../domain/denahDapur";
 import type { HasilDenah } from "../domain/denahPindai";
 import { ringkasModifikasi } from "../domain/modifikasi";
 import { cariArea, HASIL, isi, PERTANYAAN, UI } from "../domain/konten";
@@ -33,6 +34,7 @@ function KartuButir({
   denah,
   gambarTetap,
   areaId,
+  denahDapur,
 }: {
   b: Butir;
   nomor: number;
@@ -42,6 +44,8 @@ function KartuButir({
   /** Dapur, kamar tidur, mobilitas: gambar contoh tata letak tetap (tanpa baca denah). */
   gambarTetap?: boolean;
   areaId?: string;
+  /** Dapur: benda yang terbaca dari foto; gambar hanya memuat benda itu, atau tidak dibuat bila tidak ada yang terbaca. */
+  denahDapur?: HasilDenahDapur | null;
 }) {
   const { pertanyaan: p } = b;
   const belum = b.status === "belum";
@@ -90,7 +94,12 @@ function KartuButir({
           )}
           {gambarTetap && areaId && (
             <Suspense fallback={null}>
-              <GambarRuangTetapKartu areaId={areaId} id={p.id} />
+              <GambarRuangTetapKartu
+                areaId={areaId}
+                id={p.id}
+                ada={areaId === "dapur" && bisaDigambarDapur(denahDapur ?? null) ? lapisanTerbaca(denahDapur!) : undefined}
+                tidakTerbaca={areaId === "dapur" && !bisaDigambarDapur(denahDapur ?? null)}
+              />
             </Suspense>
           )}
         </>
@@ -203,6 +212,7 @@ export function HasilScreen() {
                   denah={digambar.has(b.pertanyaan.id) ? (state.denah ?? undefined) : undefined}
                   gambarTetap={BERGAMBAR_TETAP[area.id]?.has(b.pertanyaan.id) ?? false}
                   areaId={area.id}
+                  denahDapur={state.denahDapur}
                 />
               ),
           )}

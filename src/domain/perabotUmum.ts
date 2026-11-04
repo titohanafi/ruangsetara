@@ -2,6 +2,7 @@
 // kursi roda (acuan skala), kursi, meja makan, sofa, rak sepatu, galon dan dispenser, kardus, keset, meja dorong, pegboard, tabung gas,
 // APAR, lampu meja, dan bak mandi tembok. Tiap objek digambar berpusat di a = 0 dan bersandar di dinding (n = 0).
 // Ukuran hanya untuk proporsi (`UKURAN`, perkiraan, tidak ditulis di gambar, dilaporkan ke peneliti). Gambar tidak pernah memuat angka.
+import { DIM } from "./dimensiGambar";
 import { bukaanDinding, gambarBenda } from "./gambarBenda";
 import { tuas } from "./gambarRuang";
 import { ekstrusi, footprintOval, keRuang, kotak, poligon, titik, type Kerangka, type Peran, type Primitif } from "./gambarShower";
@@ -579,17 +580,18 @@ export function keranSemprot(k: Kerangka, peran: Peran = "netral", u0 = 95): Pri
   ];
 }
 
-/** Potongan daun pintu (untuk gagang), berpusat di a = 0, tinggi 50 sampai 170. */
-const daunPotong = (k: Kerangka, peran: Peran): Primitif[] => kotak(k, -40, 40, 0, 3, 50, 170, peran);
+/** Daun pintu utuh (untuk gagang dan gantungan), berpusat di a = 0, dari lantai sampai tinggi daun pintu, selebar bukaan bersih. */
+const daunPotong = (k: Kerangka, peran: Peran): Primitif[] =>
+  kotak(k, -DIM.pintu.bukaanBersih / 2, DIM.pintu.bukaanBersih / 2, 0, 3, 0, DIM.pintu.tinggi, peran);
 
 /** Gagang bulat (knob): sulit diputar dengan satu tangan (G-09). */
 export function gagangBulat(k: Kerangka, peran: Peran = "netral", daun = true): Primitif[] {
-  return [...(daun ? daunPotong(k, peran) : []), ...kotak(k, 27, 29, 3, 7, 99, 101, peran), ...cakram(k, 28, 8, 100, 6, peran, false)];
+  return [...(daun ? daunPotong(k, "netral") : []), ...kotak(k, 27, 29, 3, 7, 99, 101, peran), ...cakram(k, 28, 8, 100, 6, peran, false)];
 }
 
 /** Gagang tuas: bisa dioperasikan dengan satu kepalan tangan (B-01, G-09). */
 export function gagangTuas(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  return [...daunPotong(k, peran), ...tuas(k, 28, 100, peran === "aksen" ? "aksen" : "netral")];
+  return [...daunPotong(k, "netral"), ...tuas(k, 28, 100, peran === "aksen" ? "aksen" : "netral")];
 }
 
 /** Adaptor tuas (lever converter) yang dijepit di atas gagang bulat tanpa mengganti gagang (hack G-09). */

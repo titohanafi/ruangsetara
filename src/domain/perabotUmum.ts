@@ -710,30 +710,40 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
 export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const maju = 38;
   const f = 56 + maju;
+  const depan = 55;
+  // Bagian unit isi dipotong di muka kabinet (n = 55): bagian di dalam kabinet diurutkan bersama rangka (supaya tertutup panel
+  // sisi yang dekat kamera), bagian di luar digambar sesudahnya.
+  type Kotak = [number, number, number, number, number, number];
+  const unit: Kotak[] = [
+    [-3, 0, 2, f - 4, 18, 20],
+    [30, 32, 2, f - 4, 18, 20],
+    [0, 30, f - 52, f - 2, 8, 10],
+    [0, 2, f - 52, f - 2, 10, 46],
+    [28, 30, f - 52, f - 2, 10, 46],
+    [0, 30, f - 52, f - 50, 10, 46],
+    [4, 14, f - 36, f - 24, 10, 62],
+    [16, 26, f - 22, f - 10, 10, 54],
+  ];
+  const dalam = unit
+    .filter((b) => b[2] < depan)
+    .map(([a0, a1, n0, n1, u0, u1]) => bagKotak(k, a0, a1, n0, Math.min(n1, depan), u0, u1, peran));
+  const luar = unit
+    .filter((b) => b[3] > depan)
+    .map(([a0, a1, n0, n1, u0, u1]) => bagKotak(k, a0, a1, Math.max(n0, depan), n1, u0, u1, peran));
   return [
     ...urutkanKedalaman(k, [
       bagKotak(k, -35, -3, 0, 55, 0, 80, "netral"),
       bagKotak(k, -3, 35, 0, 2, 0, 80, "netral"),
       bagKotak(k, 32, 35, 0, 55, 0, 80, "netral"),
       bagKotak(k, -3, 32, 0, 55, 0, 3, "netral"),
-      bagKotak(k, -35, 35, 0, 58, 80, 84, "netral"),
+      ...dalam,
     ]),
-    // Garis sambungan dan gagang pada muka kabinet yang tertutup.
+    // Slab atas digambar sesudah isi di dalam kabinet (menutupi dari atas).
+    ...bagKotak(k, -35, 35, 0, 58, 80, 84, "netral").daftar,
+    // Gagang pada muka kabinet yang tertutup.
     ...kotak(k, -25, -13, 55, 58, 62, 65, "netral"),
-    // Unit isi yang ditarik keluar: keranjang terbuka di belakang muka bergagang.
-    ...urutkanKedalaman(k, [
-      // Dua rel geser dari dalam kabinet menopang unit isi saat ditarik keluar.
-      bagKotak(k, -3, 0, 2, f - 4, 18, 20, peran),
-      bagKotak(k, 30, 32, 2, f - 4, 18, 20, peran),
-      bagKotak(k, 0, 30, f - 52, f - 2, 8, 10, peran),
-      bagKotak(k, 0, 2, f - 52, f - 2, 10, 46, peran),
-      bagKotak(k, 28, 30, f - 52, f - 2, 10, 46, peran),
-      bagKotak(k, 0, 30, f - 52, f - 50, 10, 46, peran),
-      bagKotak(k, 4, 14, f - 40, f - 28, 10, 26, peran),
-      bagKotak(k, 16, 26, f - 24, f - 12, 10, 22, peran),
-      bagKotak(k, -1, 31, f - 2, f, 6, 70, peran),
-      bagKotak(k, 9, 21, f, f + 3, 58, 61, peran),
-    ]),
+    // Unit isi di luar kabinet: keranjang terbuka di belakang muka bergagang.
+    ...urutkanKedalaman(k, [...luar, bagKotak(k, -1, 31, f - 2, f, 6, 56, peran), bagKotak(k, 9, 21, f, f + 3, 44, 47, peran)]),
   ];
 }
 

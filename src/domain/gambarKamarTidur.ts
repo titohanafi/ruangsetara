@@ -104,10 +104,11 @@ export function nakas(k: Kerangka, a0: number, a1: number, peran: Peran): Primit
 
 /** Rak dinding kecil dengan dua siku penopang. */
 export function rakDinding(k: Kerangka, a0: number, a1: number, u: number, peran: Peran): Primitif[] {
+  // Siku penopang digambar lebih dulu supaya papan rak menutupi bidang atasnya.
   return [
-    ...kotak(k, a0, a1, 0, 18, u, u + 3, peran),
     ...kotak(k, a0 + 4, a0 + 7, 0, 16, u - 9, u, peran),
     ...kotak(k, a1 - 7, a1 - 4, 0, 16, u - 9, u, peran),
+    ...kotak(k, a0, a1, 0, 18, u, u + 3, peran),
   ];
 }
 

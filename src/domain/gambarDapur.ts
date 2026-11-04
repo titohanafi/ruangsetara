@@ -6,14 +6,23 @@ import { DIM } from "./dimensiGambar";
 import {
   apar,
   baskom,
+  dispenser,
+  kabinetAtas,
   keranSemprot,
   keranTuas,
   komporInduksi,
+  kursi,
+  kursiRoda,
   mejaDorong,
+  mejaMakan,
+  microwave,
   papanTarik,
   pegboard,
+  rakPiring,
   rakTarikTurun,
   rampPortable,
+  riceCooker,
+  tempatSampah,
 } from "./perabotUmum";
 import { mejaLipatDinding } from "./perabotRuang";
 import { footprintOval, kotak, poligon, titik, type Kerangka, type Primitif, type Titik } from "./gambarShower";
@@ -409,6 +418,22 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
         anotasi.push(ukurTegak(kB, 94, 0, SHEET.sakelarMin, SHEET.sakelarMaks, `${rentang(SHEET.sakelarMin, SHEET.sakelarMaks)}*`));
         anotasi.push(label(titik(kB, 20, 0, 252), "Detektor gas atau asap"));
       }
+      break;
+    }
+    case "LENGKAP": {
+      // Dapur terisi lengkap (perabot umum bukan dari sheet, ditambah kursi roda sebagai acuan skala); tanpa bagian hijau.
+      const di = (a: number, tambahan: Partial<Kerangka> = {}): Kerangka => ({ ...kB, sepanjang: a, ...tambahan });
+      const maju = (y: number) => kB.bidang + (y - xyBelakang(0, 0)[1]);
+      tambah("kabinetAtas", kabinetAtas(di((mA0 + mA1) / 2), "netral"), (mA0 + mA1) / 2, by);
+      tambah("rakPiring", rakPiring(di((wA0 + wA1) / 2), "netral"), (wA0 + wA1) / 2, by);
+      tambah("microwave", microwave(di(-150), "netral", tMeja), -150, by + 5);
+      tambah("riceCooker", riceCooker(di(-108), "netral", tMeja), -108, by + 5);
+      tambah("tempatSampah", tempatSampah(di(80), "netral"), 80, by + 5);
+      tambah("mejaMakan", mejaMakan(di(-20, { bidang: maju(40) }), "netral"), -20, 120);
+      tambah("kursi-1", kursi(di(-50, { bidang: maju(-5) }), "netral"), -50, 37);
+      tambah("kursi-2", kursi(di(10, { bidang: maju(-5) }), "netral"), 10, 37);
+      tambah("dispenser", dispenser({ ...kanan(c), sepanjang: 135 }, "netral"), DAPUR.ruang.lebar / 2, 135);
+      tambah("kursiRoda", kursiRoda(di(105, { bidang: maju(55) }), "netral"), 105, 100);
       break;
     }
     default:

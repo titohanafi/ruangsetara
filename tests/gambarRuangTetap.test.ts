@@ -117,3 +117,24 @@ describe("alternatif dari sheet", () => {
     );
   });
 });
+
+describe("ruang terisi lengkap", () => {
+  for (const area of Object.keys(RUANG_TETAP)) {
+    it(`${area}: lengkap tanpa bagian hijau, lebih banyak benda dari kondisi dasar, ada kursi roda`, () => {
+      const dasar = RUANG_TETAP[area].susun(null, konteks(area, false));
+      const lengkap = RUANG_TETAP[area].susun("LENGKAP", konteks(area, false));
+      expect(lengkap.lapisan.some((l) => l.aksen)).toBe(false);
+      expect(lengkap.lapisan.length).toBeGreaterThan(dasar.lapisan.length);
+      expect(lengkap.lapisan.map((l) => l.id)).toContain("kursiRoda");
+      expect(JSON.stringify(lengkap)).not.toMatch(/null|NaN|Infinity/);
+    });
+  }
+
+  it("hack G-09 memakai pintu tertutup dan hack G-03 mempertahankan pintu terbuka", () => {
+    const ids = (id: string) => RUANG_TETAP.mobilitas.susun(id, konteks("mobilitas", false)).lapisan.map((l) => l.id);
+    expect(ids("G-09~adaptor")).toContain("pintu-tertutup");
+    expect(ids("G-09~adaptor")).not.toContain("pintu");
+    expect(ids("G-03~ganjal")).toContain("pintu");
+    expect(ids("G-03~ganjal")).toContain("ganjal-hack");
+  });
+});

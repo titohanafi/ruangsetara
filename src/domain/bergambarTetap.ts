@@ -11,7 +11,9 @@ export const BERGAMBAR_TETAP: Readonly<Record<string, ReadonlySet<string>>> = {
 export const VARIAN_TETAP: Readonly<Record<string, readonly string[]>> = {
   "B-01": ["B-01~tirai"],
   "B-10": ["B-10~sensor"],
+  "G-03": ["G-03~geser", "G-03~ganjal"],
   "G-04": ["G-04~portable"],
+  "G-09": ["G-09~adaptor", "G-09~tarik"],
   "K-01": ["K-01~portable"],
   "K-04": ["K-04~induksi"],
   "K-08": ["K-08~apar"],
@@ -20,5 +22,4 @@ export const VARIAN_TETAP: Readonly<Record<string, readonly string[]>> = {
   "K-02": ["K-02~lipat", "K-02~papan", "K-02~dorong"],
   "K-03": ["K-03~semprot", "K-03~baskom"],
   "K-05": ["K-05~rak", "K-05~pegboard"],
-  "G-03": ["G-03~geser"],
 };

@@ -86,8 +86,8 @@ export function kursiRoda(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   ];
 }
 
-/** Kursi makan: dudukan, sandaran, empat kaki. */
-export function kursi(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+/** Kursi makan: dudukan, sandaran, empat kaki. `balik` = sandaran di sisi jauh dari dinding (menghadap dinding, mis. di meja belajar). */
+export function kursi(k: Kerangka, peran: Peran = "netral", balik = false): Primitif[] {
   const { lebar, dalam, tinggiDudukan, tinggiSandaran } = UKURAN.kursi;
   const [a0, a1] = [-lebar / 2, lebar / 2];
   const kaki = (a: number, n: number) => kotak(k, a, a + 4, n, n + 4, 0, tinggiDudukan - 3, peran);
@@ -97,7 +97,9 @@ export function kursi(k: Kerangka, peran: Peran = "netral"): Primitif[] {
     ...kaki(a0 + 1, dalam - 6),
     ...kaki(a1 - 5, dalam - 6),
     ...kotak(k, a0, a1, 0, dalam, tinggiDudukan - 3, tinggiDudukan, peran),
-    ...kotak(k, a0, a1, 0, 4, tinggiDudukan, tinggiSandaran, peran),
+    ...(balik
+      ? kotak(k, a0, a1, dalam - 4, dalam, tinggiDudukan, tinggiSandaran, peran)
+      : kotak(k, a0, a1, 0, 4, tinggiDudukan, tinggiSandaran, peran)),
   ];
 }
 
@@ -238,12 +240,12 @@ export function apar(k: Kerangka, peran: Peran = "netral"): Primitif[] {
 }
 
 /** Lampu meja: dasar bulat, tiang tipis, dan kap. */
-export function lampuMeja(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+export function lampuMeja(k: Kerangka, peran: Peran = "netral", u0 = 0): Primitif[] {
   const { jariDasar, tinggi, jariKap } = UKURAN.lampuMeja;
   return [
-    ...ekstrusi(k, footprintOval(0, jariKap, jariDasar, jariDasar, 20), 0, 3, peran, true),
-    ...kotak(k, -1, 1, jariKap - 1, jariKap + 1, 3, tinggi - 12, peran),
-    ...ekstrusi(k, footprintOval(0, jariKap, jariKap, jariKap, 24), tinggi - 14, tinggi, peran, true),
+    ...ekstrusi(k, footprintOval(0, jariKap, jariDasar, jariDasar, 20), u0, u0 + 3, peran, true),
+    ...kotak(k, -1, 1, jariKap - 1, jariKap + 1, u0 + 3, u0 + tinggi - 12, peran),
+    ...ekstrusi(k, footprintOval(0, jariKap, jariKap, jariKap, 24), u0 + tinggi - 14, u0 + tinggi, peran, true),
   ];
 }
 
@@ -528,8 +530,8 @@ export function keranSemprot(k: Kerangka, peran: Peran = "netral", u0 = 95): Pri
 const daunPotong = (k: Kerangka, peran: Peran): Primitif[] => kotak(k, -40, 40, 0, 3, 50, 170, peran);
 
 /** Gagang bulat (knob): sulit diputar dengan satu tangan (G-09). */
-export function gagangBulat(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  return [...daunPotong(k, peran), ...kotak(k, 27, 29, 3, 7, 99, 101, peran), ...cakram(k, 28, 8, 100, 6, peran, false)];
+export function gagangBulat(k: Kerangka, peran: Peran = "netral", daun = true): Primitif[] {
+  return [...(daun ? daunPotong(k, peran) : []), ...kotak(k, 27, 29, 3, 7, 99, 101, peran), ...cakram(k, 28, 8, 100, 6, peran, false)];
 }
 
 /** Gagang tuas: bisa dioperasikan dengan satu kepalan tangan (B-01, G-09). */
@@ -538,12 +540,12 @@ export function gagangTuas(k: Kerangka, peran: Peran = "netral"): Primitif[] {
 }
 
 /** Adaptor tuas (lever converter) yang dijepit di atas gagang bulat tanpa mengganti gagang (hack G-09). */
-export function adaptorTuas(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  return [...gagangBulat(k, "netral"), ...kotak(k, 23, 33, 5, 10, 94, 106, peran), ...kotak(k, 28, 46, 8, 11, 98, 102, peran)];
+export function adaptorTuas(k: Kerangka, peran: Peran = "netral", daun = true): Primitif[] {
+  return [...gagangBulat(k, "netral", daun), ...kotak(k, 23, 33, 5, 10, 94, 106, peran), ...kotak(k, 28, 46, 8, 11, 98, 102, peran)];
 }
 
 /** Pegangan tarik di sisi dalam daun pintu, dengan tali, untuk menutup pintu dari kursi roda (hack G-09). */
-export function peganganTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+export function peganganTarik(k: Kerangka, peran: Peran = "netral", daun = true): Primitif[] {
   const tali: Primitif = {
     jenis: "jalur",
     titik: [titik(k, 27, 11, 85), titik(k, 22, 12, 60), titik(k, 27, 12, 40)],
@@ -551,7 +553,7 @@ export function peganganTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] 
     peran,
   };
   return [
-    ...daunPotong(k, "netral"),
+    ...(daun ? daunPotong(k, "netral") : []),
     ...kotak(k, 25, 28, 3, 9, 84, 87, peran),
     ...kotak(k, 25, 28, 3, 9, 113, 116, peran),
     ...kotak(k, 25, 28, 8, 11, 84, 116, peran),
@@ -737,6 +739,217 @@ export function rampPortable(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   ];
 }
 
+// ===== Alat bantu kecil dan perlengkapan yang disebut di Hack dan Modifikasi sheet =====
+
+/** Meja kecil sebagai alas untuk benda kecil: papan 70 x 50 dengan empat kaki, setinggi 80 cm. */
+export function mejaKecil(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  const kaki = (a: number, n: number) => kotak(k, a, a + 4, n, n + 4, 0, 76, peran);
+  return [...kaki(-33, 3), ...kaki(29, 3), ...kaki(-33, 43), ...kaki(29, 43), ...kotak(k, -35, 35, 0, 50, 76, 80, peran)];
+}
+const ATAS_MEJA = 80;
+
+/** Penjepit (reacher): batang panjang dengan pegangan dan dua rahang di ujung, bersandar tegak (hack G-08, K-05, B-06). */
+export function penjepit(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [
+    ...kotak(k, -1, 1, 10, 12, 4, 86, peran),
+    ...kotak(k, -3, 3, 8, 14, 86, 98, peran),
+    ...kotak(k, -4, -1, 10, 12, 0, 10, peran),
+    ...kotak(k, 1, 4, 10, 12, 0, 10, peran),
+    ...kotak(k, -5, -3, 14, 18, 88, 92, peran),
+  ];
+}
+
+/** Lap tray di pangkuan kursi roda: papan berpinggir tinggi di atas dudukan (hack K-02, K-08). */
+export function lapTray(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  const bawah = UKURAN.kursiRoda.tinggiDudukan + 22;
+  return [
+    ...kursiRoda(k, "netral"),
+    ...kotak(k, -8, 26, 8, 44, bawah, bawah + 2, peran),
+    ...kotak(k, -8, 26, 8, 10, bawah + 2, bawah + 6, peran),
+    ...kotak(k, -8, 26, 42, 44, bawah + 2, bawah + 6, peran),
+    ...kotak(k, 24, 26, 10, 42, bawah + 2, bawah + 6, peran),
+  ];
+}
+
+/** Tempat gelas yang dijepit di sandaran lengan kursi roda (hack K-08). */
+export function tempatGelas(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  const n1 = 6 + UKURAN.kursiRoda.dalam;
+  return [
+    ...kursiRoda(k, "netral"),
+    ...kotak(k, 4, 8, n1 - 2, n1 + 10, 62, 66, peran),
+    ...ekstrusi(k, footprintOval(8, n1 + 8, 6, 6, 18), 66, 70, peran, true),
+    ...ekstrusi(k, footprintOval(8, n1 + 8, 3.5, 3.5, 14), 70, 88, peran, true),
+  ];
+}
+
+/** Talenan di atas meja kecil, dengan pegangan dan alas anti-slip (hack K-02). */
+export function talenan(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [
+    ...mejaKecil(k, "netral"),
+    ...kotak(k, -18, 18, 12, 36, ATAS_MEJA, ATAS_MEJA + 2, peran),
+    ...kotak(k, 18, 28, 20, 28, ATAS_MEJA, ATAS_MEJA + 2, peran),
+  ];
+}
+
+/** Pisau di atas meja kecil: bilah tipis dan gagang (simpan di zona jangkauan yang aman, hack K-08). */
+export function pisau(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [
+    ...mejaKecil(k, "netral"),
+    ...kotak(k, -14, 8, 22, 25, ATAS_MEJA, ATAS_MEJA + 1, peran),
+    ...kotak(k, 8, 20, 21.5, 25.5, ATAS_MEJA, ATAS_MEJA + 3, peran),
+  ];
+}
+
+/** Panci bertutup kaca di atas meja kecil (hack K-04). */
+export function panci(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [
+    ...mejaKecil(k, "netral"),
+    ...ekstrusi(k, footprintOval(0, 24, 16, 16, 24), ATAS_MEJA, ATAS_MEJA + 14, peran, true),
+    ...ekstrusi(k, footprintOval(0, 24, 17, 17, 24), ATAS_MEJA + 14, ATAS_MEJA + 16, peran, true),
+    ...kotak(k, -3, 3, 22, 26, ATAS_MEJA + 16, ATAS_MEJA + 19, peran),
+    ...kotak(k, -24, -16, 22, 26, ATAS_MEJA + 8, ATAS_MEJA + 10, peran),
+    ...kotak(k, 16, 24, 22, 26, ATAS_MEJA + 8, ATAS_MEJA + 10, peran),
+  ];
+}
+
+/** Gelas di atas meja kecil (K-08). */
+export function gelas(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [...mejaKecil(k, "netral"), ...ekstrusi(k, footprintOval(0, 24, 4, 4, 14), ATAS_MEJA, ATAS_MEJA + 11, peran, true)];
+}
+
+/** Ponsel di atas meja kecil (diletakkan di nakas, B-07, B-10). */
+export function ponsel(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [
+    ...mejaKecil(k, "netral"),
+    ...kotak(k, -4, 4, 18, 32, ATAS_MEJA, ATAS_MEJA + 1, peran),
+    poligon(
+      "rongga",
+      [titik(k, -3, 20, ATAS_MEJA + 1), titik(k, 3, 20, ATAS_MEJA + 1), titik(k, 3, 29, ATAS_MEJA + 1), titik(k, -3, 29, ATAS_MEJA + 1)],
+      peran,
+    ),
+  ];
+}
+
+/** Senter di atas meja kecil (disimpan di nakas, B-10). */
+export function senter(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [
+    ...mejaKecil(k, "netral"),
+    ...kotak(k, -12, 8, 23, 27, ATAS_MEJA, ATAS_MEJA + 4, peran),
+    ...kotak(k, 8, 14, 22, 28, ATAS_MEJA, ATAS_MEJA + 6, peran),
+  ];
+}
+
+/** Remote untuk lampu atau stopkontak, di atas meja kecil (hack B-08, G-08). */
+export function remote(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  const tombol = [0, 1, 2].map((i) =>
+    poligon(
+      "rongga",
+      [
+        titik(k, -2, 20 + i * 4, ATAS_MEJA + 1.5),
+        titik(k, 2, 20 + i * 4, ATAS_MEJA + 1.5),
+        titik(k, 2, 22 + i * 4, ATAS_MEJA + 1.5),
+        titik(k, -2, 22 + i * 4, ATAS_MEJA + 1.5),
+      ],
+      peran,
+    ),
+  );
+  return [...mejaKecil(k, "netral"), ...kotak(k, -3, 3, 18, 34, ATAS_MEJA, ATAS_MEJA + 1.5, peran), ...tombol];
+}
+
+/** Smart plug: colokan pintar di stopkontak dinding dengan lampu indikator (hack B-08, G-08). */
+export function smartPlug(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [
+    ...kotak(k, -6, 6, 0, 2, 40, 52, "netral"),
+    ...kotak(k, -5, 5, 2, 9, 41, 51, peran),
+    ...kotak(k, -1.5, 1.5, 9, 10, 44, 47, peran),
+  ];
+}
+
+/** Klip kabel di dinding: kabel yang dirapikan sepanjang dinding dengan tiga klip (hack B-08, K-08). */
+export function klipKabel(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  const kabel: Primitif = {
+    jenis: "garisPoli",
+    titik: [titik(k, -36, 3, 30), titik(k, -12, 3, 34), titik(k, 12, 3, 28), titik(k, 36, 3, 32)],
+    peran,
+  };
+  return [kabel, ...[-24, 0, 24].flatMap((a) => kotak(k, a - 2.5, a + 2.5, 0, 4, 26, 36, peran))];
+}
+
+/** Pengatur kabel (cable organizer): kotak berlekuk untuk kabel pengisi daya (hack B-07). */
+export function pengaturKabel(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [
+    ...mejaKecil(k, "netral"),
+    ...kotak(k, -14, 14, 18, 32, ATAS_MEJA, ATAS_MEJA + 5, peran),
+    ...[-8, 0, 8].map((a) =>
+      poligon(
+        "rongga",
+        [
+          titik(k, a - 2, 22, ATAS_MEJA + 5),
+          titik(k, a + 2, 22, ATAS_MEJA + 5),
+          titik(k, a + 2, 32, ATAS_MEJA + 5),
+          titik(k, a - 2, 32, ATAS_MEJA + 5),
+        ],
+        peran,
+      ),
+    ),
+  ];
+}
+
+/** Stiker atau keset anti-slip di lantai area basah: lima strip bertekstur sejajar (hack G-05, M-09). */
+export function stikerAntiSlip(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [0, 1, 2, 3, 4].flatMap((i) => kotak(k, -28, 28, 4 + i * 9, 9 + i * 9, 0, 0.8, peran));
+}
+
+/** Selotip karpet: karpet kecil dengan pita perekat di tepi dan gulungan selotip di sampingnya (hack G-05). */
+export function selotipKarpet(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [
+    ...kotak(k, -35, 35, 0, 50, 0, 1.5, "netral"),
+    ...kotak(k, -35, 35, 0, 4, 1.5, 2, peran),
+    ...kotak(k, -35, 35, 46, 50, 1.5, 2, peran),
+    ...kotak(k, -35, -31, 4, 46, 1.5, 2, peran),
+    ...ekstrusi(k, footprintOval(48, 25, 8, 8, 18), 0, 5, peran, true),
+  ];
+}
+
+/** Penggeser furnitur (furniture slider): kursi dengan empat bantalan bundar di bawah kakinya (hack G-02, G-07). */
+export function penggeserFurnitur(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  const { lebar, dalam } = UKURAN.kursi;
+  const bantalan = [-lebar / 2 + 3, lebar / 2 - 3].flatMap((a) =>
+    [4, dalam - 4].flatMap((n) => ekstrusi(k, footprintOval(a, n, 5, 5, 14), 0, 1.5, peran, true)),
+  );
+  return [...kursi(k, "netral").map((p) => p), ...bantalan];
+}
+
+/** Termostat air panas: kenop bulat bertanda skala pada pelat dinding (modifikasi M-07). */
+export function termostat(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  const skala = Array.from({ length: 7 }, (_, i): Primitif => {
+    const t = Math.PI * (0.15 + (i / 6) * 0.7);
+    return {
+      jenis: "garis",
+      dari: titik(k, 12 * Math.cos(t), 3.5, 100 + 12 * Math.sin(t)),
+      ke: titik(k, 15 * Math.cos(t), 3.5, 100 + 15 * Math.sin(t)),
+      gaya: "tegas",
+      peran,
+    };
+  });
+  return [...kotak(k, -16, 16, 0, 3, 84, 116, "netral"), ...cakram(k, 0, 4, 100, 9, peran, false), ...skala];
+}
+
+/** Sepeda motor parkir dilihat dari samping (menghadap +a): dua roda, rangka, jok, setang, dan lampu depan (penyempit jalur, G-01). */
+export function motor(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  return [
+    ...cakram(k, -40, 20, 26, 26, peran),
+    ...cakram(k, 50, 20, 26, 26, peran),
+    ...kotak(k, -40, 50, 17, 23, 30, 36, peran),
+    ...kotak(k, -30, 10, 12, 28, 40, 48, peran),
+    ...kotak(k, -48, -34, 14, 26, 36, 56, peran),
+    ...kotak(k, 40, 44, 14, 26, 36, 80, peran),
+    ...kotak(k, 38, 48, 8, 32, 78, 82, peran),
+    ...kotak(k, 48, 54, 15, 25, 70, 78, peran),
+    ...kotak(k, 4, 24, 14, 26, 14, 38, peran),
+  ];
+}
+
 export interface ObjekKatalog {
   id: string;
   nama: string;
@@ -900,6 +1113,59 @@ export const KATALOG_OBJEK: readonly ObjekKatalog[] = [
     kata: /ramp[^.]*portable|portable[^.]*ramp/i,
     gambar: rampPortable,
   },
+  {
+    id: "penjepit",
+    nama: "Penjepit (reacher)",
+    sumber: "sheet",
+    ruang: ["dapur", "kamar-tidur", "mobilitas"],
+    kata: /reacher|penjepit/i,
+    gambar: penjepit,
+  },
+  { id: "lap-tray", nama: "Lap tray di pangkuan kursi roda", sumber: "sheet", ruang: ["dapur"], kata: /lap tray/i, gambar: lapTray },
+  { id: "tempat-gelas", nama: "Tempat gelas di kursi roda", sumber: "sheet", ruang: ["dapur"], kata: /tempat gelas/i, gambar: tempatGelas },
+  { id: "talenan", nama: "Talenan", sumber: "sheet", ruang: ["dapur"], kata: /talenan/i, gambar: talenan },
+  { id: "pisau", nama: "Pisau", sumber: "sheet", ruang: ["dapur"], kata: /pisau/i, gambar: pisau },
+  { id: "panci", nama: "Panci bertutup kaca", sumber: "sheet", ruang: ["dapur"], kata: /panci/i, gambar: panci },
+  { id: "gelas", nama: "Gelas", sumber: "sheet", ruang: ["dapur"], kata: /gelas/i, gambar: gelas },
+  { id: "ponsel", nama: "Ponsel", sumber: "sheet", ruang: ["kamar-tidur"], kata: /ponsel/i, gambar: ponsel },
+  { id: "senter", nama: "Senter", sumber: "sheet", ruang: ["kamar-tidur"], kata: /senter/i, gambar: senter },
+  {
+    id: "remote",
+    nama: "Remote lampu atau stopkontak",
+    sumber: "sheet",
+    ruang: ["kamar-tidur", "mobilitas"],
+    kata: /remote/i,
+    gambar: remote,
+  },
+  { id: "smart-plug", nama: "Smart plug", sumber: "sheet", ruang: ["kamar-tidur", "mobilitas"], kata: /smart plug/i, gambar: smartPlug },
+  { id: "klip-kabel", nama: "Klip kabel di dinding", sumber: "sheet", ruang: ["dapur", "kamar-tidur"], kata: /klip/i, gambar: klipKabel },
+  { id: "pengatur-kabel", nama: "Pengatur kabel", sumber: "sheet", ruang: ["kamar-tidur"], kata: /pengatur kabel/i, gambar: pengaturKabel },
+  {
+    id: "stiker-anti-slip",
+    nama: "Stiker atau keset anti-slip",
+    sumber: "sheet",
+    ruang: ["kamar-mandi", "mobilitas"],
+    kata: /stiker/i,
+    gambar: stikerAntiSlip,
+  },
+  {
+    id: "selotip-karpet",
+    nama: "Karpet dengan selotip karpet",
+    sumber: "sheet",
+    ruang: ["mobilitas", "kamar-tidur"],
+    kata: /selotip karpet/i,
+    gambar: selotipKarpet,
+  },
+  {
+    id: "penggeser-furnitur",
+    nama: "Penggeser furnitur (furniture slider)",
+    sumber: "sheet",
+    ruang: ["mobilitas"],
+    kata: /furniture slider|penggeser furnitur/i,
+    gambar: penggeserFurnitur,
+  },
+  { id: "termostat", nama: "Kontrol suhu termostatik", sumber: "sheet", ruang: ["kamar-mandi"], kata: /termostatik/i, gambar: termostat },
+  { id: "motor", nama: "Sepeda motor parkir", sumber: "sheet", ruang: ["mobilitas"], kata: /\bmotor\b/i, gambar: motor },
   { id: "kabinet-atas", nama: "Kabinet dinding", sumber: "umum", ruang: ["dapur"], gambar: kabinetAtas },
   { id: "rak-piring", nama: "Rak piring dinding", sumber: "umum", ruang: ["dapur"], gambar: rakPiring },
   { id: "microwave", nama: "Microwave", sumber: "umum", ruang: ["dapur"], gambar: microwave },

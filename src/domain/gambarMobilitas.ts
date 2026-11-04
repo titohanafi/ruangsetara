@@ -20,7 +20,18 @@ import {
   type PeranBenda as Peran,
 } from "./gambarRuang";
 import { lemari, mejaLipatDinding } from "./perabotRuang";
-import { rampPortable } from "./perabotUmum";
+import {
+  adaptorTuas,
+  kipas,
+  kursiRoda,
+  mejaTamu,
+  pengganjalPintu,
+  peganganTarik,
+  rakBuku,
+  rampPortable,
+  sofa,
+  tanamanPot,
+} from "./perabotUmum";
 import { kotak, poligon, titik, type Kerangka, type Primitif } from "./gambarShower";
 
 /** Ukuran ilustratif ruang depan (cm). Perkiraan untuk proporsi, BUKAN acuan dan tidak ditulis di gambar; dilaporkan ke peneliti. */
@@ -137,7 +148,9 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
   const kK = c.kerangka("kanan");
   // Id bisa memuat alternatif dari sheet, mis. "G-03~geser".
   const [kode = null, varian] = id ? id.split("~") : [];
-  const diganti = (kode && DIGANTI[kode]) || [];
+  // Hack G-09 digambar pada pintu tertutup (adaptor dan pegangan ada di daun); hack G-03 pada pintu terbuka (kondisi dasar).
+  const hackDaun = kode === "G-09" && (varian === "adaptor" || varian === "tarik");
+  const diganti = hackDaun ? ["pintu"] : kode === "G-03" && varian === "ganjal" ? [] : (kode && DIGANTI[kode]) || [];
   const lapisan: Lapisan[] = [];
   const anotasi: Primitif[] = [];
   const tambah = (nama: string, daftar: Primitif[], x: number, y: number, aksen = false) =>
@@ -205,6 +218,13 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
       break;
     }
     case "G-03": {
+      if (varian === "ganjal") {
+        // Hack sheet: pengganjal menahan daun pintu terbuka penuh.
+        const lantai = { ...kB, sepanjang: xPintu + 55, bidang: kB.bidang + 8 };
+        tambah("ganjal-hack", pengganjalPintu(lantai, "aksen"), xPintu + 55, yB + 20, true);
+        if (T) anotasi.push(label(titik(lantai, 0, 20, 30), "Pengganjal pintu"));
+        break;
+      }
       const s2 = DIM.pintu.bukaanBersih / 2;
       const ukurBukaan = () =>
         ukur(titik(kPintu, -s2, 10, DIM.pintu.tinggi + 12), titik(kPintu, s2, 10, DIM.pintu.tinggi + 12), `min. ${SHEET.pintuMin} cm`);
@@ -290,6 +310,25 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
       break;
     }
     case "G-09": {
+      if (hackDaun) {
+        const daunTertutup = [
+          ...pintuTetap(c, "belakang", xPintu, "pintu_tanpa_daun", "netral"),
+          ...kotak(kPintu, -44, 44, 3, 6, 2, 208, "netral"),
+        ];
+        tambah("pintu-tertutup", daunTertutup, xPintu, yB);
+        tambah(
+          "hack-gagang",
+          varian === "adaptor" ? adaptorTuas(kPintu, "aksen", false) : peganganTarik(kPintu, "aksen", false),
+          xPintu,
+          yB,
+          true,
+        );
+        if (T)
+          anotasi.push(
+            label(titik(kPintu, 28, 14, 125), varian === "adaptor" ? "Adaptor tuas pada gagang bulat" : "Pegangan tarik dan tali"),
+          );
+        break;
+      }
       tambah("pintu-mod", pintuTetap(c, "belakang", xPintu, "pintu_ayun_luar", "aksen"), xPintu, yB, true);
       tambah("tuas-mod", tuas(kPintu, 32, 100, "aksen"), xPintu, yB, true);
       lapisan.push(...zonaLantai(c, "bebas", xPintu - SHEET.bebas / 2, yB, xPintu + SHEET.bebas / 2, yB + SHEET.bebas));
@@ -302,6 +341,18 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
           ),
         );
       }
+      break;
+    }
+    case "LENGKAP": {
+      // Ruang depan terisi lengkap (perabot umum bukan dari sheet, ditambah kursi roda sebagai acuan skala); tanpa bagian hijau.
+      const di = (a: number, tambahan: Partial<Kerangka> = {}): Kerangka => ({ ...kB, sepanjang: a, ...tambahan });
+      const maju = (y: number) => kB.bidang + (y - yB);
+      tambah("sofa", sofa({ ...kK, sepanjang: 70 }, "netral"), L / 2, 70);
+      tambah("mejaTamu", mejaTamu(di(70, { bidang: maju(60) }), "netral"), 70, 110);
+      tambah("rakBuku", rakBuku(di(-26), "netral"), -26, yB + 30);
+      tambah("kipas", kipas(di(-170, { bidang: maju(100) }), "netral"), -170, 125);
+      tambah("tanaman", tanamanPot(di(-120, { bidang: maju(120) }), "netral"), -120, 170);
+      tambah("kursiRoda", kursiRoda(di(-30, { bidang: maju(60) }), "netral"), -30, 105);
       break;
     }
     default:

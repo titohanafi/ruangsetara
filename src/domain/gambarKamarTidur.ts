@@ -20,7 +20,7 @@ import {
   type PeranBenda as Peran,
 } from "./gambarRuang";
 import { lemari } from "./perabotRuang";
-import { gantunganTarikTurun, lampuSensor, ranjangMedis } from "./perabotUmum";
+import { gantunganTarikTurun, kipas, keset, kursi, kursiRoda, lampuMeja, lampuSensor, mejaBelajar, ranjangMedis } from "./perabotUmum";
 import { footprintOval, kotak, poligon, titik, type Kerangka, type Primitif } from "./gambarShower";
 
 /** Ukuran ilustratif kamar tidur (cm). Perkiraan untuk proporsi, BUKAN acuan dan tidak ditulis di gambar; dilaporkan ke peneliti. */
@@ -289,6 +289,18 @@ export function susunKamarTidur(id: string | null, c: KonteksRuang): HasilRuang 
         anotasi.push(label(titik(kB, tA1 + 25, 6, 140), "Saklar dekat tempat tidur"));
         anotasi.push(label(c.proyeksi(tA1 + 40, yBelakang + 70, 30), "Kursi toilet portable", 40, 36));
       }
+      break;
+    }
+    case "LENGKAP": {
+      // Kamar tidur terisi lengkap (perabot umum bukan dari sheet, ditambah kursi roda sebagai acuan skala); tanpa bagian hijau.
+      const di = (a: number, tambahan: Partial<Kerangka> = {}): Kerangka => ({ ...kB, sepanjang: a, ...tambahan });
+      const maju = (y: number) => kB.bidang + (y - yBelakang);
+      tambah("mejaBelajar", mejaBelajar(di(60), "netral"), 60, yBelakang + 55);
+      tambah("kursiBelajar", kursi(di(60, { bidang: maju(-100) }), "netral", true), 60, -58);
+      tambah("lampuMeja", lampuMeja(di((nA0 + nA1) / 2), "netral", KAMAR_TIDUR.nakas.tinggi), (nA0 + nA1) / 2, yBelakang + 30);
+      tambah("kipas", kipas(di(150, { bidang: maju(70) }), "netral"), 150, 90);
+      tambah("keset", keset({ ...kK, sepanjang: pintuPusat }, "netral"), L / 2, pintuPusat);
+      tambah("kursiRoda", kursiRoda(di(30, { bidang: maju(95) }), "netral"), 30, 130);
       break;
     }
     default:

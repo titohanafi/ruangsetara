@@ -373,8 +373,7 @@ describe("gambar benda kamar mandi", () => {
     }
   });
 
-  // Kloset duduk sengaja tidak simetris cermin: mangkuk digeser ke kiri layar (lihat tes kloset di bawah).
-  it.each(JENIS_BENDA.filter((j) => j !== "kloset_duduk"))("%s: dinding kiri sama dengan dinding kanan yang dicerminkan", (jenis) => {
+  it.each(JENIS_BENDA)("%s: dinding kiri sama dengan dinding kanan yang dicerminkan", (jenis) => {
     expect(bulatkan(susunBenda(jenis, "kiri"))).toBe(bulatkan(cerminkanUji(susunBenda(jenis, "kanan"))));
   });
 
@@ -422,7 +421,7 @@ describe("gambar benda kamar mandi", () => {
       expect(gambarBenda(jenis).some((p) => p.jenis === "poligon" && (p.tepi || p.garisTipis))).toBe(false);
   });
 
-  it("kloset duduk: mangkuk digeser ke kiri layar pada dinding belakang dan kiri (cermin ditambah geseran tetap)", () => {
+  it("kloset duduk: mangkuk bergeser sama relatif ke tangki di semua dinding dan sudut pandang (cermin untuk sisi berlawanan)", () => {
     const proyeksi =
       (az: number) =>
       (x: number, y: number, z: number): Titik => {
@@ -441,8 +440,7 @@ describe("gambar benda kamar mandi", () => {
     const tangki = (k: Kerangka): Titik => titik(k, 0, 9, 60);
     const relB = belakang[0] - tangki({ ...dasar, dinding: "belakang" })[0];
     const relK = kiri[0] - tangki({ ...dasar, dinding: "kiri" })[0];
-    // Tanpa geseran, relB = -relK (cermin). Geseran ke kiri layar 10 satuan menambah -10 pada keduanya.
-    expect(relB + relK).toBeCloseTo(-20, 6);
+    expect(relB).toBeCloseTo(-relK, 6);
   });
 
   it("pintu: daun digambar sebelum kusen bila membuka menjauhi kamera, sesudahnya bila mendekati", () => {

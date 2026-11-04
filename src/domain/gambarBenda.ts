@@ -36,11 +36,6 @@ export type JenisBenda = (typeof JENIS_BENDA)[number];
 const oval = (k: Kerangka, a: number, n: number, ra: number, rn: number, u: number, segmen = 32): Titik[] =>
   footprintOval(a, n, ra, rn, segmen).map(([x, y]) => titik(k, x, y, u));
 
-// Mangkuk lurus di depan tangki (sumbu sama, tanpa geseran ke samping) dan pusatnya dimajukan ke 22 cm dari dinding,
-// sehingga bagian belakang mangkuk masuk ke bawah tangki dan keduanya menempel.
-const PUSAT_MANGKUK_N = 22;
-const GESER_KIRI = 10;
-
 /** Sumbu lokal `a` dan `n` di layar (vektor per satu satuan lokal, sudah termasuk skala kerangka). */
 function sumbuLayar(k: Kerangka): { a: Titik; n: Titik } {
   const o = titik(k, 0, 0, 0);
@@ -50,21 +45,26 @@ function sumbuLayar(k: Kerangka): { a: Titik; n: Titik } {
 }
 
 function klosetDuduk(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  // Geser ke KIRI layar sejauh GESER_KIRI satuan layar (permintaan pemilik), lewat sumbu lebar `a` pada kerangka ini.
-  const lebarLayar = sumbuLayar(k).a[0];
-  const a = Math.abs(lebarLayar) < 1e-6 ? 0 : -GESER_KIRI / lebarLayar;
-  const pusatN = PUSAT_MANGKUK_N;
-  const setengah = DIM.kloset.lebar / 2;
+  const w = DIM.kloset.lebar / 2;
   const tinggiDudukan = DIM.kloset.tinggiDudukan;
+  // Badan mangkuk berbentuk D: belakang rata ke dinding selebar tangki, depan melengkung. Tangki berdiri di atas bagian
+  // belakang badan itu (satu bangun porselen), mangkuk bertumpu pada leher oval yang lebih kecil di bawahnya.
+  const dalamLurus = 30;
+  const jejakD: [number, number][] = [
+    [-w, 0],
+    [w, 0],
+    ...Array.from({ length: 25 }, (_, i): [number, number] => {
+      const th = (i / 24) * Math.PI;
+      return [w * Math.cos(th), dalamLurus + 26 * Math.sin(th)];
+    }),
+  ];
   return [
-    // Bentuk kloset dikenali dari tangki bertutup dan tombol, kaki, serta mangkuk. Tangki turun sampai 28 cm (batas kaki
-    // dan mangkuk) dan mangkuk digambar di depannya, jadi tangki tampak bertumpu pada mangkuk tanpa celah.
-    ...kotak(k, -setengah, setengah, 0, 18, 0, 80, peran),
-    ...kotak(k, -setengah - 2, setengah + 2, -1, 19.5, 80, 85, peran),
+    ...ekstrusi(k, footprintOval(0, 24, w * 0.6, 18, 24), 0, 28, peran, true),
+    ...ekstrusi(k, jejakD, 28, tinggiDudukan, peran, true),
+    poligon("rongga", oval(k, 0, 34, w - 6, 16, tinggiDudukan), peran),
+    ...kotak(k, -w, w, 0, 18, tinggiDudukan, 80, peran),
+    ...kotak(k, -w - 2, w + 2, -1, 19.5, 80, 85, peran),
     ...ekstrusi(k, footprintOval(0, 9.25, 3.5, 3.5, 12), 85, 88, peran, true),
-    ...ekstrusi(k, footprintOval(a, pusatN, 11, 17, 24), 0, 28, peran, true),
-    ...ekstrusi(k, footprintOval(a, pusatN, 18, 26, 32), 28, tinggiDudukan, peran, true),
-    poligon("rongga", oval(k, a, pusatN, 12, 19, tinggiDudukan), peran),
   ];
 }
 

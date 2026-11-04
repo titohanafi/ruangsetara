@@ -73,8 +73,8 @@ export function reducer(s: State, a: Aksi): State {
   switch (a.jenis) {
     case "pilih_area":
       if (s.areaId === a.areaId) return s;
-      // Ganti area: pertanyaan, prioritas, dan hasil baca foto milik area lama tidak berlaku lagi. Foto dan profil tetap.
-      return { ...s, areaId: a.areaId, baca: BACA_AWAL, denah: null, catatanFoto: {}, temuan: {}, aktivitas: null, jawaban: {}, indeks: 0 };
+      // Ganti area: pertanyaan, prioritas, dan hasil baca foto milik area lama tidak berlaku lagi. Profil tetap; foto dibersihkan agar tidak terbawa ke area lain.
+      return { ...s, areaId: a.areaId, fotos: [], baca: BACA_AWAL, denah: null, catatanFoto: {}, temuan: {}, aktivitas: null, jawaban: {}, indeks: 0 };
     case "tambah_foto":
       return { ...s, fotos: [...s.fotos, a.foto], baca: BACA_AWAL, denah: null, catatanFoto: {}, jawaban: tanpaJawabanFoto(s.jawaban) };
     case "hapus_foto":

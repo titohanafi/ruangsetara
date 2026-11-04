@@ -22,7 +22,7 @@ export function FotoScreen() {
   const kameraRef = useRef<HTMLInputElement>(null);
   const area = cariArea(state.areaId);
   const bisaDibaca = area?.bisa_dipindai === true;
-  const tahapUji = bisaDibaca && area?.foto_teruji === false;
+  const tahapUji = bisaDibaca && area?.foto_teruji === false && area.id !== "dapur";
   const penuh = state.fotos.length >= MAKS_FOTO;
   const membaca = state.baca.status === "membaca";
 

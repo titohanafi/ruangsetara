@@ -61,7 +61,26 @@
     "label": "Mengenal kebutuhan Anda",
     "judul": "Setiap orang, kebutuhan berbeda.",
     "pilih": "Pilih jawaban",
-    "lanjut": "Pilih area rumah →"
+    "lanjut": "Pilih area rumah →",
+    "ukuranOpsional": "Opsional",
+    "satuanUkuran": "cm",
+    "pengukuran": [
+      {
+        "id": "lebar_kursi_cm",
+        "pertanyaan": "Berapa lebar kursi roda saat sedang didorong?",
+        "petunjuk": "Ukur bagian paling lebar saat mendorong roda, termasuk tangan, buku jari, dan siku yang keluar."
+      },
+      {
+        "id": "panjang_kursi_cm",
+        "pertanyaan": "Berapa panjang kursi roda dari depan ke belakang?",
+        "petunjuk": "Ukur dari ujung kaki Anda yang paling depan sampai bagian paling belakang kursi roda."
+      },
+      {
+        "id": "ruang_putar_cm",
+        "pertanyaan": "Berapa ruang yang Anda butuhkan untuk berputar penuh?",
+        "petunjuk": "Putar kursi roda satu kali penuh di tempat, tandai bagian terluar dengan lakban di lantai, lalu ukur garis tengahnya."
+      }
+    ]
   },
   "prioritas": {
     "label": "Satu area dalam satu asesmen",
@@ -102,6 +121,7 @@
     "jawabanAkhir": "Jawaban akhir Anda"
   },
   "hasil": {
+    "pilihRekomendasi": "Pilih rekomendasi",
     "label": "Rekomendasi",
     "judul": "Ruang yang lebih mendukung Anda.",
     "prioritas": "Berikut hasil asesmen untuk area yang Anda pilih.",

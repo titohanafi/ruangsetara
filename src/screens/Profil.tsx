@@ -31,6 +31,30 @@ export function ProfilScreen() {
         ))}
       </div>
 
+      <div className="mt-8 grid gap-6">
+        {T.pengukuran.map((p) => (
+          <div key={p.id}>
+            <label htmlFor={p.id} className="block text-lg font-semibold">
+              {p.pertanyaan} <span className="text-kecil font-normal text-redup">({T.ukuranOpsional})</span>
+            </label>
+            <p id={`${p.id}-petunjuk`} className="mt-2 text-kecil text-redup">{p.petunjuk}</p>
+            <div className="mt-3 flex items-center gap-3">
+              <input
+                id={p.id}
+                type="text"
+                inputMode="decimal"
+                maxLength={12}
+                aria-describedby={`${p.id}-petunjuk ${p.id}-satuan`}
+                value={state.profil[p.id] ?? ""}
+                onChange={(event) => kirim({ jenis: "isi_profil", id: p.id, nilai: event.target.value })}
+                className="h-8 min-h-0 w-24 max-w-[6rem] flex-none rounded-tombol border border-garisKontrol bg-putih px-2 py-1 text-sm focus:outline-utama"
+              />
+              <span id={`${p.id}-satuan`}>{T.satuanUkuran}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
       <div className="tanpa-cetak mt-8 flex flex-wrap items-center gap-3 border-t border-garis pt-5">
 
         <button type="button" className="tombol-utama" disabled={!lengkap} onClick={() => pindah("/prioritas")}>

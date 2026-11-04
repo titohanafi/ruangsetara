@@ -174,3 +174,8 @@ Atas permintaan Tiara, sembunyikan ringkasan hasil pembacaan foto, panel Jawaban
 ## 2026-11-03 — Interaksi rekomendasi yang disederhanakan
 
 Ringkasan modifikasi dipindahkan tepat setelah foto. Tombol hanya menampilkan nomor, dengan nama kategori tetap tersedia untuk pembaca layar. Hanya satu modifikasi aktif dan kartu terkait ditampilkan; nomor pertama aktif secara bawaan dan nomor aktif tidak dapat dinonaktifkan tanpa memilih nomor lain. Tombol putar dihapus; checkbox Tampilkan semua benda aktif secara bawaan. Teks di antara nomor dan kartu dihapus. Keterangan ilustrasi kartu menjadi "Angka ini masih perkiraan". Logika analisis foto dan ukuran rekomendasi tidak diubah. Foto tiruan dan pengaturan pratinjau lokal tidak disertakan dalam perubahan GitHub.
+
+## 2026-11-04 — Alur rekomendasi semua area dan ukuran opsional
+Kontrol nomor dan satu kartu aktif kini berlaku untuk semua area, termasuk tanpa foto atau denah. Hasil Belum tahu dan rekomendasi tanpa gambar tetap dapat dipilih. Mengganti area membersihkan foto area sebelumnya. Pemberitahuan tahap uji disembunyikan untuk dapur atas permintaan Tiara; ilustrasi area selain kamar mandi masih ditunda.
+
+Profil awal memiliki tiga isian teks opsional dalam cm: lebar saat didorong, panjang total, dan diameter ruang putar. Petunjuk mengikuti teks Tiara, isian berukuran 96 × 32 px. Nilai hanya disimpan dalam state sesi dan belum mengubah perhitungan rekomendasi atau gambar.

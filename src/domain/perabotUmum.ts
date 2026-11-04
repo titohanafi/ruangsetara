@@ -777,21 +777,16 @@ export function gantunganTarikTurun(k: Kerangka, peran: Peran = "netral"): Primi
 
 /** Papan tarik di bawah meja: papan kerja yang ditarik keluar dari bawah papan meja (alternatif K-02). */
 export function papanTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  // Meja berupa kabinet tertutup di bawah papan atas (kaki tidak bisa masuk), jadi papan kerja yang ditarik keluar dari celah
+  // di bawah papan atas itulah yang memberi permukaan kerja bagi pengguna kursi roda. Papan hanya digambar bagian yang
+  // sudah keluar; bagian di dalam tertutup kabinet.
   return [
-    ...urutkanKedalaman(k, [
-      bagKotak(k, -45, 45, 0, 2, 40, 86, "netral"),
-      bagKotak(k, -45, -42, 0, 60, 0, 86, "netral"),
-      bagKotak(k, 42, 45, 0, 60, 0, 86, "netral"),
-      bagKotak(k, -45, 45, 0, 60, 86, 90, "netral"),
-    ]),
-    // Posisi semula papan di bawah papan meja, putus-putus.
-    ...kotak(k, -38, 38, 4, 58, 72, 75, "hantu"),
-    // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
-    ...urutkanKedalaman(k, [
-      bagKotak(k, -42, -40, 0, 90, 70, 72, peran),
-      bagKotak(k, 40, 42, 0, 90, 70, 72, peran),
-      bagKotak(k, -38, 38, 40, 94, 72, 75, peran),
-    ]),
+    ...kotak(k, -45, 45, 0, 60, 0, 86, "netral"),
+    ...kotak(k, -47, 47, 0, 62, 86, 90, "netral"),
+    // Celah tempat papan keluar, dua garis tipis di muka kabinet.
+    { jenis: "garis", dari: titik(k, -42, 60, 74), ke: titik(k, 42, 60, 74), gaya: "tegas", peran: "netral" },
+    { jenis: "garis", dari: titik(k, -42, 60, 81), ke: titik(k, 42, 60, 81), gaya: "tegas", peran: "netral" },
+    ...kotak(k, -38, 38, 60, 98, 76, 79, peran),
   ];
 }
 

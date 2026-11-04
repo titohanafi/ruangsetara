@@ -67,10 +67,8 @@ describe("gambar mobilitas dari hasil baca foto", () => {
   });
 
   it("tanpa hasil baca dipakai tata letak contoh, dan ruang lengkap memuat semua benda dasar", () => {
-    expect(ids(null)).toEqual(expect.arrayContaining(["pintu", "undakan", "lemariTanam", "meja", "saklar", "retak", "karpet"]));
-    expect(ids("LENGKAP", new Set())).toEqual(
-      expect.arrayContaining(["pintu", "undakan", "lemariTanam", "meja", "saklar", "retak", "karpet"]),
-    );
+    expect(ids(null)).toEqual(expect.arrayContaining(["pintu", "lemariTanam", "meja", "saklar", "retak", "karpet"]));
+    expect(ids("LENGKAP", new Set())).toEqual(expect.arrayContaining(["pintu", "lemariTanam", "meja", "saklar", "retak", "karpet"]));
   });
 });
 

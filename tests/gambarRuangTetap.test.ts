@@ -91,7 +91,7 @@ describe("benda dasar dan angka yang tampak keliru", () => {
     expect(ids("kamar-tidur", "B-06")).not.toContain("lemari");
     expect(ids("mobilitas", "G-04")).not.toContain("undakan");
     expect(ids("mobilitas", "G-03")).not.toContain("pintu");
-    expect(ids("mobilitas", null)).toEqual(expect.arrayContaining(["pintu", "undakan", "lemariTanam", "meja", "saklar"]));
+    expect(ids("mobilitas", null)).toEqual(expect.arrayContaining(["pintu", "lemariTanam", "meja", "saklar"]));
   });
 });
 

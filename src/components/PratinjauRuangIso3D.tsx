@@ -17,8 +17,8 @@ import {
   type Primitif,
   type Titik,
 } from "../domain/gambarShower";
-import { bangku, baskom, keranjangCucian, kursiCommode, kursiRoda, pintuPocket, tempatSampah, waterHeater } from "../domain/perabotUmum";
-import { posisiSepanjang, type UkuranRuang } from "../domain/tataLetak";
+import { bangku, baskom, kursiCommode, kursiRoda, pintuPocket, tempatSampah, waterHeater } from "../domain/perabotUmum";
+import { letakLantaiLengkap, posisiSepanjang, type UkuranRuang } from "../domain/tataLetak";
 import {
   OBJEK_DENAH,
   type JenisKloset,
@@ -147,7 +147,7 @@ export function PratinjauRuangIso3D({
    */
   varian?: "pocket" | "commode" | "bangku" | "baskom";
   /**
-   * Kamar mandi terisi lengkap: ditambah pemanas air (disebut di sheet M-07), tempat sampah dan keranjang cucian (umum, bukan dari
+   * Kamar mandi terisi lengkap: ditambah pemanas air (disebut di sheet M-07), tempat sampah (umum, bukan dari
    * sheet), dan kursi roda manual sebagai acuan skala. Semua netral (tanpa bagian hijau); bukan hasil baca foto.
    */
   lengkap?: boolean;
@@ -321,10 +321,10 @@ export function PratinjauRuangIso3D({
         const k: Kerangka = { ...kerangkaDinding("belakang"), sepanjang: x, bidang: y };
         tambahan.push({ id: nama, daftar: bentuk(k), kedalaman: proyeksi(x, y, 0)[1] });
       };
-      taruh("pemanas-air", "area_mandi", 55, (k) => waterHeater(k, "netral"), "");
-      lantai("kursi-roda", -10, 20, (k) => kursiRoda(k, "netral"));
-      lantai("tempat-sampah", 0, -DALAM / 2 + 4, (k) => tempatSampah(k, "netral"));
-      lantai("keranjang-cucian", -LEBAR / 2 + 30, 10, (k) => keranjangCucian(k, "netral"));
+      const letakLengkap = letakLantaiLengkap(ruang);
+      taruh("pemanas-air", "area_mandi", letakLengkap.geserPemanasAir, (k) => waterHeater(k, "netral"), "");
+      lantai("kursi-roda", ...letakLengkap.kursiRoda, (k) => kursiRoda(k, "netral"));
+      lantai("tempat-sampah", ...letakLengkap.tempatSampah, (k) => tempatSampah(k, "netral"));
     }
     const susunMod = [...susunBagian, ...tambahan];
     const susunan = [...susunBenda, ...susunMod].sort((a, b) => a.kedalaman - b.kedalaman);

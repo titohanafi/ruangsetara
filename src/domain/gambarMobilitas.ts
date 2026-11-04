@@ -1,5 +1,5 @@
 // Gambar "setelah modifikasi" untuk mobilitas di rumah (isometrik, hijau = bagian yang diubah). Mobilitas tidak punya satu ruangan
-// tetap, jadi digambar sebagai satu ruang depan contoh dengan pintu, undakan, lemari tanam, meja besar, dan saklar. Tata letak TETAP
+// tetap, jadi digambar sebagai satu ruang depan contoh dengan pintu, lemari tanam, meja besar, dan saklar. Tata letak TETAP
 // (ilustrasi umum, bukan hasil baca foto). Ukuran benda hanya untuk proporsi (`MOBILITAS`, perkiraan). Angka yang TERTULIS di gambar
 // hanya dari teks Modifikasi sheet (G-01..G-09); G-06 dan G-08 tidak punya angka di teks Modifikasi.
 import { DIM } from "./dimensiGambar";
@@ -85,14 +85,6 @@ export function mejaBesar(c: KonteksRuang, x0: number, x1: number, y0: number, y
   ];
 }
 
-/** Undakan di dasar pintu (perbedaan level): balok rendah selebar bukaan pintu. */
-export function undakan(c: KonteksRuang, xTengah: number, peran: Peran): Primitif[] {
-  const { tinggi, dalam } = MOBILITAS.undakan;
-  const y0 = -MOBILITAS.ruang.dalam / 2;
-  const s = DIM.pintu.bukaanBersih / 2;
-  return kotakDunia(c, xTengah - s, xTengah + s, y0, y0 + dalam, 0, tinggi, peran);
-}
-
 /** Ramp dengan pegangan rambat: bagian datar di pintu (`datar`), lalu turun dengan kelandaian 1:10 (naik `tinggi`, panjang miring 10 kali) sejauh `miring`. */
 export function ramp(c: KonteksRuang, xTengah: number, lebar: number, datar: number, peran: Peran): Primitif[] {
   const tinggi = MOBILITAS.undakan.tinggi;
@@ -173,8 +165,8 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
   // pertanyaannya (tetap digambar walau bendanya tidak terbaca di foto). Ruang terisi lengkap memuat semua benda dasar.
   const tampil = (nama: string) => kode === "LENGKAP" || !c.ada || c.ada.has(nama);
   if (!diganti.includes("pintu") && tampil("pintu")) tambah("pintu", pintuTetap(c, "belakang", xPintu, "pintu", "netral"), xPintu, yB);
-  if (!diganti.includes("undakan") && tampil("undakan"))
-    tambah("undakan", undakan(c, xPintu, "netral"), xPintu, yB + MOBILITAS.undakan.dalam);
+  // Undakan sengaja tidak digambar pada kondisi dasar: di depan pintu yang membuka ke dalam ia menghalangi daun pintu. Perbedaan level
+  // hanya digambar oleh G-04 (ambang dan perubahan level) bersama ramp-nya.
   if (!diganti.includes("lemariTanam") && tampil("lemariTanam"))
     tambah("lemariTanam", lemari(kB, lA0, lA1, "netral", "tertutup", MOBILITAS.lemariTanam), (lA0 + lA1) / 2, yDepanLemari);
   if (!diganti.includes("meja") && tampil("meja")) tambah("meja", mejaBesar(c, mX0, mX1, mY0, mY1, "netral"), (mX0 + mX1) / 2, mY1);
@@ -355,9 +347,9 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
       tambah("sofa", sofa({ ...kK, sepanjang: 70 }, "netral"), L / 2, 70);
       tambah("mejaTamu", mejaTamu(di(70, { bidang: maju(60) }), "netral"), 70, 110);
       tambah("rakBuku", rakBuku(di(-26), "netral"), -26, yB + 30);
-      tambah("kipas", kipas(di(-170, { bidang: maju(100) }), "netral"), -170, 125);
-      tambah("tanaman", tanamanPot(di(-120, { bidang: maju(120) }), "netral"), -120, 170);
-      tambah("kursiRoda", kursiRoda(di(-30, { bidang: maju(60) }), "netral"), -30, 105);
+      tambah("kipas", kipas(di(-170, { bidang: maju(-5) }), "netral"), -170, 15);
+      tambah("tanaman", tanamanPot(di(-20, { bidang: maju(120) }), "netral"), -20, 170);
+      tambah("kursiRoda", kursiRoda(di(-85, { bidang: maju(60) }), "netral"), -85, 105);
       break;
     }
     default:

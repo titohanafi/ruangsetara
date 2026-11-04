@@ -42,7 +42,7 @@ export const KAMAR_TIDUR = {
   lemari: { dalam: 55, tinggi: 200, gantunganModifikasi: 105, gantunganKondisi: 150 },
   nakas: { lebar: 45, dalam: 40, tinggi: 55 },
   letak: {
-    tempatTidur: [-130, -30],
+    tempatTidur: [-120, -20],
     nakas: [-178, -133],
     lemari: [-130, -10],
     pintu: 80,
@@ -324,7 +324,7 @@ export function susunKamarTidur(id: string | null, c: KonteksRuang): HasilRuang 
       tambah("mejaBelajar", mejaBelajar(di(60), "netral"), 60, yBelakang + 55);
       tambah("kursiBelajar", kursi(di(60, { bidang: maju(-100) }), "netral", true), 60, -58);
       tambah("lampuMeja", lampuMeja(di((nA0 + nA1) / 2), "netral", KAMAR_TIDUR.nakas.tinggi), (nA0 + nA1) / 2, yBelakang + 30);
-      tambah("kipas", kipas(di(150, { bidang: maju(70) }), "netral"), 150, 90);
+      tambah("kipas", kipas(di(-156, { bidang: maju(120) }), "netral"), -156, 140);
       tambah("keset", keset({ ...kK, sepanjang: pintuPusat }, "netral"), L / 2, pintuPusat);
       tambah("kursiRoda", kursiRoda(di(30, { bidang: maju(95) }), "netral"), 30, 130);
       break;
@@ -332,5 +332,15 @@ export function susunKamarTidur(id: string | null, c: KonteksRuang): HasilRuang 
     default:
       break;
   }
+  // Nakas ada di sisi kiri tempat tidur, lebih dekat ke kamera (kamera di sisi kiri), jadi digambar di depan tempat tidur dan menutupi
+  // sebagian kaki kepala tempat tidur. Urutan berdasarkan titik pijak di lantai tidak menangkap ini karena nakas dangkal di dinding
+  // belakang. Lampu meja di atas nakas digambar setelah nakas.
+  const nakasLapisan = lapisan.find((l) => l.id === "nakas");
+  const tidurLapisan = lapisan.filter((l) => l.id.startsWith("tempatTidur"));
+  if (nakasLapisan && tidurLapisan.length > 0) {
+    nakasLapisan.kedalaman = Math.max(nakasLapisan.kedalaman, ...tidurLapisan.map((l) => l.kedalaman)) + 0.01;
+  }
+  const lampuLapisan = lapisan.find((l) => l.id === "lampuMeja");
+  if (lampuLapisan && nakasLapisan) lampuLapisan.kedalaman = Math.max(lampuLapisan.kedalaman, nakasLapisan.kedalaman + 0.01);
   return { lapisan, anotasi };
 }

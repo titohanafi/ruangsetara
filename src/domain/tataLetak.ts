@@ -120,3 +120,22 @@ export function titikTertata(
     }),
   ) as Record<ObjekDenah, { x: number; y: number }>;
 }
+
+/**
+ * Letak benda lantai pada kamar mandi terisi lengkap (cm dari tengah ruang; x sepanjang lebar, y sepanjang dalam, dinding belakang di
+ * y negatif) dan geseran pemanas air sepanjang dinding shower. Keranjang cucian tidak ikut: di ruang seluas toilet PerMen, dengan
+ * area ayunan pintu dan kursi roda, tidak ada lantai tersisa untuknya. Dipilih supaya tidak ada benda yang tumpang tindih atau berdiri di
+ * area ayunan pintu pada tata letak bawaan (pintu di dinding depan, kloset dan wastafel di dinding belakang, shower di dinding
+ * kanan); dijaga oleh `tests/tataLetakLengkap.test.ts`.
+ */
+export function letakLantaiLengkap(ruang: UkuranRuang): {
+  kursiRoda: readonly [number, number];
+  tempatSampah: readonly [number, number];
+  geserPemanasAir: number;
+} {
+  return {
+    kursiRoda: [-24, -29],
+    tempatSampah: [5.5, -ruang.dalam / 2 + 4],
+    geserPemanasAir: 55,
+  };
+}

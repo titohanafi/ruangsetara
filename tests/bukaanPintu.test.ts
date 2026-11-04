@@ -5,14 +5,13 @@ import { kerangkaPanel, type Primitif } from "../src/domain/gambarShower";
 const poligon = (daftar: Primitif[]) => daftar.filter((p): p is Extract<Primitif, { jenis: "poligon" }> => p.jenis === "poligon");
 
 describe("bukaan pintu", () => {
-  it("lubang polos: putih, tanpa garis tepi, tanpa lantai atau garis di dalamnya", () => {
+  it("lubang polos: abu-abu rata area luar, tanpa garis tepi, tanpa lantai atau garis di dalamnya", () => {
     const hasil = bukaanDinding(kerangkaPanel("kanan"));
     expect(hasil).toHaveLength(1);
     const lubang = hasil[0];
     expect(lubang.jenis).toBe("poligon");
     if (lubang.jenis === "poligon") {
-      expect(lubang.muka).toBe("latar");
-      expect(lubang.peran).toBe("netral");
+      expect(lubang.muka).toBe("luar");
       expect(lubang.tanpaGaris).toBe(true);
       expect(lubang.titik).toHaveLength(4);
     }

@@ -194,11 +194,11 @@ function lubangPintu(k: Kerangka): Titik[] {
 
 /**
  * Bukaan pintu pada bidang dinding: lubang selebar bukaan bersih setinggi pintu, digambar di atas dinding berkeramik supaya
- * pintu tampak menembus dinding, bukan menempel di permukaannya. Lubangnya polos: putih tanpa garis tepi, tanpa lantai atau garis
- * keramik di dalamnya (ruang di baliknya sengaja tidak digambar).
+ * pintu tampak menembus dinding, bukan menempel di permukaannya. Lubangnya polos: abu-abu rata (lebih gelap dari lantai) tanpa garis tepi,
+ * tanpa lantai atau garis keramik di dalamnya (ruang di baliknya sengaja tidak digambar).
  */
 export function bukaanDinding(k: Kerangka): Primitif[] {
-  return [{ ...poligon("latar", lubangPintu(k), "netral"), tanpaGaris: true }];
+  return [{ ...poligon("luar", lubangPintu(k), "ruang"), tanpaGaris: true }];
 }
 
 /**

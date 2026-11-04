@@ -23,6 +23,7 @@ export default {
         benda: { DEFAULT: "#FFFFFF", atas: "#FFFFFF", kanan: "#FFFFFF", kiri: "#E6E6E6" },
         dinding: { DEFAULT: "#F7F7F7", belakang: "#FFFFFF", tebal: "#DDDDDD" },
         lantai: "#EBEBEB",
+        balikPintu: "#BFBFBF", // area di balik lubang pintu (luar ruangan): abu polos, lebih gelap dari lantai
         bahaya: { DEFAULT: "#A32020", muda: "#FDEDED" },
       },
       fontFamily: { sans: ["system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"] },

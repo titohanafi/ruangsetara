@@ -1,6 +1,6 @@
 import type { Peran, Primitif, Titik } from "../domain/gambarShower";
 
-type Bidang = "atas" | "kanan" | "kiri" | "latar" | "lantai" | "zona" | "pita" | "rongga";
+type Bidang = "atas" | "kanan" | "kiri" | "latar" | "lantai" | "zona" | "pita" | "rongga" | "luar";
 const ISI: Record<Peran, Record<Bidang, string>> = {
   netral: {
     atas: "fill-benda-atas",
@@ -11,6 +11,7 @@ const ISI: Record<Peran, Record<Bidang, string>> = {
     zona: "fill-utama/10",
     pita: "fill-benda-kiri",
     rongga: "fill-benda-kiri",
+    luar: "fill-balikPintu",
   },
   aksen: {
     atas: "fill-utama-muda",
@@ -21,6 +22,7 @@ const ISI: Record<Peran, Record<Bidang, string>> = {
     zona: "fill-utama/10",
     pita: "fill-utama/40",
     rongga: "fill-utama/40",
+    luar: "fill-balikPintu",
   },
   hantu: {
     atas: "fill-none",
@@ -31,6 +33,7 @@ const ISI: Record<Peran, Record<Bidang, string>> = {
     zona: "fill-none",
     pita: "fill-none",
     rongga: "fill-none",
+    luar: "fill-none",
   },
   ruang: {
     atas: "fill-white",
@@ -41,6 +44,7 @@ const ISI: Record<Peran, Record<Bidang, string>> = {
     zona: "fill-utama/10",
     pita: "fill-dinding-tebal",
     rongga: "fill-dinding-tebal",
+    luar: "fill-balikPintu",
   },
 };
 const GARIS: Record<Peran, string> = { netral: "stroke-tinta", aksen: "stroke-utama", hantu: "stroke-garisKontrol", ruang: "stroke-tinta" };

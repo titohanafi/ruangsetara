@@ -241,3 +241,6 @@ Atas permintaan pemilik: lubang bukaan pintu dibuat **benar-benar polos** (putih
 
 ## 2026-11-04 — Pintu geser di sisi luar
 Atas permintaan pemilik: daun dan rel pintu geser digambar di **sisi luar** dinding (lorong), bukan di dalam ruangan, supaya tidak memakan dinding kamar mandi yang sempit (sebelumnya menempel di sisi dalam tanpa dasar di sheet). Dari dalam ruangan hanya bagian daun yang tampak lewat lubang pintu yang digambar (dipotong sebesar lubang); rel di atas kusen tersembunyi di balik dinding. Pocket door tidak berubah (daunnya memang masuk ke dalam dinding). Berlaku di semua gambar yang memakai `pintu_geser` (kondisi dari foto, alternatif G-03, kartu benda). Tes ditambah di `tests/bukaanPintu.test.ts`.
+
+## 2026-11-04 — Area di balik lubang pintu abu-abu polos
+Atas permintaan pemilik: area di balik lubang pintu (luar ruangan) diisi **abu-abu rata yang lebih gelap dari lantai** (token baru `balikPintu` #BFBFBF di `tailwind.config.ts`, bidang `luar` di `LapisPrimitif`), menggantikan lubang putih. Tetap tanpa garis tepi, tanpa lantai atau garis keramik di dalamnya. Nama token sengaja bukan `luar` karena kelas `stroke-luar` sudah dipakai (tanpa warna) untuk jalur selang di `LapisPrimitif`.

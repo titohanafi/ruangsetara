@@ -22,7 +22,7 @@ export type Muka = "atas" | "kanan" | "kiri";
 export type Primitif =
   | {
       jenis: "poligon";
-      muka: Muka | "latar" | "lantai" | "zona" | "pita" | "rongga";
+      muka: Muka | "latar" | "lantai" | "zona" | "pita" | "rongga" | "luar";
       titik: Titik[];
       peran: Peran;
       tanpaGaris?: boolean;
@@ -142,7 +142,7 @@ export function ukuranShower(): UkuranShower {
 }
 
 export const poligon = (
-  muka: Muka | "latar" | "lantai" | "zona" | "pita" | "rongga",
+  muka: Muka | "latar" | "lantai" | "zona" | "pita" | "rongga" | "luar",
   pts: Titik[],
   peran: Peran,
 ): Extract<Primitif, { jenis: "poligon" }> => ({

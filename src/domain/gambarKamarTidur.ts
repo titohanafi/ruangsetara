@@ -20,6 +20,7 @@ import {
   type PeranBenda as Peran,
 } from "./gambarRuang";
 import { lemari } from "./perabotRuang";
+import { gantunganTarikTurun, ranjangMedis } from "./perabotUmum";
 import { footprintOval, kotak, poligon, titik, type Kerangka, type Primitif } from "./gambarShower";
 
 /** Ukuran ilustratif kamar tidur (cm). Perkiraan untuk proporsi, BUKAN acuan dan tidak ditulis di gambar; dilaporkan ke peneliti. */
@@ -219,12 +220,24 @@ export function susunKamarTidur(id: string | null, c: KonteksRuang): HasilRuang 
       break;
     }
     case "B-04": {
+      if (varian === "atur") {
+        // Alternatif sheet: ranjang yang tingginya bisa diatur.
+        tambah("tempatTidur-mod", ranjangMedis({ ...kB, sepanjang: (tA0 + tA1) / 2 }, "aksen"), (tA0 + tA1) / 2, yKakiTidur, true);
+        if (T) anotasi.push(label(titik(kB, (tA0 + tA1) / 2, 150, 90), "Ranjang yang tingginya bisa diatur"));
+        break;
+      }
       const tinggi = KAMAR_TIDUR.tempatTidur.tinggiModifikasi;
       tambah("tempatTidur-mod", tempatTidur(kB, tA0, tA1, tinggi, "aksen"), (tA0 + tA1) / 2, yKakiTidur, true);
       if (T) anotasi.push(ukurTegak(kB, tA1 + 6, KAMAR_TIDUR.tempatTidur.panjang, 0, tinggi, rentang(SHEET.tinggiMin, SHEET.tinggiMaks)));
       break;
     }
     case "B-06": {
+      if (varian === "tarik") {
+        // Alternatif sheet: sistem gantungan tarik turun.
+        tambah("lemari-mod", gantunganTarikTurun({ ...kK, sepanjang: (lA0 + lA1) / 2 }, "aksen"), L / 2, (lA0 + lA1) / 2, true);
+        if (T) anotasi.push(label(titik(kK, (lA0 + lA1) / 2, 60, 205), "Gantungan tarik turun"));
+        break;
+      }
       tambah(
         "lemari-mod",
         lemari(kK, lA0, lA1, "aksen", "terbuka", KAMAR_TIDUR.lemari, KAMAR_TIDUR.lemari.gantunganModifikasi),

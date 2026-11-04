@@ -19,7 +19,7 @@ import {
   type Lapisan,
   type PeranBenda as Peran,
 } from "./gambarRuang";
-import { lemari } from "./perabotRuang";
+import { lemari, mejaLipatDinding } from "./perabotRuang";
 import { kotak, poligon, titik, type Kerangka, type Primitif } from "./gambarShower";
 
 /** Ukuran ilustratif ruang depan (cm). Perkiraan untuk proporsi, BUKAN acuan dan tidak ditulis di gambar; dilaporkan ke peneliti. */
@@ -70,19 +70,6 @@ export function mejaBesar(c: KonteksRuang, x0: number, x1: number, y0: number, y
     ...kaki(x0 + 2, y1 - 8),
     ...kaki(x1 - 8, y1 - 8),
     ...kotakDunia(c, x0, x1, y0, y1, t - 4, t, peran),
-  ];
-}
-
-/** Meja lipat yang menempel di dinding kanan (ramping, tidak memakan lantai) dengan dua siku penopang, dan rak gantung di atasnya. */
-export function mejaLipatDinding(k: Kerangka, a0: number, a1: number, peran: Peran): Primitif[] {
-  const t = MOBILITAS.meja.tinggi;
-  return [
-    ...kotak(k, a0, a1, 0, 40, t - 3, t, peran),
-    ...kotak(k, a0 + 4, a0 + 7, 0, 36, t - 28, t - 3, peran),
-    ...kotak(k, a1 - 7, a1 - 4, 0, 36, t - 28, t - 3, peran),
-    ...kotak(k, a0 + 10, a1 - 10, 0, 18, 150, 153, peran),
-    ...kotak(k, a0 + 14, a0 + 17, 0, 16, 141, 150, peran),
-    ...kotak(k, a1 - 17, a1 - 14, 0, 16, 141, 150, peran),
   ];
 }
 

@@ -3,6 +3,8 @@
 // Ukuran benda hanya untuk proporsi (`DAPUR`, perkiraan). Angka yang TERTULIS di gambar hanya dari teks Modifikasi di sheet
 // peneliti (K-01..K-08); angka yang tampak keliru atau masih ditinjau tidak ditulis (lihat `ANGKA_DAPUR_DITINJAU`).
 import { DIM } from "./dimensiGambar";
+import { keranSemprot, keranTuas, papanTarik, rakTarikTurun } from "./perabotUmum";
+import { mejaLipatDinding } from "./perabotRuang";
 import { footprintOval, kotak, poligon, titik, type Kerangka, type Primitif, type Titik } from "./gambarShower";
 import {
   angka,
@@ -117,14 +119,16 @@ function kulkas(k: Kerangka, peran: Peran, freezerBawah: boolean): Primitif[] {
 }
 
 /** Wastafel dapur: papan dengan bak dan keran; `terbuka` = tanpa lemari di bawahnya (ruang lutut). */
-function wastafel(k: Kerangka, peran: Peran, terbuka: boolean, tinggiAtas: number): Primitif[] {
+function wastafel(k: Kerangka, peran: Peran, terbuka: boolean, tinggiAtas: number, tanpaKeran = false): Primitif[] {
   const [a0, a1] = DAPUR.letak.wastafel;
   const tengah = (a0 + a1) / 2;
   const hasil = kabinet(k, a0, a1, tinggiAtas, peran, terbuka ? "terbuka" : "pintu");
   const T = (a: number, n: number): Titik => titik(k, a, n, tinggiAtas);
   hasil.push(poligon("rongga", [T(tengah - 28, 14), T(tengah + 28, 14), T(tengah + 28, 46), T(tengah - 28, 46)], peran));
-  hasil.push(...kotak(k, tengah - 2, tengah + 2, 4, 8, tinggiAtas, tinggiAtas + 22, peran));
-  hasil.push(...kotak(k, tengah - 2, tengah + 2, 4, 20, tinggiAtas + 19, tinggiAtas + 22, peran));
+  if (!tanpaKeran) {
+    hasil.push(...kotak(k, tengah - 2, tengah + 2, 4, 8, tinggiAtas, tinggiAtas + 22, peran));
+    hasil.push(...kotak(k, tengah - 2, tengah + 2, 4, 20, tinggiAtas + 19, tinggiAtas + 22, peran));
+  }
   if (terbuka) {
     // Kaki papan di sisi luar supaya papan tidak melayang; bagian bawah dibiarkan kosong untuk lutut.
     hasil.push(...kotak(k, a0, a0 + 3, 4, dalamKaki(), 0, tinggiAtas - DAPUR.meja.tebalPapan, peran));
@@ -158,7 +162,10 @@ function kompor(k: Kerangka, peran: Peran, tinggiAtas: number): Primitif[] {
 /** Gambar dapur untuk satu pertanyaan (`id`) yang dijawab Tidak; `null` = kondisi dasar tanpa modifikasi. */
 export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
   const kB = belakang(c);
-  const diganti = id ? DIGANTI[id] : undefined;
+  // Id bisa memuat alternatif dari sheet, mis. "K-02~lipat".
+  const [kode = null, varian] = id ? id.split("~") : [];
+  const keluar = kode === "K-02" && varian === "lipat";
+  const diganti = kode && !keluar && !(kode === "K-05" && varian === "rak") ? DIGANTI[kode] : undefined;
   const lapisan: Lapisan[] = [];
   const anotasi: Primitif[] = [];
   const tambah = (nama: string, daftar: Primitif[], x: number, y: number, aksen = false) =>
@@ -179,7 +186,7 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
   if (diganti !== "pintu")
     tambah("pintu", pintuTetap(c, "kanan", DAPUR.pintuKanan.pusat, "pintu", "netral"), DAPUR.ruang.lebar / 2, DAPUR.pintuKanan.pusat);
 
-  switch (id) {
+  switch (kode) {
     case "K-01": {
       const kK = kanan(c);
       const { pusat } = DAPUR.pintuKanan;
@@ -207,6 +214,19 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
       break;
     }
     case "K-02": {
+      if (varian === "lipat") {
+        // Alternatif sheet: permukaan lipat di dinding.
+        const kKanan = kanan(c);
+        tambah("lipat-mod", mejaLipatDinding(kKanan, -60, 20, "aksen"), DAPUR.ruang.lebar / 2, -20, true);
+        if (T) anotasi.push(label(titik(kKanan, -20, 44, 100), "Permukaan lipat di dinding"));
+        break;
+      }
+      if (varian === "papan") {
+        // Alternatif sheet: papan tarik di bawah meja.
+        tambah("meja-mod", papanTarik({ ...kB, sepanjang: (mA0 + mA1) / 2 }, "aksen"), (mA0 + mA1) / 2, by + 80, true);
+        if (T) anotasi.push(label(titik(kB, (mA0 + mA1) / 2, 84, 60), "Papan tarik di bawah meja"));
+        break;
+      }
       const atas = 79;
       const daftar = [
         ...kotak(kB, mA0, mA1, 0, DAPUR.meja.dalam, atas - DAPUR.meja.tebalPapan, atas, "aksen"),
@@ -232,8 +252,11 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
     }
     case "K-03": {
       const atas = 84;
-      tambah("wastafel-mod", wastafel(kB, "aksen", true, atas), (wA0 + wA1) / 2, by, true);
       const tengah = (wA0 + wA1) / 2;
+      tambah("wastafel-mod", wastafel(kB, "aksen", true, atas, true), tengah, by, true);
+      // Keran diganti keran tuas, atau keran semprot tarik (alternatif sheet).
+      const kKeran = { ...kB, sepanjang: tengah };
+      tambah("keran-mod", varian === "semprot" ? keranSemprot(kKeran, "aksen", atas) : keranTuas(kKeran, "aksen", atas), tengah, by, true);
       lapisan.push(
         ...zonaLantai(
           c,
@@ -253,6 +276,7 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
           ),
         );
         anotasi.push(label(titik(kB, tengah, 30, atas + 34), `Bak maks. ${angka(SHEET.bakMaks)} cm`));
+        anotasi.push(label(titik(kB, tengah, 30, atas + 78), varian === "semprot" ? "Keran semprot tarik" : "Keran tuas"));
       }
       break;
     }
@@ -271,6 +295,12 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
       break;
     }
     case "K-05": {
+      if (varian === "rak") {
+        // Alternatif sheet: rak tarik turun.
+        tambah("rak-mod", rakTarikTurun({ ...kB, sepanjang: (mA0 + mA1) / 2 }, "aksen"), (mA0 + mA1) / 2, by + 40, true);
+        if (T) anotasi.push(label(titik(kB, (mA0 + mA1) / 2, 44, 215), "Rak tarik turun"));
+        break;
+      }
       const daftar = kabinet(kB, mA0, mA1, tMeja, "aksen", "laci");
       tambah("laci-mod", daftar, (mA0 + mA1) / 2, by, true);
       // Satu laci ditarik penuh ke depan.

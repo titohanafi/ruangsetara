@@ -181,7 +181,13 @@
  "catatanKamarTidur": "Ilustrasi umum kamar tidur dengan tata letak contoh, bukan hasil baca foto Anda. Letak benda di kamar Anda bisa berbeda.",
  "varian": {
   "B-01~tirai": "Alternatif dari sheet: ganti daun pintu dengan tirai",
-  "G-03~geser": "Alternatif dari sheet: pintu geser untuk ruang sempit"
+  "G-03~geser": "Alternatif dari sheet: pintu geser untuk ruang sempit",
+  "B-04~atur": "Alternatif dari sheet: ranjang yang tingginya bisa diatur",
+  "B-06~tarik": "Alternatif dari sheet: sistem gantungan tarik turun",
+  "K-02~lipat": "Alternatif dari sheet: permukaan lipat di dinding",
+  "K-02~papan": "Alternatif dari sheet: papan tarik di bawah meja",
+  "K-03~semprot": "Alternatif dari sheet: keran semprot tarik",
+  "K-05~rak": "Alternatif dari sheet: rak tarik turun"
  },
  "catatanMobilitas": "Ilustrasi umum ruang depan dengan tata letak contoh, bukan hasil baca foto Anda. Letak benda di rumah Anda bisa berbeda.",
     "altKartu": "Ilustrasi isometrik kamar mandi dengan modifikasi {nama}.",

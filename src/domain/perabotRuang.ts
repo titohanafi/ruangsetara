@@ -44,3 +44,15 @@ export function lemari(
   }
   return hasil;
 }
+
+/** Meja lipat yang menempel di dinding kanan (ramping, tidak memakan lantai) dengan dua siku penopang, dan rak gantung di atasnya. */
+export function mejaLipatDinding(k: Kerangka, a0: number, a1: number, peran: PeranBenda, t = 75): Primitif[] {
+  return [
+    ...kotak(k, a0, a1, 0, 40, t - 3, t, peran),
+    ...kotak(k, a0 + 4, a0 + 7, 0, 36, t - 28, t - 3, peran),
+    ...kotak(k, a1 - 7, a1 - 4, 0, 36, t - 28, t - 3, peran),
+    ...kotak(k, a0 + 10, a1 - 10, 0, 18, 150, 153, peran),
+    ...kotak(k, a0 + 14, a0 + 17, 0, 16, 141, 150, peran),
+    ...kotak(k, a1 - 17, a1 - 14, 0, 16, 141, 150, peran),
+  ];
+}

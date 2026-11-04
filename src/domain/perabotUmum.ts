@@ -735,7 +735,14 @@ export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[]
     ...bagKotak(k, -35, 35, 0, 58, 80, 84, "netral").daftar,
     ...kotak(k, -25, -13, 55, 58, 62, 65, "netral"),
     // Bagian rak di luar kabinet, dengan muka bergagang di ujungnya.
-    ...urutkanKedalaman(k, [...luar, bagKotak(k, -1, 31, f - 2, f, 6, 56, peran), bagKotak(k, 9, 21, f, f + 3, 44, 47, peran)]),
+    ...urutkanKedalaman(k, [
+      ...luar,
+      // Dua balok polos sebagai barang di dalam rak (hanya yang berada di luar kabinet).
+      bagKotak(k, 4, 14, 62, 74, 10, 40, peran),
+      bagKotak(k, 16, 26, 78, 88, 10, 30, peran),
+      bagKotak(k, -1, 31, f - 2, f, 6, 56, peran),
+      bagKotak(k, 9, 21, f, f + 3, 44, 47, peran),
+    ]),
   ];
 }
 

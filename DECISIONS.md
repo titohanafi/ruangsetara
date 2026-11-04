@@ -235,3 +235,6 @@ Keluhan pemilik: pintu yang terbuka memperlihatkan dinding, seperti membuka pint
 **Belum:** ruang di balik pintu hanya lantai polos (tanpa dinding atau perabot di baliknya); itu sengaja agar gambar tidak mengarang isi ruang lain.
 
 **Tambahan (lubang pintu di panel benda):** panel benda pintu (lembar tinjauan) dan `pintuPocket` kini juga menggambar lubang bukaan, sehingga garis keramik dinding tidak terlihat lewat bukaan.
+
+## 2026-11-04 — Lubang pintu polos dan daun ayun luar tidak menembus dinding
+Atas permintaan pemilik: lubang bukaan pintu dibuat **benar-benar polos** (putih tanpa garis tepi; lantai abu-abu di baliknya dihapus). Daun pintu **ayun ke luar** sebenarnya berada di luar ruangan (di balik dinding), tetapi sebelumnya digambar di depan dinding sehingga tampak memotong dinding; kini daunnya dipotong sebesar lubang (`potongCembung`, irisan poligon cembung) sehingga hanya bagian yang tampak lewat bukaan yang digambar, dan garis lintasan ayun di lantai luar tidak digambar. Berlaku untuk semua gambar yang memakai `pintu_ayun_luar` (M-01, B-01, G-03, G-09, dan panel benda). Tes: `tests/bukaanPintu.test.ts`.

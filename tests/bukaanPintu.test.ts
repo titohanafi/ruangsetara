@@ -1,30 +1,46 @@
 import { describe, expect, it } from "vitest";
-import { bukaanDinding } from "../src/domain/gambarBenda";
-import { kerangkaPanel } from "../src/domain/gambarShower";
+import { bukaanDinding, gambarBenda } from "../src/domain/gambarBenda";
+import { kerangkaPanel, type Primitif } from "../src/domain/gambarShower";
+
+const poligon = (daftar: Primitif[]) => daftar.filter((p): p is Extract<Primitif, { jenis: "poligon" }> => p.jenis === "poligon");
 
 describe("bukaan pintu", () => {
-  it("lubang putih tembus (bukan warna dinding) dan berhingga", () => {
+  it("lubang polos: putih, tanpa garis tepi, tanpa lantai atau garis di dalamnya", () => {
     const hasil = bukaanDinding(kerangkaPanel("kanan"));
-    expect(hasil.length).toBeGreaterThan(0);
+    expect(hasil).toHaveLength(1);
     const lubang = hasil[0];
     expect(lubang.jenis).toBe("poligon");
     if (lubang.jenis === "poligon") {
       expect(lubang.muka).toBe("latar");
       expect(lubang.peran).toBe("netral");
+      expect(lubang.tanpaGaris).toBe(true);
+      expect(lubang.titik).toHaveLength(4);
     }
     expect(JSON.stringify(hasil)).not.toMatch(/null|NaN|Infinity/);
   });
 
-  it("lantai di balik bukaan, bila tampak, tidak keluar dari lubang", () => {
-    const [lubang, lantai] = bukaanDinding({ ...kerangkaPanel("kanan"), lihat: { x: -1, y: 1 } });
-    if (!lantai || lantai.jenis !== "poligon" || lubang.jenis !== "poligon") return;
-    const xs = lubang.titik.map((t) => t[0]);
-    const ys = lubang.titik.map((t) => t[1]);
-    for (const [x, y] of lantai.titik) {
-      expect(x).toBeGreaterThanOrEqual(Math.min(...xs) - 1e-6);
-      expect(x).toBeLessThanOrEqual(Math.max(...xs) + 1e-6);
-      expect(y).toBeGreaterThanOrEqual(Math.min(...ys) - 1e-6);
-      expect(y).toBeLessThanOrEqual(Math.max(...ys) + 1e-6);
+  it("daun pintu ayun ke luar tidak keluar dari lubang (tidak memotong dinding)", () => {
+    const k = kerangkaPanel("kanan");
+    const lubang = poligon(bukaanDinding(k))[0].titik;
+    const xs = lubang.map((t) => t[0]);
+    const ys = lubang.map((t) => t[1]);
+    const kusen = new Set(gambarBenda("pintu_tanpa_daun", k).map((p) => JSON.stringify(p)));
+    const daun = poligon(gambarBenda("pintu_ayun_luar", k)).filter((p) => !kusen.has(JSON.stringify(p)));
+    expect(daun.length).toBeGreaterThan(0);
+    for (const p of daun) {
+      for (const [x, y] of p.titik) {
+        expect(x).toBeGreaterThanOrEqual(Math.min(...xs) - 1e-6);
+        expect(x).toBeLessThanOrEqual(Math.max(...xs) + 1e-6);
+        expect(y).toBeGreaterThanOrEqual(Math.min(...ys) - 1e-6);
+        expect(y).toBeLessThanOrEqual(Math.max(...ys) + 1e-6);
+      }
     }
+  });
+
+  it("pintu ayun ke luar tidak menggambar garis lintasan ayun di lantai luar", () => {
+    const hasil = gambarBenda("pintu_ayun_luar", kerangkaPanel("kanan"));
+    expect(hasil.some((p) => p.jenis === "garisPoli")).toBe(false);
+    const dalam = gambarBenda("pintu", kerangkaPanel("kanan"));
+    expect(dalam.some((p) => p.jenis === "garisPoli" && p.peran === "hantu")).toBe(true);
   });
 });

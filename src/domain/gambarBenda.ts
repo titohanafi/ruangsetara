@@ -185,19 +185,20 @@ function potongCembung(subjek: Titik[], klip: Titik[]): Titik[] {
   return hasil;
 }
 
-/**
- * Bukaan pintu pada bidang dinding: lubang selebar bukaan bersih setinggi pintu, digambar di atas dinding berkeramik supaya
- * pintu tampak menembus dinding, bukan menempel di permukaannya. Lubangnya putih (tembus, bukan warna dinding) dan lantai ruang di
- * baliknya terlihat lewat bukaan, supaya membuka pintu terlihat seperti menuju ruangan lain, bukan menghadap dinding.
- */
-export function bukaanDinding(k: Kerangka): Primitif[] {
+/** Sudut lubang pintu pada bidang dinding `k` (selebar bukaan bersih, setinggi pintu), dalam koordinat layar. */
+function lubangPintu(k: Kerangka): Titik[] {
   const s2 = DIM.pintu.bukaanBersih / 2;
   const tinggi = DIM.pintu.tinggi;
-  const lubang: Titik[] = [titik(k, -s2, 0, 0), titik(k, s2, 0, 0), titik(k, s2, 0, tinggi), titik(k, -s2, 0, tinggi)];
-  // Lantai di luar dinding (n negatif = menjauhi ruangan), hanya bagian yang tampak lewat lubang.
-  const lantaiLuar: Titik[] = [titik(k, -s2, 0, 0), titik(k, s2, 0, 0), titik(k, s2, -150, 0), titik(k, -s2, -150, 0)];
-  const tampak = potongCembung(lantaiLuar, lubang);
-  return [poligon("latar", lubang, "netral"), ...(tampak.length >= 3 ? [poligon("lantai", tampak, "ruang")] : [])];
+  return [titik(k, -s2, 0, 0), titik(k, s2, 0, 0), titik(k, s2, 0, tinggi), titik(k, -s2, 0, tinggi)];
+}
+
+/**
+ * Bukaan pintu pada bidang dinding: lubang selebar bukaan bersih setinggi pintu, digambar di atas dinding berkeramik supaya
+ * pintu tampak menembus dinding, bukan menempel di permukaannya. Lubangnya polos: putih tanpa garis tepi, tanpa lantai atau garis
+ * keramik di dalamnya (ruang di baliknya sengaja tidak digambar).
+ */
+export function bukaanDinding(k: Kerangka): Primitif[] {
+  return [{ ...poligon("latar", lubangPintu(k), "netral"), tanpaGaris: true }];
 }
 
 /**
@@ -226,6 +227,17 @@ function pintuAyun(k: Kerangka, arah: 1 | -1, peran: Peran = "netral"): Primitif
   const { n: arahMasuk } = sumbuLayar(k);
   const daunDekat = arah * arahMasuk[1] > 0;
   const kusen = kusenPintu(k, peran);
+  if (arah === -1) {
+    // Daun yang membuka ke luar berada di luar ruangan, di balik dinding: dari dalam ruangan hanya bagian yang tampak lewat lubang
+    // pintu yang terlihat (dipotong sebesar lubang), supaya tidak tampak menembus dinding. Garis lintasan di lantai luar tidak digambar.
+    const lubang = lubangPintu(k);
+    const tampak = daun.flatMap((p): Primitif[] => {
+      if (p.jenis !== "poligon") return [];
+      const potong = potongCembung(p.titik, lubang);
+      return potong.length >= 3 ? [{ ...p, titik: potong }] : [];
+    });
+    return daunDekat ? [...kusen, ...tampak] : [...tampak, ...kusen];
+  }
   return [{ jenis: "garisPoli", titik: lintasan, peran: "hantu" }, ...(daunDekat ? [...kusen, ...daun] : [...daun, ...kusen])];
 }
 

@@ -44,6 +44,9 @@ function sumbuLayar(k: Kerangka): { a: Titik; n: Titik } {
   return { a: [a[0] - o[0], a[1] - o[1]], n: [n[0] - o[0], n[1] - o[1]] };
 }
 
+// Tebal tutup dudukan hanya untuk bentuk gambar (perkiraan, tidak ditulis di gambar).
+const TEBAL_TUTUP = 3;
+
 function klosetDuduk(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const w = DIM.kloset.lebar / 2;
   const tinggiDudukan = DIM.kloset.tinggiDudukan;
@@ -58,10 +61,20 @@ function klosetDuduk(k: Kerangka, peran: Peran = "netral"): Primitif[] {
       return [w * Math.cos(th), dalamLurus + 26 * Math.sin(th)];
     }),
   ];
+  const jejakTutup: [number, number][] = [
+    [-(w - 2), 18],
+    [w - 2, 18],
+    ...Array.from({ length: 25 }, (_, i): [number, number] => {
+      const th = (i / 24) * Math.PI;
+      return [(w - 2) * Math.cos(th), dalamLurus + 24 * Math.sin(th)];
+    }),
+  ];
   return [
     ...ekstrusi(k, footprintOval(0, 24, w * 0.6, 18, 24), 0, 28, peran, true),
     ...ekstrusi(k, jejakD, 28, tinggiDudukan, peran, true),
     poligon("rongga", oval(k, 0, 34, w - 6, 16, tinggiDudukan), peran),
+    // Tutup dudukan tertutup: pelat D tipis, sedikit lebih kecil dari badan, dari muka tangki ke depan.
+    ...ekstrusi(k, jejakTutup, tinggiDudukan, tinggiDudukan + TEBAL_TUTUP, peran, true),
     ...kotak(k, -w, w, 0, 18, tinggiDudukan, 80, peran),
     ...kotak(k, -w - 2, w + 2, -1, 19.5, 80, 85, peran),
     ...ekstrusi(k, footprintOval(0, 9.25, 3.5, 3.5, 12), 85, 88, peran, true),

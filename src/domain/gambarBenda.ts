@@ -36,13 +36,6 @@ export type JenisBenda = (typeof JENIS_BENDA)[number];
 const oval = (k: Kerangka, a: number, n: number, ra: number, rn: number, u: number, segmen = 32): Titik[] =>
   footprintOval(a, n, ra, rn, segmen).map(([x, y]) => titik(k, x, y, u));
 
-// Versi E (disetujui pemilik di papan Claude Design): mangkuk, kaki, dan cekungan digeser dari sumbu tangki supaya
-// pusatnya tampak sejajar dengan pusat tangki di layar, dan tangki diberi kaki sampai lantai supaya menyatu dengan mangkuk (menggantikan garis penyambung).
-// Geseran ditetapkan di LAYAR (6 satuan ke arah sisi mangkuk dan 6 ke atas pada panel), lalu diubah ke koordinat lokal
-// (a, n) menurut sumbu dinding dan kamera yang dipakai, supaya hasilnya sama di semua dinding dan sudut pandang. Pada
-// panel dinding belakang hasilnya (-9,464; -2,536).
-const GESER_LAYAR = 6;
-
 /** Sumbu lokal `a` dan `n` di layar (vektor per satu satuan lokal, sudah termasuk skala kerangka). */
 function sumbuLayar(k: Kerangka): { a: Titik; n: Titik } {
   const o = titik(k, 0, 0, 0);
@@ -51,25 +44,19 @@ function sumbuLayar(k: Kerangka): { a: Titik; n: Titik } {
   return { a: [a[0] - o[0], a[1] - o[1]], n: [n[0] - o[0], n[1] - o[1]] };
 }
 
-/** Geseran lokal (a, n) yang menggeser mangkuk 6 satuan layar ke sisi n dan 6 ke atas, pada skala panel. */
-function geseranMangkuk(k: Kerangka): { a: number; n: number } {
-  const { a: A, n: N } = sumbuLayar(k);
-  const skala = Math.hypot(A[0], A[1]);
-  const sx = (N[0] >= 0 ? GESER_LAYAR : -GESER_LAYAR) * skala;
-  const sy = -GESER_LAYAR * skala;
-  const det = A[0] * N[1] - N[0] * A[1];
-  return { a: (sx * N[1] - N[0] * sy) / det, n: (A[0] * sy - sx * A[1]) / det };
-}
-
 function klosetDuduk(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  const { a, n } = geseranMangkuk(k);
-  const pusatN = 31 + n;
+  const a = 0;
+  const pusatN = 31;
   const setengah = DIM.kloset.lebar / 2;
   const tinggiDudukan = DIM.kloset.tinggiDudukan;
   return [
-    // Disederhanakan: tangki satu balok dari lantai (menempel ke mangkuk) dan mangkuk satu badan oval.
-    ...kotak(k, -setengah, setengah, 0, 22, 0, 80, peran),
-    ...ekstrusi(k, footprintOval(a, pusatN, 18, 26, 32), 0, tinggiDudukan, peran, true),
+    // Bentuk kloset dikenali dari tangki bertutup dan tombol, kaki, serta mangkuk. Tangki turun sampai 28 cm (batas kaki
+    // dan mangkuk) dan mangkuk digambar di depannya, jadi tangki tampak bertumpu pada mangkuk tanpa celah.
+    ...kotak(k, -setengah, setengah, 0, 18, 28, 80, peran),
+    ...kotak(k, -setengah - 2, setengah + 2, -1, 19.5, 80, 85, peran),
+    ...ekstrusi(k, footprintOval(0, 9.25, 3.5, 3.5, 12), 85, 88, peran, true),
+    ...ekstrusi(k, footprintOval(a, pusatN, 11, 17, 24), 0, 28, peran, true),
+    ...ekstrusi(k, footprintOval(a, pusatN, 18, 26, 32), 28, tinggiDudukan, peran, true),
     poligon("rongga", oval(k, a, pusatN, 12, 19, tinggiDudukan), peran),
   ];
 }

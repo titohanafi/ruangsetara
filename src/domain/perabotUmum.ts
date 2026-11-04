@@ -711,37 +711,28 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
  * panel sisi yang dekat kamera. Rak dibuat sederhana: dasar, tiga dinding, dan muka.
  */
 export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  const depan = 55;
   const f = 96;
-  // Bagian rak yang masih di dalam kabinet (n < 55) diurutkan bersama rangka kabinet supaya tertutup panel sisi dekat kamera.
-  const dalamRak: Bagian[] = [
-    bagKotak(k, 0, 30, 6, depan, 8, 10, peran),
-    bagKotak(k, 0, 2, 6, depan, 10, 46, peran),
-    bagKotak(k, 28, 30, 6, depan, 10, 46, peran),
-    bagKotak(k, 0, 30, 6, 8, 10, 46, peran),
-  ];
-  // Bagian di luar kabinet: dinding sisi yang jauh dari kamera dulu, lalu dasar dan barang, lalu dinding sisi yang dekat
-  // (menutupi barang dari samping), lalu muka bergagang.
-  const kiri = bagKotak(k, 0, 2, depan, f - 2, 10, 46, peran);
-  const kanan = bagKotak(k, 28, 30, depan, f - 2, 10, 46, peran);
+  // Rak digambar utuh (tanpa sambungan di muka kabinet, supaya tidak ada garis di dalamnya). Bagian yang masih di dalam
+  // kabinet tertutup karena panel sisi kanan kabinet dan papan atas digambar sesudah rak.
+  const kiri = bagKotak(k, 0, 2, 6, f - 2, 10, 46, peran);
+  const kanan = bagKotak(k, 28, 30, 6, f - 2, 10, 46, peran);
   const [jauh, dekat] = kedalamanBagian(k, kiri) <= kedalamanBagian(k, kanan) ? [kiri, kanan] : [kanan, kiri];
   return [
     ...urutkanKedalaman(k, [
-      bagKotak(k, -35, -3, 0, 55, 0, 80, "netral"),
       bagKotak(k, -3, 35, 0, 2, 0, 80, "netral"),
-      bagKotak(k, 32, 35, 0, 55, 0, 80, "netral"),
+      bagKotak(k, -35, -3, 0, 55, 0, 80, "netral"),
       bagKotak(k, -3, 32, 0, 55, 0, 3, "netral"),
-      ...dalamRak,
     ]),
-    // Papan atas digambar sesudah isi di dalam kabinet.
-    ...bagKotak(k, -35, 35, 0, 58, 80, 84, "netral").daftar,
-    ...kotak(k, -25, -13, 55, 58, 62, 65, "netral"),
     ...jauh.daftar,
-    ...bagKotak(k, 0, 30, depan, f - 2, 8, 10, peran).daftar,
+    ...bagKotak(k, 0, 30, 6, f - 2, 8, 10, peran).daftar,
     ...urutkanKedalaman(k, [bagKotak(k, 4, 14, 62, 74, 10, 40, peran), bagKotak(k, 16, 26, 78, 88, 10, 54, peran)]),
     ...dekat.daftar,
     ...bagKotak(k, -1, 31, f - 2, f, 6, 56, peran).daftar,
     ...bagKotak(k, 9, 21, f, f + 3, 44, 47, peran).daftar,
+    // Panel sisi kanan kabinet dan papan atas menutupi bagian rak yang masih di dalam kabinet.
+    ...bagKotak(k, 32, 35, 0, 55, 0, 80, "netral").daftar,
+    ...bagKotak(k, -35, 35, 0, 58, 80, 84, "netral").daftar,
+    ...kotak(k, -25, -13, 55, 58, 62, 65, "netral"),
   ];
 }
 

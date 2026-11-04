@@ -696,7 +696,10 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
   ];
 }
 
-/** Keranjang tarik di dalam lemari bawah: keranjang kawat yang ditarik penuh ke depan di atas rel (K-05). */
+/**
+ * Keranjang tarik (K-05): lemari bawah tanpa pintu. Posisi semula keranjang di dalam lemari digambar putus-putus; keranjang
+ * kawat yang ditarik penuh ke depan di atas dua rel digambar penuh di depan lemari.
+ */
 export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
     ...urutkanKedalaman(k, [
@@ -706,14 +709,16 @@ export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[]
       bagKotak(k, -35, 35, 0, 58, 80, 84, "netral"),
       bagKotak(k, -32, 32, 0, 55, 0, 3, "netral"),
     ]),
+    // Posisi semula keranjang di dalam lemari, putus-putus.
+    ...kotak(k, -28, 28, 4, 54, 30, 50, "hantu"),
     // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
     ...urutkanKedalaman(k, [
-      bagKotak(k, -31, -29, 0, 80, 26, 28, peran),
-      bagKotak(k, 29, 31, 0, 80, 26, 28, peran),
-      bagKotak(k, -28, 28, 30, 80, 28, 30, peran),
-      bagKotak(k, -28, -26, 30, 80, 30, 50, peran),
-      bagKotak(k, 26, 28, 30, 80, 30, 50, peran),
-      bagKotak(k, -28, 28, 78, 80, 30, 50, peran),
+      bagKotak(k, -31, -29, 0, 90, 26, 28, peran),
+      bagKotak(k, 29, 31, 0, 90, 26, 28, peran),
+      bagKotak(k, -28, 28, 40, 90, 28, 30, peran),
+      bagKotak(k, -28, -26, 40, 90, 30, 50, peran),
+      bagKotak(k, 26, 28, 40, 90, 30, 50, peran),
+      bagKotak(k, -28, 28, 88, 90, 30, 50, peran),
     ]),
   ];
 }
@@ -762,11 +767,13 @@ export function papanTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
       bagKotak(k, 42, 45, 0, 60, 0, 86, "netral"),
       bagKotak(k, -45, 45, 0, 60, 86, 90, "netral"),
     ]),
+    // Posisi semula papan di bawah papan meja, putus-putus.
+    ...kotak(k, -38, 38, 4, 58, 72, 75, "hantu"),
     // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
     ...urutkanKedalaman(k, [
-      bagKotak(k, -42, -40, 0, 80, 70, 72, peran),
-      bagKotak(k, 40, 42, 0, 80, 70, 72, peran),
-      bagKotak(k, -38, 38, 20, 80, 72, 75, peran),
+      bagKotak(k, -42, -40, 0, 90, 70, 72, peran),
+      bagKotak(k, 40, 42, 0, 90, 70, 72, peran),
+      bagKotak(k, -38, 38, 40, 94, 72, 75, peran),
     ]),
   ];
 }

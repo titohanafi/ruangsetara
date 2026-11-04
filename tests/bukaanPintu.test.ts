@@ -43,4 +43,22 @@ describe("bukaan pintu", () => {
     const dalam = gambarBenda("pintu", kerangkaPanel("kanan"));
     expect(dalam.some((p) => p.jenis === "garisPoli" && p.peran === "hantu")).toBe(true);
   });
+
+  it("daun pintu geser berada di sisi luar: hanya bagian di dalam lubang yang digambar", () => {
+    const k = kerangkaPanel("kanan");
+    const lubang = poligon(bukaanDinding(k))[0].titik;
+    const xs = lubang.map((t) => t[0]);
+    const ys = lubang.map((t) => t[1]);
+    const kusen = new Set(gambarBenda("pintu_tanpa_daun", k).map((p) => JSON.stringify(p)));
+    const daun = poligon(gambarBenda("pintu_geser", k)).filter((p) => !kusen.has(JSON.stringify(p)));
+    expect(daun.length).toBeGreaterThan(0);
+    for (const p of daun) {
+      for (const [x, y] of p.titik) {
+        expect(x).toBeGreaterThanOrEqual(Math.min(...xs) - 1e-6);
+        expect(x).toBeLessThanOrEqual(Math.max(...xs) + 1e-6);
+        expect(y).toBeGreaterThanOrEqual(Math.min(...ys) - 1e-6);
+        expect(y).toBeLessThanOrEqual(Math.max(...ys) + 1e-6);
+      }
+    }
+  });
 });

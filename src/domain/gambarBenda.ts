@@ -241,16 +241,26 @@ function pintuAyun(k: Kerangka, arah: 1 | -1, peran: Peran = "netral"): Primitif
   return [{ jenis: "garisPoli", titik: lintasan, peran: "hantu" }, ...(daunDekat ? [...kusen, ...daun] : [...daun, ...kusen])];
 }
 
-/** Pintu geser: daun bergeser di depan dinding pada rel di atas kusen, separuh terbuka. */
+/**
+ * Pintu geser: daun bergeser di sisi luar dinding (lorong), separuh terbuka, supaya tidak memakan dinding di dalam ruangan. Dari dalam
+ * ruangan, daun dan relnya berada di balik dinding: hanya bagian daun yang tampak lewat lubang pintu yang digambar (dipotong sebesar
+ * lubang); rel di atas kusen tersembunyi di balik dinding.
+ */
 function pintuGeser(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const bukaan = DIM.pintu.bukaanBersih;
   const tinggi = DIM.pintu.tinggi;
-  const s2 = bukaan / 2;
-  const rel = kotak(k, -s2 - 4, s2 + bukaan / 2 + 8, 8, 14, tinggi + 8, tinggi + 12, peran);
-  const daun = [...kotak(k, 5, 5 + bukaan, 9, 13, 2, tinggi - 2, peran), ...kotak(k, 10, 13, 13, 15, 95, 115, peran)];
-  const { n: arahMasuk } = sumbuLayar(k);
-  const kusen = kusenPintu(k, peran);
-  return arahMasuk[1] > 0 ? [...kusen, ...rel, ...daun] : [...daun, ...kusen, ...rel];
+  const tebal = DIM.ruang.tebalDinding;
+  const lubang = lubangPintu(k);
+  const daun = [
+    ...kotak(k, 5, 5 + bukaan, -tebal - 4, -tebal, 2, tinggi - 2, peran),
+    ...kotak(k, 10, 13, -tebal - 7, -tebal - 4, 95, 115, peran),
+  ];
+  const tampak = daun.flatMap((p): Primitif[] => {
+    if (p.jenis !== "poligon") return [];
+    const potong = potongCembung(p.titik, lubang);
+    return potong.length >= 3 ? [{ ...p, titik: potong }] : [];
+  });
+  return [...tampak, ...kusenPintu(k, peran)];
 }
 
 /** Kloset yang jenisnya tidak terbaca dari foto: kotak putus-putus dengan tanda tanya, tidak menebak. */

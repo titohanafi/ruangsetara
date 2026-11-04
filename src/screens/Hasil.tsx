@@ -4,6 +4,7 @@ import { Layout } from "../components/Layout";
 import { butirHasil, ringkas, type Butir } from "../domain/asesmen";
 import { BERGAMBAR_TETAP } from "../domain/bergambarTetap";
 import { bisaDigambarDapur, lapisanTerbaca, type HasilDenahDapur } from "../domain/denahDapur";
+import { bisaDigambarKamarTidur, lapisanTerbacaKamarTidur, type HasilDenahKamarTidur } from "../domain/denahKamarTidur";
 import type { HasilDenah } from "../domain/denahPindai";
 import { ringkasModifikasi } from "../domain/modifikasi";
 import { cariArea, HASIL, isi, PERTANYAAN, UI } from "../domain/konten";
@@ -26,6 +27,18 @@ function Teks({ judul, teks }: { judul: string; teks: string | null }) {
   );
 }
 
+/** Dapur dan kamar tidur: gambar dari benda yang terbaca di foto, atau tidak dibuat sama sekali; ruang lain masih tata letak contoh. */
+function gambarDariFoto(
+  areaId: string,
+  dapur: HasilDenahDapur | null,
+  kamarTidur: HasilDenahKamarTidur | null,
+): { ada?: ReadonlySet<string>; tidakTerbaca?: boolean } {
+  if (areaId === "dapur") return bisaDigambarDapur(dapur) ? { ada: lapisanTerbaca(dapur) } : { tidakTerbaca: true };
+  if (areaId === "kamar-tidur")
+    return bisaDigambarKamarTidur(kamarTidur) ? { ada: lapisanTerbacaKamarTidur(kamarTidur) } : { tidakTerbaca: true };
+  return {};
+}
+
 function KartuButir({
   b,
   nomor,
@@ -35,6 +48,7 @@ function KartuButir({
   gambarTetap,
   areaId,
   denahDapur,
+  denahKamarTidur,
 }: {
   b: Butir;
   nomor: number;
@@ -46,6 +60,8 @@ function KartuButir({
   areaId?: string;
   /** Dapur: benda yang terbaca dari foto; gambar hanya memuat benda itu, atau tidak dibuat bila tidak ada yang terbaca. */
   denahDapur?: HasilDenahDapur | null;
+  /** Kamar tidur: sama seperti dapur. */
+  denahKamarTidur?: HasilDenahKamarTidur | null;
 }) {
   const { pertanyaan: p } = b;
   const belum = b.status === "belum";
@@ -94,12 +110,7 @@ function KartuButir({
           )}
           {gambarTetap && areaId && (
             <Suspense fallback={null}>
-              <GambarRuangTetapKartu
-                areaId={areaId}
-                id={p.id}
-                ada={areaId === "dapur" && bisaDigambarDapur(denahDapur ?? null) ? lapisanTerbaca(denahDapur!) : undefined}
-                tidakTerbaca={areaId === "dapur" && !bisaDigambarDapur(denahDapur ?? null)}
-              />
+              <GambarRuangTetapKartu areaId={areaId} id={p.id} {...gambarDariFoto(areaId, denahDapur ?? null, denahKamarTidur ?? null)} />
             </Suspense>
           )}
         </>
@@ -213,6 +224,7 @@ export function HasilScreen() {
                   gambarTetap={BERGAMBAR_TETAP[area.id]?.has(b.pertanyaan.id) ?? false}
                   areaId={area.id}
                   denahDapur={state.denahDapur}
+                  denahKamarTidur={state.denahKamarTidur}
                 />
               ),
           )}

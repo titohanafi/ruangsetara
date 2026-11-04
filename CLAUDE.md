@@ -28,7 +28,7 @@ Proyek ini menyatukan situs asesmen tim peneliti (isi pertanyaan dan rekomendasi
 ## Aturan teknis
 - Vite + React 18 + TypeScript (strict) + Tailwind + React Router (HashRouter) + Zod + Vitest.
 - State hanya di memori (tanpa localStorage): jawaban dan foto hilang saat halaman dimuat ulang, sesuai janji privasi situs peneliti.
-- Tiga fungsi server: `server/analisis.ts` (checklist), `server/denah.ts` (tata letak kamar mandi untuk gambar ruang), dan `server/denahDapur.ts` (benda dapur yang terlihat, untuk gambar dapur), dibundel menjadi `api/analisis.mjs`, `api/denah.mjs`, dan `api/denah-dapur.mjs` (`npm run bundel:api`, bundel ikut di-commit). Kunci `GEMINI_API_KEY` hanya di server.
+- Empat fungsi server: `server/analisis.ts` (checklist), `server/denah.ts` (tata letak kamar mandi untuk gambar ruang), serta `server/denahDapur.ts` dan `server/denahKamarTidur.ts` (benda yang terlihat di foto, untuk gambar dapur dan kamar tidur; penangan bersama di `server/bacaBenda.ts`), dibundel menjadi `api/analisis.mjs`, `api/denah.mjs`, `api/denah-dapur.mjs`, dan `api/denah-kamar-tidur.mjs` (`npm run bundel:api`, bundel ikut di-commit). Kunci `GEMINI_API_KEY` hanya di server.
 - Mobile-first (360px), area sentuh minimal 44x44px, WCAG 2.2 AA, ringan untuk kuota rendah (tanpa pustaka berat, font sistem).
 - Token desain di `tailwind.config.ts`, mengikuti warna situs peneliti (hijau tua `#245C4C`, tinta `#183F37`).
 - Logika murni di `src/domain/` dengan tes di `tests/`.

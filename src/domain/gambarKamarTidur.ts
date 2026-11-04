@@ -178,13 +178,17 @@ export function susunKamarTidur(id: string | null, c: KonteksRuang): HasilRuang 
   const kPintu: Kerangka = { ...kK, sepanjang: pintuPusat };
   const xLemari = L / 2 - KAMAR_TIDUR.lemari.dalam;
 
-  // Benda dasar (abu-abu); yang diganti modifikasi digambar ulang hijau di bawah.
-  if (diganti !== "tempatTidur")
+  // Benda dasar (abu-abu). Dengan hasil baca foto (`c.ada`) hanya benda yang terbaca yang digambar, tanpa tata letak contoh;
+  // tanpa hasil baca (pratinjau pengembang) dipakai tata letak contoh. Yang diganti modifikasi digambar ulang hijau oleh
+  // pertanyaannya (tetap digambar walau bendanya tidak terbaca di foto). Ruang terisi lengkap memuat semua benda dasar.
+  const tampil = (nama: string) => kode === "LENGKAP" || !c.ada || c.ada.has(nama);
+  if (diganti !== "tempatTidur" && tampil("tempatTidur"))
     tambah("tempatTidur", tempatTidur(kB, tA0, tA1, KAMAR_TIDUR.tempatTidur.tinggiKondisi, "netral"), (tA0 + tA1) / 2, yKakiTidur);
-  tambah("nakas", nakas(kB, nA0, nA1, "netral"), (nA0 + nA1) / 2, yBelakang + KAMAR_TIDUR.nakas.dalam);
-  if (diganti !== "lemari") tambah("lemari", lemari(kK, lA0, lA1, "netral", "tertutup", KAMAR_TIDUR.lemari), L / 2, (lA0 + lA1) / 2);
-  if (diganti !== "pintu") tambah("pintu", pintuTetap(c, "kanan", pintuPusat, "pintu", "netral"), L / 2, pintuPusat);
-  if (diganti !== "saklar") {
+  if (tampil("nakas")) tambah("nakas", nakas(kB, nA0, nA1, "netral"), (nA0 + nA1) / 2, yBelakang + KAMAR_TIDUR.nakas.dalam);
+  if (diganti !== "lemari" && tampil("lemari"))
+    tambah("lemari", lemari(kK, lA0, lA1, "netral", "tertutup", KAMAR_TIDUR.lemari), L / 2, (lA0 + lA1) / 2);
+  if (diganti !== "pintu" && tampil("pintu")) tambah("pintu", pintuTetap(c, "kanan", pintuPusat, "pintu", "netral"), L / 2, pintuPusat);
+  if (diganti !== "saklar" && tampil("saklar")) {
     // Kondisi contoh: saklar tinggi di dinding belakang, stopkontak rendah.
     tambah("saklar", [...pelat(kB, 110, 140, "netral"), ...pelat(kB, 135, 30, "netral")], 120, yBelakang);
   }

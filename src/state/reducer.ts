@@ -1,6 +1,7 @@
 // State asesmen. Sengaja hanya di memori (tidak ke localStorage): situs peneliti berjanji jawaban dan foto hilang saat halaman dimuat ulang.
 import type { Nilai, PetaJawaban } from "../domain/asesmen";
 import type { HasilDenahDapur } from "../domain/denahDapur";
+import type { HasilDenahKamarTidur } from "../domain/denahKamarTidur";
 import type { HasilDenah } from "../domain/denahPindai";
 
 export interface Foto {
@@ -26,6 +27,8 @@ export interface State {
   denah: HasilDenah | null;
   /** Benda dapur yang terbaca dari foto pertama; null bila belum dibaca, gagal, atau bukan dapur. */
   denahDapur: HasilDenahDapur | null;
+  /** Benda kamar tidur yang terbaca dari foto pertama; null bila belum dibaca, gagal, atau bukan kamar tidur. */
+  denahKamarTidur: HasilDenahKamarTidur | null;
   /** Catatan AI per pertanyaan yang tidak terisi dari foto (apa yang terlihat dan kenapa belum cukup). Bukan jawaban. */
   catatanFoto: Record<string, string>;
   /** Hasil pemeriksaan yang diketik pengguna per pertanyaan (teks bebas, mis. angka hasil ukur). Disimpan sebagai bukti; tidak dinilai sistem. */
@@ -44,6 +47,7 @@ export const AWAL: State = {
   baca: BACA_AWAL,
   denah: null,
   denahDapur: null,
+  denahKamarTidur: null,
   catatanFoto: {},
   temuan: {},
   profil: {},
@@ -61,6 +65,7 @@ export type Aksi =
   | { jenis: "gagal_baca"; sering: boolean }
   | { jenis: "selesai_denah"; denah: HasilDenah | null }
   | { jenis: "selesai_denah_dapur"; denah: HasilDenahDapur | null }
+  | { jenis: "selesai_denah_kamar_tidur"; denah: HasilDenahKamarTidur | null }
   | { jenis: "isi_profil"; id: string; nilai: string }
   | { jenis: "pilih_aktivitas"; aktivitas: string }
   | { jenis: "jawab"; id: string; nilai: Nilai }
@@ -86,6 +91,7 @@ export function reducer(s: State, a: Aksi): State {
         baca: BACA_AWAL,
         denah: null,
         denahDapur: null,
+        denahKamarTidur: null,
         catatanFoto: {},
         temuan: {},
         aktivitas: null,
@@ -99,6 +105,7 @@ export function reducer(s: State, a: Aksi): State {
         baca: BACA_AWAL,
         denah: null,
         denahDapur: null,
+        denahKamarTidur: null,
         catatanFoto: {},
         jawaban: tanpaJawabanFoto(s.jawaban),
       };
@@ -127,6 +134,8 @@ export function reducer(s: State, a: Aksi): State {
       return { ...s, denah: a.denah };
     case "selesai_denah_dapur":
       return { ...s, denahDapur: a.denah };
+    case "selesai_denah_kamar_tidur":
+      return { ...s, denahKamarTidur: a.denah };
     case "isi_profil":
       return { ...s, profil: { ...s.profil, [a.id]: a.nilai } };
     case "pilih_aktivitas":

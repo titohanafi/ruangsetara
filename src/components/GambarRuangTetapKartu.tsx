@@ -25,7 +25,8 @@ export function GambarRuangTetapKartu({
 }) {
   const aturan = RUANG_TETAP[areaId];
   if (!aturan) return null;
-  if (tidakTerbaca) return <p className="mt-4 text-kecil text-redup">{T.tidakTerbaca}</p>;
+  if (tidakTerbaca)
+    return <p className="mt-4 text-kecil text-redup">{isi(T.tidakTerbaca, { ruang: (cariArea(areaId)?.nama ?? areaId).toLowerCase() })}</p>;
   const nama = PERTANYAAN[areaId]?.pertanyaan.find((p) => p.id === id)?.elemen ?? id;
   const namaRuang = (cariArea(areaId)?.nama ?? areaId).toLowerCase();
   const gambar = (kunci: string, judul: string) => (
@@ -51,7 +52,7 @@ export function GambarRuangTetapKartu({
       {gambar(id, T.judulKartu)}
       {(VARIAN_TETAP[id] ?? []).map((kunci) => gambar(kunci, NAMA_VARIAN[kunci] ?? kunci))}
       <p className="mt-1 text-kecil text-redup">{T.keteranganKartu}</p>
-      <p className="text-kecil text-redup">{ada ? T.catatanDapurFoto : T[aturan.catatan]}</p>
+      <p className="text-kecil text-redup">{ada && aturan.catatanFoto ? T[aturan.catatanFoto] : T[aturan.catatan]}</p>
       {aturan.ditinjau.has(id) && <p className="text-kecil text-redup">{T.angkaDitinjau}</p>}
     </>
   );

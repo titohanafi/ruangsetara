@@ -207,8 +207,9 @@
     "zonaMati": "Zona lantai (ruang putar, area bebas, keramik) dimatikan dulu supaya gambar tidak penuh; nyalakan lewat nomornya.",
     "ruangDiperluas": "Ruang digambar lebih luas ({lebar} × {dalam} cm) supaya ruang putar dan area shower tidak tumpang tindih. Itu ukuran ideal, bukan ukuran ruang Anda.",
     "ruangDiperluasCatatan": "Untuk ditanyakan ke peneliti: belum dipastikan apakah ruang putar boleh tumpang tindih dengan area shower tanpa undakan. Ukuran ini penafsiran dari dua angka tabel, belum acuan resmi.",
-    "tidakTerbaca": "Gambar ruang tidak dibuat: benda dapur tidak terbaca jelas dari foto. Rekomendasi di atas tetap berlaku. Coba foto yang memperlihatkan meja kerja, kompor, atau wastafel dengan jelas.",
-    "catatanDapurFoto": "Hanya benda yang terbaca dari foto Anda yang digambar. Letaknya di sepanjang dinding hanya urutan contoh, bukan hasil baca foto."
+    "tidakTerbaca": "Gambar ruang tidak dibuat: benda di {ruang} tidak terbaca jelas dari foto. Rekomendasi di atas tetap berlaku. Coba foto yang memperlihatkan perabot utamanya dengan jelas.",
+    "catatanDapurFoto": "Hanya benda yang terbaca dari foto Anda yang digambar. Letaknya di sepanjang dinding hanya urutan contoh, bukan hasil baca foto.",
+    "catatanKamarTidurFoto": "Hanya benda yang terbaca dari foto Anda yang digambar. Letaknya di dinding hanya urutan contoh, bukan hasil baca foto."
   },
   "footer": {
     "nama": "Ruang Setara",

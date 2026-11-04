@@ -1,6 +1,5 @@
-// Pembacaan benda dapur dari foto untuk gambar ruang dapur: hanya benda yang jelas terlihat yang digambar.
-// Tidak ada tata letak contoh sebagai cadangan: bila tidak ada benda yang terbaca, gambar ruang tidak dibuat.
-// Posisi benda di sepanjang dinding belakang adalah urutan tetap (bukan hasil baca foto); yang dibaca dari foto hanya ADA atau TIDAK.
+// Pembacaan benda dapur dari foto untuk gambar ruang dapur (lihat denahBenda.ts): hanya benda yang jelas terlihat yang digambar.
+import { bacaBenda, bisaDigambar, lapisanBenda, type HasilBenda, type KonfigBenda } from "./denahBenda";
 
 /** Benda dapur yang dicari di foto. Urutan = urutan tampil kiri ke kanan di gambar. */
 export const OBJEK_DAPUR = ["meja_kerja", "kompor", "wastafel", "kulkas", "pintu"] as const;
@@ -15,6 +14,8 @@ export const LAPISAN_DAPUR: Readonly<Record<ObjekDapur, string>> = {
   pintu: "pintu",
 };
 
+const KONFIG: KonfigBenda<ObjekDapur> = { objek: OBJEK_DAPUR, lapisan: LAPISAN_DAPUR };
+
 export interface HasilDenahDapur {
   /** Foto menampilkan dapur; bila false, gambar ruang tidak dibuat. */
   dapur: boolean;
@@ -22,26 +23,12 @@ export interface HasilDenahDapur {
   terbaca: Record<ObjekDapur, boolean>;
 }
 
-const adalahObjek = (x: unknown): x is Record<string, unknown> => typeof x === "object" && x !== null && !Array.isArray(x);
+const dariUmum = (h: HasilBenda<ObjekDapur> | null): HasilDenahDapur | null => (h ? { dapur: h.ruang, terbaca: h.terbaca } : null);
+const keUmum = (h: HasilDenahDapur): HasilBenda<ObjekDapur> => ({ ruang: h.dapur, terbaca: h.terbaca });
 
-/**
- * Memeriksa respons fungsi server denah dapur (ditulis tangan agar zod tidak ikut bundel). Nilai selain `true` dianggap
- * tidak terbaca. Null bila bentuknya salah.
- */
-export function bacaHasilDenahDapur(x: unknown): HasilDenahDapur | null {
-  if (!adalahObjek(x) || typeof x.dapur !== "boolean") return null;
-  const mentah = adalahObjek(x.objek) ? x.objek : {};
-  const terbaca = Object.fromEntries(OBJEK_DAPUR.map((id) => [id, mentah[id] === true])) as Record<ObjekDapur, boolean>;
-  return { dapur: x.dapur, terbaca };
-}
-
-/** Himpunan nama lapisan benda yang terbaca, untuk penyusun gambar dapur. */
-export const lapisanTerbaca = (h: HasilDenahDapur): ReadonlySet<string> =>
-  new Set(OBJEK_DAPUR.filter((id) => h.terbaca[id]).map((id) => LAPISAN_DAPUR[id]));
-
-/** Gambar dapur dibuat hanya bila fotonya dapur dan sedikitnya satu benda terbaca. */
-export const bisaDigambarDapur = (h: HasilDenahDapur | null): h is HasilDenahDapur =>
-  !!h && h.dapur && OBJEK_DAPUR.some((id) => h.terbaca[id]);
+export const bacaHasilDenahDapur = (x: unknown): HasilDenahDapur | null => dariUmum(bacaBenda(KONFIG, "dapur", x));
+export const lapisanTerbaca = (h: HasilDenahDapur): ReadonlySet<string> => lapisanBenda(KONFIG, keUmum(h));
+export const bisaDigambarDapur = (h: HasilDenahDapur | null): h is HasilDenahDapur => bisaDigambar(KONFIG, h ? keUmum(h) : null);
 
 /** Hasil tiruan untuk mode pengembangan (`VITE_PINDAI_MOCK=true`): kompor, wastafel, meja kerja, dan pintu terbaca; kulkas tidak. */
 export const DENAH_DAPUR_TIRUAN: HasilDenahDapur = {

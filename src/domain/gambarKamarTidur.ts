@@ -133,7 +133,9 @@ export function tirai(k: Kerangka, peran: Peran): Primitif[] {
 /** Kursi toilet portable (commode): dudukan berlubang di atas rangka empat kaki, bersandaran. */
 export function kursiToilet(c: KonteksRuang, x: number, y: number, peran: Peran): Primitif[] {
   const s = 21;
-  const T = (px: number, py: number, u: number) => c.proyeksi(px, py, u);
+  // Titik lubang dihitung lewat kerangka yang sama dengan kotakDunia, supaya tepat di tengah bidang dudukan.
+  const kb = c.kerangka("belakang");
+  const T = (px: number, py: number, u: number) => titik(kb, px, py - kb.bidang, u);
   const kaki = (dx: number, dy: number) => kotakDunia(c, x + dx - 2, x + dx + 2, y + dy - 2, y + dy + 2, 0, 42, peran);
   const lubang = poligon(
     "rongga",

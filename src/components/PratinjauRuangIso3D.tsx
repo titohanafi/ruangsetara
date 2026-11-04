@@ -109,6 +109,7 @@ export function PratinjauRuangIso3D({
   tampilkanSemua = false,
   tidakTerlihat = [],
   kelas = "h-96 w-full",
+  ukuranAwal = null,
 }: {
   letak: (id: ObjekDenah) => LetakDenah;
   sudutAktif: { x: "kiri" | "kanan" };
@@ -135,11 +136,13 @@ export function PratinjauRuangIso3D({
   /** Benda yang tidak terlihat di foto (posisinya tidak diketahui): tidak digambar sama sekali, juga bukan lewat tombol mata. */
   tidakTerlihat?: readonly ObjekDenah[];
   kelas?: string;
+  /** Ukuran kanvas awal (piksel) untuk render tanpa layar (tes, ekspor aset). Bawaan: diukur dari elemen. */
+  ukuranAwal?: { lebar: number; tinggi: number } | null;
 }) {
   const LEBAR = ruang.lebar;
   const DALAM = ruang.dalam;
   const pembungkusRef = useRef<HTMLDivElement>(null);
-  const [ukuran, setUkuran] = useState<{ lebar: number; tinggi: number } | null>(null);
+  const [ukuran, setUkuran] = useState<{ lebar: number; tinggi: number } | null>(ukuranAwal);
   useEffect(() => {
     const el = pembungkusRef.current;
     if (!el) return;

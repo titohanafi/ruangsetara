@@ -722,6 +722,9 @@ export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[]
     ...kotak(k, -25, -13, 55, 58, 62, 65, "netral"),
     // Unit isi yang ditarik keluar: keranjang terbuka di belakang muka bergagang.
     ...urutkanKedalaman(k, [
+      // Dua rel geser dari dalam kabinet menopang unit isi saat ditarik keluar.
+      bagKotak(k, -3, 0, 2, f - 4, 18, 20, peran),
+      bagKotak(k, 30, 32, 2, f - 4, 18, 20, peran),
       bagKotak(k, 0, 30, f - 52, f - 2, 8, 10, peran),
       bagKotak(k, 0, 2, f - 52, f - 2, 10, 46, peran),
       bagKotak(k, 28, 30, f - 52, f - 2, 10, 46, peran),

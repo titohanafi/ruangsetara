@@ -425,12 +425,17 @@ export function rakBuku(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const papan = [0, 1, 2, 3, 4].map((i) => 3 + i * ((tinggi - 6) / 4));
   const buku = papan
     .slice(0, 4)
-    .flatMap((u) => [-30, -22, -14, 2, 10, 18].flatMap((a, j) => kotak(k, a, a + 5, 4, dalam - 4, u + 2, u + 20 - (j % 3) * 3, peran)));
+    .flatMap((u) => [-30, -22, -14, 2, 10, 18].map((a, j) => bagKotak(k, a, a + 5, 4, dalam - 4, u + 2, u + 20 - (j % 3) * 3, peran)));
+  // Urutan: papan belakang, sisi yang jauh dari kamera, papan tingkat (lebar penuh, jadi tidak bisa diurutkan dengan buku), lalu
+  // buku dan sisi yang dekat kamera menurut kedalaman, supaya sisi dekat menutupi isi rak dari samping.
+  const kiri = bagKotak(k, a0, a0 + 3, 0, dalam, 0, tinggi, peran);
+  const kanan = bagKotak(k, a1 - 3, a1, 0, dalam, 0, tinggi, peran);
+  const [jauh, dekat] = kedalamanBagian(k, kiri) <= kedalamanBagian(k, kanan) ? [kiri, kanan] : [kanan, kiri];
   return [
-    ...kotak(k, a0, a0 + 3, 0, dalam, 0, tinggi, peran),
-    ...kotak(k, a1 - 3, a1, 0, dalam, 0, tinggi, peran),
+    ...bagKotak(k, a0, a1, 0, 2, 0, tinggi, peran).daftar,
+    ...jauh.daftar,
     ...papan.flatMap((u) => kotak(k, a0, a1, 0, dalam, u, u + 3, peran)),
-    ...buku,
+    ...urutkanKedalaman(k, [...buku, dekat]),
   ];
 }
 

@@ -708,30 +708,32 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
 }
 
 /**
- * Keranjang tarik (K-05), mengikuti foto acuan pemilik: kabinet bawah dengan satu bagian terbuka, tempat sebuah rak
- * (keranjang terbuka dengan muka bergagang) ditarik keluar separuh lebih. Bagian rak yang masih di dalam kabinet tertutup
- * panel sisi yang dekat kamera. Rak dibuat sederhana: dasar, tiga dinding, dan muka.
+ * Keranjang tarik (K-05), mengikuti foto acuan pemilik: kabinet bawah yang isinya ditarik keluar. Berbeda dari laci tarik
+ * penuh (kotak bermuka padat), keranjang adalah wadah kawat terbuka: hanya rangka rel, tiang, dan dasar berjeruji, dengan
+ * gagang di ujung depan. Bagian keranjang yang masih di dalam kabinet tertutup panel sisi kanan dan papan atas kabinet.
  */
 export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const f = 96;
-  // Rak digambar utuh (tanpa sambungan di muka kabinet, supaya tidak ada garis di dalamnya). Bagian yang masih di dalam
-  // kabinet tertutup karena panel sisi kanan kabinet dan papan atas digambar sesudah rak.
-  const kiri = bagKotak(k, 0, 2, 6, f - 2, 10, 46, peran);
-  const kanan = bagKotak(k, 28, 30, 6, f - 2, 10, 46, peran);
-  const [jauh, dekat] = kedalamanBagian(k, kiri) <= kedalamanBagian(k, kanan) ? [kiri, kanan] : [kanan, kiri];
+  const [n0, n1] = [6, f - 2];
+  const batang = (a0: number, a1: number, b0: number, b1: number, u0: number, u1: number) => bagKotak(k, a0, a1, b0, b1, u0, u1, peran);
+  const tiang = [0, 28].flatMap((a) => [n0, n1 - 2].map((n) => batang(a, a + 2, n, n + 2, 10, 46)));
+  const panjang = [0, 28].flatMap((a) => [
+    batang(a, a + 2, n0, n1, 8, 10),
+    batang(a, a + 2, n0, n1, 26, 28),
+    batang(a, a + 2, n0, n1, 44, 46),
+  ]);
+  const lintang = [n0, n1 - 2].flatMap((n) => [batang(0, 30, n, n + 2, 8, 10), batang(0, 30, n, n + 2, 44, 46)]);
+  const jeruji = [14].map((a) => batang(a, a + 2, n0, n1, 8, 10));
+  const barang = [batang(4, 14, 62, 74, 10, 40), batang(16, 26, 78, 88, 10, 54)];
   return [
     ...urutkanKedalaman(k, [
       bagKotak(k, -3, 35, 0, 2, 0, 80, "netral"),
       bagKotak(k, -35, -3, 0, 55, 0, 80, "netral"),
       bagKotak(k, -3, 32, 0, 55, 0, 3, "netral"),
     ]),
-    ...jauh.daftar,
-    ...bagKotak(k, 0, 30, 6, f - 2, 8, 10, peran).daftar,
-    ...urutkanKedalaman(k, [bagKotak(k, 4, 14, 62, 74, 10, 40, peran), bagKotak(k, 16, 26, 78, 88, 10, 54, peran)]),
-    ...dekat.daftar,
-    ...bagKotak(k, -1, 31, f - 2, f, 6, 56, peran).daftar,
-    ...bagKotak(k, 9, 21, f, f + 3, 44, 47, peran).daftar,
-    // Panel sisi kanan kabinet dan papan atas menutupi bagian rak yang masih di dalam kabinet.
+    ...urutkanKedalaman(k, [...tiang, ...panjang, ...lintang, ...jeruji, ...barang]),
+    ...bagKotak(k, 8, 22, f, f + 3, 38, 41, peran).daftar,
+    // Panel sisi kanan kabinet dan papan atas menutupi bagian keranjang yang masih di dalam kabinet.
     ...bagKotak(k, 32, 35, 0, 55, 0, 80, "netral").daftar,
     ...bagKotak(k, -35, 35, 0, 58, 80, 84, "netral").daftar,
     ...kotak(k, -25, -13, 55, 58, 62, 65, "netral"),

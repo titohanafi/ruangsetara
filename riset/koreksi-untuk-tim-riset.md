@@ -60,3 +60,5 @@ Angka di teks Modifikasi dapur yang perlu dicek peneliti. Gambar tidak menulis a
 PerMen No. 14/2017 mengatur toilet dan pancuran **umum** di bangunan gedung, bukan kamar mandi rumah tinggal. Sebaiknya tiap angka diberi label "acuan bangunan gedung" supaya tidak terbaca sebagai syarat untuk rumah.
 
 - **K-05, "keranjang tarik"**: sheet hanya menyebut nama ini di kolom hack tanpa bentuk. Kami menggambarnya sebagai unit keranjang kawat pada rel geser (tanpa lemari). Mohon konfirmasi apakah maksudnya keranjang di lemari bawah, keranjang gantung, atau yang lain.
+
+- **K-05, \"keranjang tarik\" vs \"laci tarik penuh\"**: sheet menyebut keranjang tarik di hack dan laci tarik penuh di modifikasi tanpa menjelaskan bedanya. Di gambar kami keranjang = wadah kawat terbuka dan laci = kotak bermuka padat. Mohon konfirmasi apakah keduanya memang dua hal berbeda.

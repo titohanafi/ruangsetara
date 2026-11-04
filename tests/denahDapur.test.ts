@@ -3,6 +3,7 @@ import { bacaHasilDenahDapur, bisaDigambarDapur, DENAH_DAPUR_TIRUAN, lapisanTerb
 import { RUANG_TETAP } from "../src/domain/gambarRuangTetap";
 import { PROMPT, SKEMA } from "../server/denahDapur";
 import { AWAL, reducer } from "../src/state/reducer";
+import { komporGasPortabel } from "../src/domain/perabotUmum";
 import { konteksUji } from "./konteksRuangUji";
 
 const sah = { dapur: true, objek: { meja_kerja: true, kompor: true, wastafel: false, kulkas: false, pintu: true } };
@@ -11,7 +12,7 @@ describe("bacaHasilDenahDapur", () => {
   it("membaca respons yang sah", () => {
     const h = bacaHasilDenahDapur(sah)!;
     expect(h.dapur).toBe(true);
-    expect(h.terbaca).toEqual({ meja_kerja: true, kompor: true, wastafel: false, kulkas: false, pintu: true });
+    expect(h.terbaca).toEqual({ meja_kerja: true, kompor: true, kompor_portabel: false, wastafel: false, kulkas: false, pintu: true });
     expect([...lapisanTerbaca(h)].sort()).toEqual(["kompor", "meja", "pintu"]);
   });
 
@@ -24,7 +25,7 @@ describe("bacaHasilDenahDapur", () => {
 
   it("nilai selain true atau yang hilang dianggap tidak terbaca, tidak ditebak", () => {
     const h = bacaHasilDenahDapur({ dapur: true, objek: { kompor: "ya", kulkas: 1, wastafel: true } })!;
-    expect(h.terbaca).toEqual({ meja_kerja: false, kompor: false, wastafel: true, kulkas: false, pintu: false });
+    expect(h.terbaca).toEqual({ meja_kerja: false, kompor: false, kompor_portabel: false, wastafel: true, kulkas: false, pintu: false });
   });
 
   it("gambar hanya dibuat bila dapur dan sedikitnya satu benda terbaca", () => {
@@ -53,6 +54,15 @@ describe("gambar dapur dari hasil baca foto", () => {
     const ids = susun(null, new Set(["kompor", "pintu"]));
     expect(ids).toEqual(expect.arrayContaining(["kompor", "pintu"]));
     for (const x of ["meja", "wastafel", "kulkas"]) expect(ids).not.toContain(x);
+  });
+
+  it("kompor portabel digambar di atas meja bila meja terbaca, dan di meja kecil sendiri bila tidak", () => {
+    const denganMeja = susun(null, new Set(["meja", "kompor_portabel"]));
+    expect(denganMeja).toEqual(expect.arrayContaining(["meja", "kompor_portabel"]));
+    expect(denganMeja).not.toContain("kompor");
+    const tanpaMeja = RUANG_TETAP.dapur.susun(null, { ...konteksUji("dapur"), ada: new Set(["kompor_portabel"]) }).lapisan;
+    expect(tanpaMeja.map((l) => l.id)).toEqual(["kompor_portabel"]);
+    expect(tanpaMeja[0]!.daftar.length).toBeGreaterThan(komporGasPortabel(konteksUji("dapur").kerangka("belakang")).length);
   });
 
   it("pertanyaan tentang benda yang tidak terbaca tetap menggambar versi hijaunya", () => {

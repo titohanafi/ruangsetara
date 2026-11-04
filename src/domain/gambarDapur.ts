@@ -10,6 +10,7 @@ import {
   kabinetAtas,
   keranSemprot,
   keranTuas,
+  komporGasPortabel,
   komporInduksi,
   kursi,
   kursiRoda,
@@ -165,6 +166,19 @@ function wastafel(k: Kerangka, peran: Peran, terbuka: boolean, tinggiAtas: numbe
 }
 const dalamKaki = (): number => DAPUR.meja.dalam - 6;
 
+/** Meja kecil (papan dan empat kaki) setinggi meja dapur, tempat kompor portabel bila meja kerja tidak terbaca di foto. */
+function mejaKecil(k: Kerangka, peran: Peran, tinggiAtas: number): Primitif[] {
+  const [a0, a1, dalam] = [-45, 45, 50];
+  const kaki = (a: number, n: number) => kotak(k, a, a + 4, n, n + 4, 0, tinggiAtas - 3, peran);
+  return [
+    ...kaki(a0 + 2, 2),
+    ...kaki(a1 - 6, 2),
+    ...kaki(a0 + 2, dalam - 6),
+    ...kaki(a1 - 6, dalam - 6),
+    ...kotak(k, a0, a1, 0, dalam, tinggiAtas - 3, tinggiAtas, peran),
+  ];
+}
+
 function kompor(k: Kerangka, peran: Peran, tinggiAtas: number): Primitif[] {
   const [a0, a1] = DAPUR.letak.kompor;
   const tengah = (a0 + a1) / 2;
@@ -215,6 +229,14 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
   if (diganti !== "kulkas" && tampil("kulkas")) tambah("kulkas", kulkas(kB, "netral", false), (kA0 + kA1) / 2, by);
   if (diganti !== "meja" && tampil("meja")) tambah("meja", kabinet(kB, mA0, mA1, tMeja, "netral", "pintu"), (mA0 + mA1) / 2, by);
   if (diganti !== "kompor" && tampil("kompor")) tambah("kompor", kompor(kB, "netral", tMeja), (pA0 + pA1) / 2, by);
+  // Kompor gas portabel (hanya dari hasil baca foto, tidak ada di tata letak contoh atau ruang terisi lengkap): diletakkan di atas meja kerja (di tengah bagian meja); bila mejanya tidak terbaca, ia berdiri di meja kecil sendiri.
+  if (c.ada?.has("kompor_portabel")) {
+    const tengahMeja = (mA0 + mA1) / 2;
+    const alas = { ...kB, sepanjang: tengahMeja };
+    const daftar = komporGasPortabel(alas, "netral", tMeja);
+    if (!tampil("meja")) daftar.unshift(...mejaKecil(alas, "netral", tMeja));
+    tambah("kompor_portabel", daftar, tengahMeja, by);
+  }
   if (diganti !== "wastafel" && tampil("wastafel")) tambah("wastafel", wastafel(kB, "netral", false, tMeja), (wA0 + wA1) / 2, by);
   if (diganti !== "pintu" && tampil("pintu"))
     tambah("pintu", pintuTetap(c, "kanan", DAPUR.pintuKanan.pusat, "pintu", "netral"), DAPUR.ruang.lebar / 2, DAPUR.pintuKanan.pusat);
@@ -450,11 +472,11 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
       tambah("microwave", microwave(di(-150), "netral", tMeja), -150, by + 5);
       tambah("riceCooker", riceCooker(di(-108), "netral", tMeja), -108, by + 5);
       tambah("tempatSampah", tempatSampah(di(80), "netral"), 80, by + 5);
-      tambah("mejaMakan", mejaMakan(di(-20, { bidang: maju(40) }), "netral"), -20, 120);
-      tambah("kursi-1", kursi(di(-50, { bidang: maju(-5) }), "netral"), -50, 37);
-      tambah("kursi-2", kursi(di(10, { bidang: maju(-5) }), "netral"), 10, 37);
-      tambah("dispenser", dispenser({ ...kanan(c), sepanjang: 135 }, "netral"), DAPUR.ruang.lebar / 2, 135);
-      tambah("kursiRoda", kursiRoda(di(105, { bidang: maju(55) }), "netral"), 105, 100);
+      tambah("mejaMakan", mejaMakan(di(-75, { bidang: maju(40) }), "netral"), -75, 120);
+      tambah("kursi-1", kursi(di(-105, { bidang: maju(-5) }), "netral"), -105, 37);
+      tambah("kursi-2", kursi(di(-45, { bidang: maju(-5) }), "netral"), -45, 37);
+      tambah("dispenser", dispenser({ ...kanan(c), sepanjang: -40 }, "netral"), DAPUR.ruang.lebar / 2, -40);
+      tambah("kursiRoda", kursiRoda(di(45, { bidang: maju(55) }), "netral"), 45, 100);
       break;
     }
     default:

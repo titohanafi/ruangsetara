@@ -2,13 +2,14 @@
 import { bacaBenda, bisaDigambar, lapisanBenda, type HasilBenda, type KonfigBenda } from "./denahBenda";
 
 /** Benda dapur yang dicari di foto. Urutan = urutan tampil kiri ke kanan di gambar. */
-export const OBJEK_DAPUR = ["meja_kerja", "kompor", "wastafel", "kulkas", "pintu"] as const;
+export const OBJEK_DAPUR = ["meja_kerja", "kompor", "kompor_portabel", "wastafel", "kulkas", "pintu"] as const;
 export type ObjekDapur = (typeof OBJEK_DAPUR)[number];
 
 /** Nama lapisan di gambar dapur (gambarDapur.ts) untuk tiap benda yang dibaca. */
 export const LAPISAN_DAPUR: Readonly<Record<ObjekDapur, string>> = {
   meja_kerja: "meja",
   kompor: "kompor",
+  kompor_portabel: "kompor_portabel",
   wastafel: "wastafel",
   kulkas: "kulkas",
   pintu: "pintu",
@@ -33,5 +34,5 @@ export const bisaDigambarDapur = (h: HasilDenahDapur | null): h is HasilDenahDap
 /** Hasil tiruan untuk mode pengembangan (`VITE_PINDAI_MOCK=true`): kompor, wastafel, meja kerja, dan pintu terbaca; kulkas tidak. */
 export const DENAH_DAPUR_TIRUAN: HasilDenahDapur = {
   dapur: true,
-  terbaca: { meja_kerja: true, kompor: true, wastafel: true, kulkas: false, pintu: true },
+  terbaca: { meja_kerja: true, kompor: true, kompor_portabel: false, wastafel: true, kulkas: false, pintu: true },
 };

@@ -91,6 +91,7 @@ export const UKURAN = {
   microwave: { lebar: 46, dalam: 34, tinggi: 28 },
   riceCooker: { jari: 14, tinggi: 24 },
   komporInduksi: { lebar: 40, dalam: 34, tinggi: 6 },
+  komporGas: { lebar: 72, dalam: 38, tinggi: 9, jariTungku: 11 },
   mejaTamu: { lebar: 100, dalam: 50, tinggi: 40 },
   rakTv: { lebar: 120, dalam: 40, tinggi: 45, lebarTv: 100, tinggiTv: 60 },
   rakBuku: { lebar: 80, dalam: 30, tinggi: 180 },
@@ -343,17 +344,22 @@ export function kabinetAtas(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   ];
 }
 
-/** Rak piring dinding: dua rangka tipis dengan piring berdiri. */
+/** Rak piring dinding: dua tingkat dengan papan samping utuh di kedua ujung (tertutup dari alas sampai atas) dan piring berdiri. */
 export function rakPiring(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const { lebar, dalam, dasar } = UKURAN.rakPiring;
   const [a0, a1] = [-lebar / 2, lebar / 2];
+  const tinggi = 28 + 28;
   const tingkat = [dasar, dasar + 28].flatMap((u) => [
     ...kotak(k, a0, a1, 0, dalam, u, u + 2, peran),
-    ...kotak(k, a0, a0 + 2, 0, dalam, u, u + 26, peran),
-    ...kotak(k, a1 - 2, a1, 0, dalam, u, u + 26, peran),
     ...[-18, -6, 6, 18].flatMap((a) => kotak(k, a - 1, a + 1, 4, dalam - 4, u + 2, u + 22, peran)),
   ]);
-  return tingkat;
+  // Papan samping satu lembar dari alas tingkat bawah sampai atas tingkat atas, supaya sisi rak tertutup rapat. Urutan gambar dari
+  // belakang ke depan: papan kiri (paling jauh dari kamera), isi, lalu papan kanan.
+  return [
+    ...kotak(k, a0, a0 + 2, 0, dalam, dasar, dasar + tinggi, peran),
+    ...tingkat,
+    ...kotak(k, a1 - 2, a1, 0, dalam, dasar, dasar + tinggi, peran),
+  ];
 }
 
 /** Microwave di atas meja: kotak dengan jendela dan panel kontrol; `u0` = tinggi alas. */
@@ -400,6 +406,43 @@ export function komporInduksi(k: Kerangka, peran: Peran = "netral", u0 = 0): Pri
     ...kotak(k, -8, -4, dalam, dalam + 2, u0 + 1, u0 + 5, peran),
     ...kotak(k, 4, 8, dalam, dalam + 2, u0 + 1, u0 + 5, peran),
   ];
+}
+
+/**
+ * Kompor gas portabel dua tungku (kompor meja): kotak rendah dengan dua tungku bertumpu empat dudukan panci dan dua tombol di
+ * sisi depan; `u0` = tinggi alas (permukaan meja tempat kompor diletakkan). Ukuran perkiraan, belum bersumber.
+ */
+export function komporGasPortabel(k: Kerangka, peran: Peran = "netral", u0 = 0): Primitif[] {
+  const { lebar, dalam, tinggi, jariTungku } = UKURAN.komporGas;
+  const [a0, a1] = [-lebar / 2, lebar / 2];
+  const atas = u0 + tinggi;
+  const hasil: Primitif[] = [...kotak(k, a0, a1, 0, dalam, u0, atas, peran)];
+  for (const a of [-lebar / 4, lebar / 4]) {
+    const n = dalam / 2 - 2;
+    hasil.push(
+      poligon(
+        "rongga",
+        footprintOval(a, n, jariTungku, jariTungku, 20).map(([x, y]) => titik(k, x, y, atas)),
+        peran,
+      ),
+      poligon(
+        "atas",
+        footprintOval(a, n, jariTungku - 6, jariTungku - 6, 14).map(([x, y]) => titik(k, x, y, atas + 0.5)),
+        peran,
+      ),
+    );
+    for (const [da, dn] of [
+      [-1, -1],
+      [1, -1],
+      [-1, 1],
+      [1, 1],
+    ] as const) {
+      const [ca, cn] = [a + da * (jariTungku - 1), n + dn * (jariTungku - 1)];
+      hasil.push(...kotak(k, ca - 1.5, ca + 1.5, cn - 1.5, cn + 1.5, atas, atas + 2.5, peran));
+    }
+    hasil.push(...kotak(k, a - 2.5, a + 2.5, dalam, dalam + 3, u0 + 3, u0 + 7, peran));
+  }
+  return hasil;
 }
 
 /** Meja tamu pendek: papan, kaki, dan rak bawah. */
@@ -504,19 +547,45 @@ export function kipas(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   ];
 }
 
-/** Cermin berdiri bersandar pada dinding: bingkai tipis di atas dua kaki. */
+/**
+ * Cermin berdiri berbingkai tipis dengan ujung atas melengkung (setengah lingkaran), miring sedikit ke belakang dan ditopang dua kaki
+ * belakang yang menyatu dengan palang (rangka A) ke arah dinding. Kaca digambar sebagai bidang abu di dalam bingkai.
+ */
 export function cerminBerdiri(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const { lebar, tinggi } = UKURAN.cerminBerdiri;
   const [a0, a1] = [-lebar / 2, lebar / 2];
-  return [
-    ...kotak(k, a0, a1, 6, 9, 10, 10 + tinggi, peran),
-    poligon(
-      "rongga",
-      [titik(k, a0 + 4, 9, 14), titik(k, a1 - 4, 9, 14), titik(k, a1 - 4, 9, 6 + tinggi), titik(k, a0 + 4, 9, 6 + tinggi)],
+  const r = lebar / 2;
+  const [nBawah, nAtas, tebal] = [40, 30, 3];
+  const alas = 4;
+  const nDi = (u: number) => nBawah + ((nAtas - nBawah) * (u - alas)) / tinggi;
+  // Tepi bingkai bidang a-u: sisi kiri, busur setengah lingkaran di atas, sisi kanan.
+  const garis = (inset: number, n: (u: number) => number, geser: number): Titik[] => {
+    const uBusur = alas + tinggi - r;
+    const jari = r - inset;
+    const busur = Array.from({ length: 13 }, (_, i) => {
+      const th = Math.PI - (i / 12) * Math.PI;
+      return [jari * Math.cos(th), uBusur + jari * Math.sin(th)] as const;
+    });
+    const titikAU = [[-jari, alas + inset] as const, ...busur, [jari, alas + inset] as const];
+    return titikAU.map(([a, u]) => titik(k, a, n(u) + geser, u));
+  };
+  const nPapan = (u: number) => nDi(u);
+  const kaki = (a: number): Primitif[] => [
+    {
+      jenis: "garis",
+      dari: titik(k, a, nDi(alas + tinggi * 0.78) - tebal, alas + tinggi * 0.78),
+      ke: titik(k, a, 6, 0),
+      gaya: "tegas",
       peran,
-    ),
-    ...kotak(k, a0 + 4, a0 + 10, 0, 18, 0, 10, peran),
-    ...kotak(k, a1 - 10, a1 - 4, 0, 18, 0, 10, peran),
+    },
+  ];
+  return [
+    ...kaki(a0 + 6),
+    ...kaki(a1 - 6),
+    { jenis: "garis", dari: titik(k, a0 + 6, 13.5, 38), ke: titik(k, a1 - 6, 13.5, 38), gaya: "tegas", peran },
+    poligon("kiri", garis(0, nPapan, -tebal), peran),
+    poligon("kanan", garis(0, nPapan, 0), peran),
+    poligon("rongga", garis(2.5, nPapan, 0), peran),
   ];
 }
 

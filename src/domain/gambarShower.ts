@@ -9,7 +9,7 @@
 // diperbesar seragam lewat `ZOOM_PANEL` pada kerangkanya, bukan dengan mengubah ukuran benda. Gambar tidak pernah
 // menampilkan angka.
 import type { VarianShower } from "./denahPindai";
-import { DIM } from "./dimensiGambar";
+import { DIM, DIMENSI_PERKIRAAN } from "./dimensiGambar";
 
 export type Titik = readonly [number, number];
 export type ModeGambar = "kondisi" | "hack" | "permanen";
@@ -416,8 +416,8 @@ const rakitanKeran = (f: number) => rakitan(f, 0, 101);
  * Keran dinding sederhana di tengah dinding (a = 0): pelat, cerat ke depan, dan satu tuas. Keran punya dua bukaan air:
  * cerat ke depan dan cerat pendek ke bawah tempat selang hand shower dipasang.
  */
-function keran(k: Kerangka, mode: ModeGambar, f: number): Primitif[] {
-  const r = rakitanKeran(f);
+function keran(k: Kerangka, mode: ModeGambar, f: number, uPivot = 101): Primitif[] {
+  const r = rakitan(f, 0, uPivot);
   return bersihkan([
     ...r.kotak(k, -8, 8, 0, 4, 92, 110, "netral"),
     ...r.kotak(k, -3, 3, 8, 14, 82, 96, "netral"),
@@ -509,13 +509,15 @@ function showerTetap(k: Kerangka, f: number): Primitif[] {
 }
 
 function emberGayung(k: Kerangka, f: number): Primitif[] {
-  const s = pikselPerSatuan(k) * f;
+  // Ember dan gayung memakai pengali sendiri (lebih besar dari keran dan kepala shower), tetap perkiraan.
+  const s = pikselPerSatuan(k) * DIMENSI_PERKIRAAN.pengaliEmberGayung.cm;
   const arah = sumbuA(k)[0] >= 0 ? 1 : -1;
-  const [ex, eyBawah] = titik(k, 0, 40, 0);
+  const kr = rakitanKeran(f);
+  // Ember tepat di bawah ujung keran supaya air jatuh ke dalam ember (n = 18 cm: ember lebih besar, tetap tidak menembus dinding).
+  const [ex, eyBawah] = titik(k, kr.A(0), 18, 0);
   const tinggiEmber = 55 * s;
   const yAtasEmber = eyBawah - tinggiEmber;
-  const [gx, gyBawah] = titik(k, 40, 30, 0);
-  const kr = rakitanKeran(f);
+  const [gx, gyBawah] = titik(k, 50, 30, 0);
   const ujungKeran = titik(k, kr.A(0), kr.N(28), kr.U(96));
   return [
     ...keran(k, "kondisi", f),
@@ -551,6 +553,93 @@ function emberGayung(k: Kerangka, f: number): Primitif[] {
   ];
 }
 
+/**
+ * Bak mandi tembok dengan keran di atasnya dan gayung di bibir bak: air ditampung di bak lalu diciduk. Ukuran bak
+ * dari `DIMENSI_PERKIRAAN.bakMandi` (perkiraan, belum bersumber); keran dipasang lebih rendah dari shower.
+ */
+function bakMandiTembok(k: Kerangka, f: number): Primitif[] {
+  const bak = { lebar: DIMENSI_PERKIRAAN.bakMandi.cm, dalam: 70, tinggi: 50 };
+  const [a0, a1] = [-bak.lebar / 2, bak.lebar / 2];
+  const uKeran = 70;
+  const kr = rakitan(f, 0, uKeran);
+  const sg = pikselPerSatuan(k) * DIMENSI_PERKIRAAN.pengaliEmberGayung.cm;
+  const ujungKeran = titik(k, kr.A(0), kr.N(28), kr.U(96));
+  const permukaan = titik(k, kr.A(0), kr.N(28), bak.tinggi + 4);
+  const [gx, gyBawah] = titik(k, 35, bak.dalam - 8, bak.tinggi);
+  const arah = sumbuA(k)[0] >= 0 ? 1 : -1;
+  return [
+    ...kotak(k, a0, a1, 0, bak.dalam, 0, bak.tinggi, "netral"),
+    poligon(
+      "rongga",
+      [
+        titik(k, a0 + 8, 8, bak.tinggi),
+        titik(k, a1 - 8, 8, bak.tinggi),
+        titik(k, a1 - 8, bak.dalam - 8, bak.tinggi),
+        titik(k, a0 + 8, bak.dalam - 8, bak.tinggi),
+      ],
+      "netral",
+    ),
+    ...keran(k, "kondisi", f, uKeran),
+    { jenis: "garis", dari: [ujungKeran[0], ujungKeran[1] + 4], ke: permukaan, gaya: "air", peran: "netral" },
+    {
+      jenis: "jalur",
+      titik: [
+        [gx + arah * 9.3 * sg, gyBawah - 14 * sg],
+        [gx + arah * 41.3 * sg, gyBawah - 28 * sg],
+      ],
+      gaya: "gagang",
+      peran: "netral",
+    },
+    ...silinderTegak(gx, gyBawah - 14 * sg, 9 * sg, 14 * sg, "kanan", true, "netral"),
+  ];
+}
+
+/**
+ * Bilik shower tertutup (kaca atau tirai) dengan kepala shower tetap di dalamnya dan ambang di pintu bilik. Kaca digambar
+ * putus-putus (tembus pandang). Ukuran bilik dari `DIMENSI_PERKIRAAN.bilikShower` (perkiraan, belum bersumber).
+ */
+function bilikShower(k: Kerangka, f: number): Primitif[] {
+  const { lebar, dalam, tinggi, ambang } = DIMENSI_PERKIRAAN.bilikShower;
+  const [a0, a1] = [-lebar / 2, lebar / 2];
+  return [...kotak(k, a0, a1, 0, dalam, 0, ambang, "netral"), ...showerTetap(k, f), ...kotak(k, a0, a1, 0, dalam, ambang, tinggi, "hantu")];
+}
+
+/**
+ * Shower tiang (shower set): tiang tegak di dinding dengan kepala hujan lebar di atas, hand shower di dudukannya pada
+ * tiang, dan keran campur di bawah. Selang menghubungkan hand shower ke keran. Ukuran dari `DIMENSI_PERKIRAAN.showerTiang`
+ * (perkiraan, belum bersumber).
+ */
+function showerTiang(k: Kerangka, f: number): Primitif[] {
+  const { tinggiTiang, lebarHujan, dalamHujan } = DIMENSI_PERKIRAAN.showerTiang;
+  // Hand shower digeser ke samping tiang (aH) lewat lengan dudukan, supaya keran campur di bawah tiang tidak tertutup selang dan gagang.
+  const [uHand, aH] = [150, 14];
+  const kp = rakitan(f, aH, uHand);
+  const uKeran = 100;
+  const kr = rakitan(f, 0, uKeran);
+  const uHujan = tinggiTiang - 6;
+  const air = [-lebarHujan / 3, 0, lebarHujan / 3].map((a): Primitif => ({
+    jenis: "garis",
+    dari: titik(k, a, 8 + dalamHujan / 2, uHujan - 4),
+    ke: titik(k, a, 8 + dalamHujan / 2, uHujan - 40),
+    gaya: "air",
+    peran: "netral",
+  }));
+  return [
+    // Tiang berdiri di atas keran campur (bentuk keran sama dengan varian lain), tanpa menutupinya.
+    ...kotak(k, -2.5, 2.5, 0, 5, uKeran + 3, tinggiTiang, "netral"),
+    ...keran(k, "kondisi", f, uKeran),
+    ...kotak(k, -2, 2, 0, 28, tinggiTiang - 4, tinggiTiang, "netral"),
+    ...kotak(k, -lebarHujan / 2, lebarHujan / 2, 8, 8 + dalamHujan, uHujan, uHujan + 3, "netral"),
+    ...air,
+    ...kotak(k, 2, aH - 2, 0, 5, uHand - 8, uHand - 4, "netral"),
+    selang(k, [kp.A(aH + 4), kp.N(20), kp.U(uHand - 57)], [kr.A(0), kr.N(11), kr.U(79)], "netral"),
+    ...bersihkan(kr.kotak(k, -4, 4, 7, 15, 78, 84, "netral")),
+    ...kp.kotak(k, aH - 8, aH + 8, 0, 12, uHand - 20, uHand, "netral"),
+    ...kp.kotak(k, aH - 4, aH + 4, 12, 20, uHand - 57, uHand + 17, "netral"),
+    ...silinderCakram(k, aH, kp.N(14), kp.N(10), kp.U(uHand + 25), 22 * f, "netral"),
+  ];
+}
+
 function tidakJelas(k: Kerangka): Primitif[] {
   const [tx, ty] = titik(k, 0, 30, 170);
   return [...kotak(k, -20, 20, 0, 30, 140, 200, "hantu"), { jenis: "tanda", x: tx, y: ty + 11 * pikselPerSatuan(k), teks: "?" }];
@@ -576,6 +665,12 @@ export function gambarShower(
       return showerTetap(k, f);
     case "ember_gayung":
       return emberGayung(k, f);
+    case "bak_mandi_tembok":
+      return bakMandiTembok(k, f);
+    case "bilik_shower":
+      return bilikShower(k, f);
+    case "shower_tiang":
+      return showerTiang(k, f);
     case "tidak_jelas":
       return tidakJelas(k);
   }

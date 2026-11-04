@@ -36,6 +36,28 @@ export const DIMENSI_PERKIRAAN = {
     cm: 110,
     keterangan: "Panjang bak mandi tembok pada gambar kondisi (juga kedalaman 70 cm dan tinggi bibir 50 cm); tidak ada di tabel.",
   },
+  showerTiang: {
+    tinggiTiang: 215,
+    lebarHujan: 34,
+    dalamHujan: 24,
+    cm: 215,
+    keterangan:
+      "Shower tiang (shower set) pada gambar shower_tiang: tinggi tiang 215 cm, kepala hujan 34 × 24 cm, hand shower di tiang setinggi 150 cm; perkiraan umum, tidak ada di tabel.",
+  },
+  bilikShower: {
+    lebar: 90,
+    dalam: 90,
+    tinggi: 200,
+    ambang: 6,
+    cm: 90,
+    keterangan:
+      "Bilik shower tertutup pada gambar bilik_shower: 90 × 90 cm, tinggi 200 cm, ambang 6 cm; perkiraan umum, tidak ada di tabel. Ambang adalah bagian yang sulit dilewati kursi roda.",
+  },
+  pengaliEmberGayung: {
+    cm: 0.7,
+    keterangan:
+      "Pengali ember dan gayung pada gambar ember_gayung (ember mandi sekitar 31 cm lebar dan 38 cm tinggi, gayung sekitar 13 cm); perkiraan, belum bersumber.",
+  },
   bagianKecilShower: {
     cm: 0.45,
     keterangan:

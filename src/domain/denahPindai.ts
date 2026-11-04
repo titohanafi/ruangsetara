@@ -33,7 +33,15 @@ export type ObjekDenah = (typeof OBJEK_DENAH)[number];
 
 // Jenis shower yang dikenali dari foto. Daftar tertutup: tiap varian punya gambar sendiri (lihat gambarShower.ts),
 // dan "tidak_jelas" dipakai bila jenisnya tidak terbaca supaya denah tidak menggambar benda yang tidak ada.
-export const VARIAN_SHOWER = ["hand_shower_gantung", "shower_tetap", "ember_gayung", "tidak_jelas"] as const;
+export const VARIAN_SHOWER = [
+  "hand_shower_gantung",
+  "shower_tetap",
+  "ember_gayung",
+  "bak_mandi_tembok",
+  "bilik_shower",
+  "shower_tiang",
+  "tidak_jelas",
+] as const;
 export type VarianShower = (typeof VARIAN_SHOWER)[number];
 
 // Jenis kloset dan cara pintu membuka yang dikenali dari foto. Sama seperti varian shower: daftar tertutup, tiap nilai

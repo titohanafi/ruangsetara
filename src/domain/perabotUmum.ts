@@ -703,22 +703,40 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
 }
 
 /**
- * Keranjang tarik (K-05), mengikuti foto acuan pemilik: hanya unit isi yang sudah ditarik keluar penuh, yaitu muka bergagang,
- * keranjang terbuka, dua rel geser, dan barang berupa balok polos. Kabinetnya tidak digambar.
+ * Keranjang tarik (K-05), mengikuti foto acuan pemilik: kabinet bawah dengan satu bagian terbuka, tempat sebuah rak
+ * (keranjang terbuka dengan muka bergagang) ditarik keluar separuh lebih. Bagian rak yang masih di dalam kabinet tertutup
+ * panel sisi yang dekat kamera. Rak dibuat sederhana: dasar, tiga dinding, dan muka.
  */
 export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  return urutkanKedalaman(k, [
-    bagKotak(k, -3, 0, 10, 62, 18, 20, peran),
-    bagKotak(k, 30, 33, 10, 62, 18, 20, peran),
-    bagKotak(k, 0, 30, 14, 60, 8, 10, peran),
-    bagKotak(k, 0, 2, 14, 60, 10, 46, peran),
-    bagKotak(k, 28, 30, 14, 60, 10, 46, peran),
-    bagKotak(k, 0, 30, 14, 16, 10, 46, peran),
-    bagKotak(k, 4, 14, 22, 34, 10, 62, peran),
-    bagKotak(k, 16, 26, 38, 50, 10, 54, peran),
-    bagKotak(k, -1, 31, 60, 62, 6, 56, peran),
-    bagKotak(k, 9, 21, 62, 65, 44, 47, peran),
-  ]);
+  const depan = 55;
+  const f = 96;
+  type Kotak = [number, number, number, number, number, number];
+  const rak: Kotak[] = [
+    [0, 30, 6, f - 2, 8, 10],
+    [0, 2, 6, f - 2, 10, 46],
+    [28, 30, 6, f - 2, 10, 46],
+    [0, 30, 6, 8, 10, 46],
+  ];
+  const dalam = rak
+    .filter((b) => b[2] < depan)
+    .map(([a0, a1, n0, n1, u0, u1]) => bagKotak(k, a0, a1, n0, Math.min(n1, depan), u0, u1, peran));
+  const luar = rak
+    .filter((b) => b[3] > depan)
+    .map(([a0, a1, n0, n1, u0, u1]) => bagKotak(k, a0, a1, Math.max(n0, depan), n1, u0, u1, peran));
+  return [
+    ...urutkanKedalaman(k, [
+      bagKotak(k, -35, -3, 0, 55, 0, 80, "netral"),
+      bagKotak(k, -3, 35, 0, 2, 0, 80, "netral"),
+      bagKotak(k, 32, 35, 0, 55, 0, 80, "netral"),
+      bagKotak(k, -3, 32, 0, 55, 0, 3, "netral"),
+      ...dalam,
+    ]),
+    // Papan atas digambar sesudah isi di dalam kabinet.
+    ...bagKotak(k, -35, 35, 0, 58, 80, 84, "netral").daftar,
+    ...kotak(k, -25, -13, 55, 58, 62, 65, "netral"),
+    // Bagian rak di luar kabinet, dengan muka bergagang di ujungnya.
+    ...urutkanKedalaman(k, [...luar, bagKotak(k, -1, 31, f - 2, f, 6, 56, peran), bagKotak(k, 9, 21, f, f + 3, 44, 47, peran)]),
+  ];
 }
 
 /** Rak putar (lazy susan): dua piringan bertingkat pada satu tiang, dengan beberapa stoples (K-05). */

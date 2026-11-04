@@ -174,13 +174,17 @@ export function mejaMakan(k: Kerangka, peran: Peran = "netral"): Primitif[] {
 export function sofa(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const { lebar, dalam, tinggiDudukan, tinggiSandaran } = UKURAN.sofa;
   const [a0, a1] = [-lebar / 2, lebar / 2];
+  // Alas digambar dulu (semua bagian lain bertumpu di atasnya); sandaran, bantal duduk, dan lengan diurutkan menurut
+  // kedalaman, jadi lengan sisi jauh tertutup bantal dan lengan sisi dekat menutupi bantal.
   return [
     ...kotak(k, a0, a1, 0, dalam, 0, 18, peran),
-    ...kotak(k, a0 + 14, -1, 16, dalam - 2, 18, tinggiDudukan, peran),
-    ...kotak(k, 1, a1 - 14, 16, dalam - 2, 18, tinggiDudukan, peran),
-    ...kotak(k, a0, a1, 0, 16, 18, tinggiSandaran, peran),
-    ...kotak(k, a0, a0 + 14, 0, dalam, 18, 62, peran),
-    ...kotak(k, a1 - 14, a1, 0, dalam, 18, 62, peran),
+    ...urutkanKedalaman(k, [
+      bagKotak(k, a0, a1, 0, 16, 18, tinggiSandaran, peran),
+      bagKotak(k, a0 + 14, -1, 16, dalam - 2, 18, tinggiDudukan, peran),
+      bagKotak(k, 1, a1 - 14, 16, dalam - 2, 18, tinggiDudukan, peran),
+      bagKotak(k, a0, a0 + 14, 0, dalam, 18, 62, peran),
+      bagKotak(k, a1 - 14, a1, 0, dalam, 18, 62, peran),
+    ]),
   ];
 }
 

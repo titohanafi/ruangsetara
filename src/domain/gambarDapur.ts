@@ -145,17 +145,19 @@ function kulkas(k: Kerangka, peran: Peran, freezerBawah: boolean): Primitif[] {
 function wastafel(k: Kerangka, peran: Peran, terbuka: boolean, tinggiAtas: number, tanpaKeran = false): Primitif[] {
   const [a0, a1] = DAPUR.letak.wastafel;
   const tengah = (a0 + a1) / 2;
-  const hasil = kabinet(k, a0, a1, tinggiAtas, peran, terbuka ? "terbuka" : "pintu");
+  const hasil: Primitif[] = [];
+  if (terbuka) {
+    // Kaki papan di sisi luar supaya papan tidak melayang; bagian bawah dibiarkan kosong untuk lutut. Digambar lebih dulu
+    // agar papan dan bak berada di atasnya (kaki sisi dekat kamera tidak menutupi bak).
+    hasil.push(...kotak(k, a0, a0 + 3, 4, dalamKaki(), 0, tinggiAtas - DAPUR.meja.tebalPapan, peran));
+    hasil.push(...kotak(k, a1 - 3, a1, 4, dalamKaki(), 0, tinggiAtas - DAPUR.meja.tebalPapan, peran));
+  }
+  hasil.push(...kabinet(k, a0, a1, tinggiAtas, peran, terbuka ? "terbuka" : "pintu"));
   const T = (a: number, n: number): Titik => titik(k, a, n, tinggiAtas);
   hasil.push(poligon("rongga", [T(tengah - 28, 14), T(tengah + 28, 14), T(tengah + 28, 46), T(tengah - 28, 46)], peran));
   if (!tanpaKeran) {
     hasil.push(...kotak(k, tengah - 2, tengah + 2, 4, 8, tinggiAtas, tinggiAtas + 22, peran));
     hasil.push(...kotak(k, tengah - 2, tengah + 2, 4, 20, tinggiAtas + 19, tinggiAtas + 22, peran));
-  }
-  if (terbuka) {
-    // Kaki papan di sisi luar supaya papan tidak melayang; bagian bawah dibiarkan kosong untuk lutut.
-    hasil.push(...kotak(k, a0, a0 + 3, 4, dalamKaki(), 0, tinggiAtas - DAPUR.meja.tebalPapan, peran));
-    hasil.push(...kotak(k, a1 - 3, a1, 4, dalamKaki(), 0, tinggiAtas - DAPUR.meja.tebalPapan, peran));
   }
   return hasil;
 }

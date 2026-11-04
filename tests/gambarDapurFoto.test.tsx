@@ -38,3 +38,18 @@ describe("kartu gambar kamar tidur dari hasil baca foto", () => {
     expect(html).not.toContain(UI.ruang.catatanKamarTidur.slice(0, 30));
   });
 });
+
+describe("kartu gambar mobilitas dari hasil baca foto", () => {
+  it("tidak ada benda terbaca: hanya keterangan, tanpa gambar contoh", () => {
+    const html = renderToStaticMarkup(<GambarRuangTetapKartu areaId="mobilitas" id="G-04" tidakTerbaca />);
+    expect(html).toContain("mobilitas");
+    expect(html).not.toContain('role="img"');
+  });
+
+  it("ada benda terbaca: gambar dibuat dengan catatan hasil baca foto", () => {
+    const html = renderToStaticMarkup(<GambarRuangTetapKartu areaId="mobilitas" id="G-04" ada={new Set(["pintu"])} />);
+    expect(html).toContain('role="img"');
+    expect(html).toContain(UI.ruang.catatanMobilitasFoto.slice(0, 30));
+    expect(html).not.toContain(UI.ruang.catatanMobilitas.slice(0, 30));
+  });
+});

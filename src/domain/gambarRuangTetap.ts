@@ -12,7 +12,7 @@ export interface AturanRuangTetap {
   /** Kunci teks catatan di `content/ui.json` (bagian ruang). */
   catatan: "catatanDapur" | "catatanKamarTidur" | "catatanMobilitas";
   /** Kunci catatan bila gambar dibuat dari benda yang terbaca di foto (bukan tata letak contoh); kosong = ruang ini belum membaca foto. */
-  catatanFoto?: "catatanDapurFoto" | "catatanKamarTidurFoto";
+  catatanFoto?: "catatanDapurFoto" | "catatanKamarTidurFoto" | "catatanMobilitasFoto";
 }
 
 export const RUANG_TETAP: Readonly<Record<string, AturanRuangTetap>> = {
@@ -30,5 +30,11 @@ export const RUANG_TETAP: Readonly<Record<string, AturanRuangTetap>> = {
     catatan: "catatanKamarTidur",
     catatanFoto: "catatanKamarTidurFoto",
   },
-  mobilitas: { ruang: MOBILITAS.ruang, susun: susunMobilitas, ditinjau: new Set(), catatan: "catatanMobilitas" },
+  mobilitas: {
+    ruang: MOBILITAS.ruang,
+    susun: susunMobilitas,
+    ditinjau: new Set(),
+    catatan: "catatanMobilitas",
+    catatanFoto: "catatanMobilitasFoto",
+  },
 };

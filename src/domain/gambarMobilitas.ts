@@ -168,15 +168,20 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
   const yDepanLemari = yB + MOBILITAS.lemariTanam.dalam;
   const aSaklar = MOBILITAS.letak.saklar;
 
-  // Benda dasar (abu-abu); yang diganti modifikasi digambar ulang hijau di bawah.
-  if (!diganti.includes("pintu")) tambah("pintu", pintuTetap(c, "belakang", xPintu, "pintu", "netral"), xPintu, yB);
-  if (!diganti.includes("undakan")) tambah("undakan", undakan(c, xPintu, "netral"), xPintu, yB + MOBILITAS.undakan.dalam);
-  if (!diganti.includes("lemariTanam"))
+  // Benda dasar (abu-abu). Dengan hasil baca foto (`c.ada`) hanya benda yang terbaca yang digambar, tanpa tata letak contoh;
+  // tanpa hasil baca (pratinjau pengembang) dipakai tata letak contoh. Yang diganti modifikasi digambar ulang hijau oleh
+  // pertanyaannya (tetap digambar walau bendanya tidak terbaca di foto). Ruang terisi lengkap memuat semua benda dasar.
+  const tampil = (nama: string) => kode === "LENGKAP" || !c.ada || c.ada.has(nama);
+  if (!diganti.includes("pintu") && tampil("pintu")) tambah("pintu", pintuTetap(c, "belakang", xPintu, "pintu", "netral"), xPintu, yB);
+  if (!diganti.includes("undakan") && tampil("undakan"))
+    tambah("undakan", undakan(c, xPintu, "netral"), xPintu, yB + MOBILITAS.undakan.dalam);
+  if (!diganti.includes("lemariTanam") && tampil("lemariTanam"))
     tambah("lemariTanam", lemari(kB, lA0, lA1, "netral", "tertutup", MOBILITAS.lemariTanam), (lA0 + lA1) / 2, yDepanLemari);
-  if (!diganti.includes("meja")) tambah("meja", mejaBesar(c, mX0, mX1, mY0, mY1, "netral"), (mX0 + mX1) / 2, mY1);
-  if (!diganti.includes("saklar"))
+  if (!diganti.includes("meja") && tampil("meja")) tambah("meja", mejaBesar(c, mX0, mX1, mY0, mY1, "netral"), (mX0 + mX1) / 2, mY1);
+  if (!diganti.includes("saklar") && tampil("saklar"))
     tambah("saklar", [...pelat(kB, aSaklar, 150, "netral"), ...pelat(kB, aSaklar + 25, 30, "netral")], aSaklar, yB);
-  if (!diganti.includes("retak")) {
+  // Keramik retak tidak bisa dibaca dari foto: hanya tampil pada tata letak contoh (tanpa hasil baca) atau ruang terisi lengkap.
+  if (!diganti.includes("retak") && (kode === "LENGKAP" || !c.ada)) {
     // Keramik retak di tengah lantai (kondisi contoh).
     const retak = [
       [-60, 60],
@@ -187,7 +192,7 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
     ].map(([x, y]) => c.proyeksi(x, y, 0));
     tambah("retak", [{ jenis: "garisPoli", titik: retak, peran: "netral" }], -20, 100);
   }
-  if (!diganti.includes("karpet")) tambah("karpet", kotakDunia(c, -80, -20, -100, -50, 0, 1.5, "netral"), -50, -50);
+  if (!diganti.includes("karpet") && tampil("karpet")) tambah("karpet", kotakDunia(c, -80, -20, -100, -50, 0, 1.5, "netral"), -50, -50);
 
   switch (kode) {
     case "G-01": {

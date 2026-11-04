@@ -209,7 +209,8 @@
     "ruangDiperluasCatatan": "Untuk ditanyakan ke peneliti: belum dipastikan apakah ruang putar boleh tumpang tindih dengan area shower tanpa undakan. Ukuran ini penafsiran dari dua angka tabel, belum acuan resmi.",
     "tidakTerbaca": "Gambar ruang tidak dibuat: benda di {ruang} tidak terbaca jelas dari foto. Rekomendasi di atas tetap berlaku. Coba foto yang memperlihatkan perabot utamanya dengan jelas.",
     "catatanDapurFoto": "Hanya benda yang terbaca dari foto Anda yang digambar. Letaknya di sepanjang dinding hanya urutan contoh, bukan hasil baca foto.",
-    "catatanKamarTidurFoto": "Hanya benda yang terbaca dari foto Anda yang digambar. Letaknya di dinding hanya urutan contoh, bukan hasil baca foto."
+    "catatanKamarTidurFoto": "Hanya benda yang terbaca dari foto Anda yang digambar. Letaknya di dinding hanya urutan contoh, bukan hasil baca foto.",
+    "catatanMobilitasFoto": "Hanya benda yang terbaca dari foto Anda yang digambar. Letaknya hanya urutan contoh, bukan hasil baca foto."
   },
   "footer": {
     "nama": "Ruang Setara",

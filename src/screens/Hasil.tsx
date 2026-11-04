@@ -5,6 +5,7 @@ import { butirHasil, ringkas, type Butir } from "../domain/asesmen";
 import { BERGAMBAR_TETAP } from "../domain/bergambarTetap";
 import { bisaDigambarDapur, lapisanTerbaca, type HasilDenahDapur } from "../domain/denahDapur";
 import { bisaDigambarKamarTidur, lapisanTerbacaKamarTidur, type HasilDenahKamarTidur } from "../domain/denahKamarTidur";
+import { bisaDigambarMobilitas, lapisanTerbacaMobilitas, type HasilDenahMobilitas } from "../domain/denahMobilitas";
 import type { HasilDenah } from "../domain/denahPindai";
 import { ringkasModifikasi } from "../domain/modifikasi";
 import { cariArea, HASIL, isi, PERTANYAAN, UI } from "../domain/konten";
@@ -27,15 +28,18 @@ function Teks({ judul, teks }: { judul: string; teks: string | null }) {
   );
 }
 
-/** Dapur dan kamar tidur: gambar dari benda yang terbaca di foto, atau tidak dibuat sama sekali; ruang lain masih tata letak contoh. */
+/** Dapur, kamar tidur, dan mobilitas: gambar dari benda yang terbaca di foto, atau tidak dibuat sama sekali. */
 function gambarDariFoto(
   areaId: string,
   dapur: HasilDenahDapur | null,
   kamarTidur: HasilDenahKamarTidur | null,
+  mobilitas: HasilDenahMobilitas | null,
 ): { ada?: ReadonlySet<string>; tidakTerbaca?: boolean } {
   if (areaId === "dapur") return bisaDigambarDapur(dapur) ? { ada: lapisanTerbaca(dapur) } : { tidakTerbaca: true };
   if (areaId === "kamar-tidur")
     return bisaDigambarKamarTidur(kamarTidur) ? { ada: lapisanTerbacaKamarTidur(kamarTidur) } : { tidakTerbaca: true };
+  if (areaId === "mobilitas")
+    return bisaDigambarMobilitas(mobilitas) ? { ada: lapisanTerbacaMobilitas(mobilitas) } : { tidakTerbaca: true };
   return {};
 }
 
@@ -49,6 +53,7 @@ function KartuButir({
   areaId,
   denahDapur,
   denahKamarTidur,
+  denahMobilitas,
 }: {
   b: Butir;
   nomor: number;
@@ -62,6 +67,8 @@ function KartuButir({
   denahDapur?: HasilDenahDapur | null;
   /** Kamar tidur: sama seperti dapur. */
   denahKamarTidur?: HasilDenahKamarTidur | null;
+  /** Mobilitas: sama seperti dapur. */
+  denahMobilitas?: HasilDenahMobilitas | null;
 }) {
   const { pertanyaan: p } = b;
   const belum = b.status === "belum";
@@ -110,7 +117,11 @@ function KartuButir({
           )}
           {gambarTetap && areaId && (
             <Suspense fallback={null}>
-              <GambarRuangTetapKartu areaId={areaId} id={p.id} {...gambarDariFoto(areaId, denahDapur ?? null, denahKamarTidur ?? null)} />
+              <GambarRuangTetapKartu
+                areaId={areaId}
+                id={p.id}
+                {...gambarDariFoto(areaId, denahDapur ?? null, denahKamarTidur ?? null, denahMobilitas ?? null)}
+              />
             </Suspense>
           )}
         </>
@@ -225,6 +236,7 @@ export function HasilScreen() {
                   areaId={area.id}
                   denahDapur={state.denahDapur}
                   denahKamarTidur={state.denahKamarTidur}
+                  denahMobilitas={state.denahMobilitas}
                 />
               ),
           )}

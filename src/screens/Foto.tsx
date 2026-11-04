@@ -7,6 +7,7 @@ import { analisisFoto, GalatAnalisis } from "../lib/analisis";
 import { bacaDenah } from "../lib/denah";
 import { bacaDenahDapur } from "../lib/denahDapur";
 import { bacaDenahKamarTidur } from "../lib/denahKamarTidur";
+import { bacaDenahMobilitas } from "../lib/denahMobilitas";
 import { kecilkanFoto } from "../lib/foto";
 import { useStore } from "../state/store";
 
@@ -49,6 +50,7 @@ export function FotoScreen() {
     // Dapur: foto pertama juga dibaca untuk benda yang digambar (hanya yang terlihat); gagal berarti gambar ruang tidak dibuat.
     const denahDapur = area.id === "dapur" ? bacaDenahDapur(state.fotos[0].url) : Promise.resolve(null);
     const denahKamarTidur = area.id === "kamar-tidur" ? bacaDenahKamarTidur(state.fotos[0].url) : Promise.resolve(null);
+    const denahMobilitas = area.id === "mobilitas" ? bacaDenahMobilitas(state.fotos[0].url) : Promise.resolve(null);
     try {
       const hasil = await analisisFoto(
         state.fotos.map((f) => f.url),
@@ -57,6 +59,7 @@ export function FotoScreen() {
       kirim({ jenis: "selesai_denah", denah: await denah });
       kirim({ jenis: "selesai_denah_dapur", denah: await denahDapur });
       kirim({ jenis: "selesai_denah_kamar_tidur", denah: await denahKamarTidur });
+      kirim({ jenis: "selesai_denah_mobilitas", denah: await denahMobilitas });
       const daftar = PERTANYAAN[area.id].pertanyaan;
       const { jawaban, terisi, catatan } = isiDariFoto(daftar, aturanFoto(area.id), hasil, state.jawaban);
       kirim({ jenis: "selesai_baca", jawaban, terisi, total: daftar.length, bukanRuangan: !hasil.ruang_sesuai, catatan });

@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Layout } from "../components/Layout";
 import { DENAH_DAPUR_TIRUAN } from "../domain/denahDapur";
 import { DENAH_KAMAR_TIDUR_TIRUAN } from "../domain/denahKamarTidur";
+import { DENAH_MOBILITAS_TIRUAN } from "../domain/denahMobilitas";
 import { DENAH_TIRUAN } from "../domain/denahPindai";
 import { aturanFoto, cariArea, PERTANYAAN, UI } from "../domain/konten";
 import { isiDariFoto } from "../domain/pindai";
@@ -46,6 +47,7 @@ export function DevHasilScreen() {
       if (AREA === AREA_BAWAAN) kirim({ jenis: "selesai_denah", denah: DENAH_TIRUAN });
       if (AREA === "dapur") kirim({ jenis: "selesai_denah_dapur", denah: DENAH_DAPUR_TIRUAN });
       if (AREA === "kamar-tidur") kirim({ jenis: "selesai_denah_kamar_tidur", denah: DENAH_KAMAR_TIDUR_TIRUAN });
+      if (AREA === "mobilitas") kirim({ jenis: "selesai_denah_mobilitas", denah: DENAH_MOBILITAS_TIRUAN });
       kirim({ jenis: "pilih_aktivitas", aktivitas: area.aktivitas[0] });
       pindah("/hasil", { replace: true });
     })().catch(() => setPesan(T.gagal));

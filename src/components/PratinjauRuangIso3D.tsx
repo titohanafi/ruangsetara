@@ -17,6 +17,7 @@ import {
   type Primitif,
   type Titik,
 } from "../domain/gambarShower";
+import { bangku, baskom, kursiCommode, pintuPocket } from "../domain/perabotUmum";
 import { posisiSepanjang, type UkuranRuang } from "../domain/tataLetak";
 import {
   OBJEK_DENAH,
@@ -110,6 +111,7 @@ export function PratinjauRuangIso3D({
   tidakTerlihat = [],
   kelas = "h-96 w-full",
   ukuranAwal = null,
+  varian,
 }: {
   letak: (id: ObjekDenah) => LetakDenah;
   sudutAktif: { x: "kiri" | "kanan" };
@@ -138,6 +140,11 @@ export function PratinjauRuangIso3D({
   kelas?: string;
   /** Ukuran kanvas awal (piksel) untuk render tanpa layar (tes, ekspor aset). Bawaan: diukur dari elemen. */
   ukuranAwal?: { lebar: number; tinggi: number } | null;
+  /**
+   * Alternatif atau hack dari teks sheet yang menambah perabot di atas kondisi dasar (tanpa mengubah pembacaan foto): pintu geser
+   * masuk dinding (M-01), kursi shower-commode beroda (M-10), bangku rendah (hack M-08), baskom (hack M-06).
+   */
+  varian?: "pocket" | "commode" | "bangku" | "baskom";
 }) {
   const LEBAR = ruang.lebar;
   const DALAM = ruang.dalam;
@@ -242,11 +249,13 @@ export function PratinjauRuangIso3D({
             ? gambarShower(varianShower, modeShower, { kerangka })
             : id === "kloset" && modifikasi.includes("M-04")
               ? gambarBenda("kloset_duduk", kerangka, "aksen") // M-04: kloset diganti kloset duduk (hijau)
-              : id === "pintu" && (modifikasi.includes("M-01") || modifikasi.includes("M-12"))
-                ? gambarBenda("pintu_ayun_luar", kerangka, "aksen") // M-01, M-12: pintu lebar membuka ke luar (hijau)
-                : id === "wastafel" && modifikasi.includes("M-06")
-                  ? gambarBenda("wastafel", kerangka, "aksen") // M-06: wastafel gantung, keran tuas (hijau)
-                  : gambarBenda(jenisBenda(id), kerangka);
+              : id === "pintu" && varian === "pocket"
+                ? pintuPocket(kerangka, "aksen") // alternatif M-01: pintu geser masuk dinding (hijau)
+                : id === "pintu" && (modifikasi.includes("M-01") || modifikasi.includes("M-12"))
+                  ? gambarBenda("pintu_ayun_luar", kerangka, "aksen") // M-01, M-12: pintu lebar membuka ke luar (hijau)
+                  : id === "wastafel" && modifikasi.includes("M-06")
+                    ? gambarBenda("wastafel", kerangka, "aksen") // M-06: wastafel gantung, keran tuas (hijau)
+                    : gambarBenda(jenisBenda(id), kerangka);
         // Urutan gambar dari belakang ke depan: titik pijak benda yang lebih rendah di layar berarti lebih dekat kamera.
         const [x, y] = keRuang(kerangka, 0, 0);
         return { id, daftar, kedalaman: proyeksi(x, y, 0)[1] };
@@ -265,7 +274,7 @@ export function PratinjauRuangIso3D({
       ringkas,
     };
     const bagian: (BagianModifikasi & { id: string })[] = modifikasi.flatMap((id) => gambarModifikasi(id, ctx).map((b) => ({ ...b, id })));
-    const susunMod = bagian
+    const susunBagian = bagian
       .filter((b) => b.objek === null || (!tersembunyi.includes(b.objek) && !tidakTerlihat.includes(b.objek)))
       .map((b, i) => ({
         id: `mod-${i}`,
@@ -277,10 +286,37 @@ export function PratinjauRuangIso3D({
             ? -1e9 + (b.daftar.some((p) => p.jenis === "poligon") ? 0 : 1000) + i
             : proyeksi(b.pijak[0], b.pijak[1], 0)[1],
       }));
+    // Perabot tambahan dari alternatif atau hack sheet: dipasang pada dinding benda dasarnya, hijau, dengan nama bila ukuran ditampilkan.
+    const tambahan: { id: string; daftar: Primitif[]; kedalaman: number }[] = [];
+    const labelTambahan: Primitif[] = [];
+    const taruh = (nama: string, dasar: ObjekDenah, geser: number, bentuk: (k: Kerangka) => Primitif[], teks: string, majuN = 0) => {
+      if (tidakTerlihat.includes(dasar) || tersembunyi.includes(dasar)) return;
+      const k0 = kerangkaDinding(titikDinding(letak(dasar)).dinding);
+      const arah = k0.dinding === "belakang" || k0.dinding === "kiri" ? 1 : -1;
+      const k: Kerangka = { ...k0, sepanjang: posisi[dasar] + geser, bidang: k0.bidang + arah * majuN };
+      const [x, y] = keRuang(k, 0, 0);
+      tambahan.push({ id: nama, daftar: bentuk(k), kedalaman: proyeksi(x, y, 0)[1] });
+      if (tampilkanUkuran) {
+        const [lx, ly] = titik(k, 0, 24, 100);
+        labelTambahan.push({ jenis: "label", x: lx, y: ly, teks });
+      }
+    };
+    if (varian === "commode") taruh("commode", "area_mandi", 0, (k) => kursiCommode(k, "aksen"), "Kursi shower-commode beroda");
+    if (varian === "bangku") taruh("bangku", "area_mandi", 45, (k) => bangku(k, "aksen"), "Bangku rendah");
+    if (varian === "baskom") taruh("baskom", "wastafel", 0, (k) => baskom(k, "aksen"), "Baskom", 55);
+    if (varian === "pocket" && tampilkanUkuran && terlihat.includes("pintu") && !tersembunyi.includes("pintu")) {
+      const kPintu: Kerangka = { ...kerangkaDinding(dindingPintu), sepanjang: posisi.pintu };
+      const [lx, ly] = titik(kPintu, 20, 12, 110);
+      labelTambahan.push({ jenis: "label", x: lx, y: ly, teks: "Pintu geser masuk dinding (pocket door)" });
+    }
+    const susunMod = [...susunBagian, ...tambahan];
     const susunan = [...susunBenda, ...susunMod].sort((a, b) => a.kedalaman - b.kedalaman);
-    const anotasi = bagian
-      .filter((b) => b.objek === null || (!tersembunyi.includes(b.objek) && !tidakTerlihat.includes(b.objek)))
-      .flatMap((b) => b.daftar.filter((p) => p.jenis === "ukur" || p.jenis === "label"));
+    const anotasi = [
+      ...bagian
+        .filter((b) => b.objek === null || (!tersembunyi.includes(b.objek) && !tidakTerlihat.includes(b.objek)))
+        .flatMap((b) => b.daftar.filter((p) => p.jenis === "ukur" || p.jenis === "label")),
+      ...labelTambahan,
+    ];
 
     // Cakram (kepala shower) dihitung dari ukuran sebenarnya di layar; titikPrimitif memakai perkiraan untuk panel yang jauh lebih besar.
     const titikBentuk = (p: Primitif): Titik[] =>
@@ -326,12 +362,13 @@ export function PratinjauRuangIso3D({
 
     // Fokus: kotak pembatas (piksel kanvas) dari bagian modifikasi dan benda yang diganti, diberi ruang, dengan rasio kanvas.
     let tampak = { x: 0, y: 0, w: ukuran.lebar, h: ukuran.tinggi };
-    if (fokus && susunMod.length > 0) {
+    if (fokus && (susunMod.length > 0 || varian === "pocket")) {
       const diganti = [
         modifikasi.includes("M-04") ? "kloset" : null,
         modifikasi.includes("M-01") || modifikasi.includes("M-12") ? "pintu" : null,
         modifikasi.includes("M-06") ? "wastafel" : null,
         modifikasi.includes("M-07") ? "area_mandi" : null,
+        varian === "pocket" ? "pintu" : null,
       ];
       const titikFokus = [
         ...susunMod.flatMap((b) => b.daftar),

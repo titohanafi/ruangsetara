@@ -20,3 +20,11 @@ export const BERGAMBAR: Record<string, readonly ObjekDenah[]> = {
   "M-11": ["area_mandi", "wastafel"],
   "M-12": ["kloset", "area_mandi", "pintu"],
 };
+
+/** Alternatif dan hack dari teks sheet yang digambar sebagai gambar tambahan di kartu kamar mandi (kunci = id pertanyaan, nilai = varian di `PratinjauRuangIso3D`). */
+export const VARIAN_MANDI: Readonly<Record<string, readonly ("pocket" | "commode" | "bangku" | "baskom")[]>> = {
+  "M-01": ["pocket"],
+  "M-06": ["baskom"],
+  "M-08": ["bangku"],
+  "M-10": ["commode"],
+};

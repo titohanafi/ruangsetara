@@ -77,10 +77,8 @@ export function tempatTidur(k: Kerangka, a0: number, a1: number, tinggi: number,
   return urutkanKedalaman(k, [
     kaki(a0 + 2, panjang - 7),
     kaki(a1 - 7, panjang - 7),
-    bagKotak(k, a0, a1, 0, panjang, tinggi - 22, tinggi - 18, peran),
-    bagKotak(k, a0 + 1, a1 - 1, 0, panjang - 1, tinggi - 18, tinggi, peran),
+    bagKotak(k, a0, a1, 0, panjang, tinggi - 22, tinggi, peran),
     bagKotak(k, a0, a1, 0, 5, 0, tinggi + 35, peran),
-    bagKotak(k, a0 + 10, a1 - 10, 10, 40, tinggi, tinggi + 8, peran),
   ]);
 }
 

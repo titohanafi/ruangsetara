@@ -16,12 +16,12 @@ const ISI: Record<Peran, Record<Bidang, string>> = {
   aksen: {
     atas: "fill-utama-muda",
     kanan: "fill-utama-redup",
-    kiri: "fill-utama/40",
+    kiri: "fill-utama-sedang",
     latar: "fill-white",
     lantai: "fill-lantai",
     zona: "fill-utama/10",
-    pita: "fill-utama/40",
-    rongga: "fill-utama/40",
+    pita: "fill-utama-sedang",
+    rongga: "fill-utama-sedang",
     luar: "fill-balikPintu",
   },
   hantu: {
@@ -51,11 +51,16 @@ const GARIS: Record<Peran, string> = { netral: "stroke-tinta", aksen: "stroke-ut
 const ISI_BADAN: Record<Peran, Record<"kanan" | "kiri", string>> = {
   netral: { kanan: "fill-benda-kanan", kiri: "fill-benda-kiri" },
   ruang: { kanan: "fill-dinding", kiri: "fill-dinding-tebal" },
-  aksen: { kanan: "fill-utama-redup", kiri: "fill-utama/40" },
+  aksen: { kanan: "fill-utama-redup", kiri: "fill-utama-sedang" },
   hantu: { kanan: "fill-none", kiri: "fill-none" },
 };
 const ISI_ATAS: Record<Peran, string> = { netral: "fill-benda-atas", ruang: "fill-white", aksen: "fill-utama-muda", hantu: "fill-none" };
-const ISI_RONGGA: Record<Peran, string> = { netral: "fill-benda-kiri", ruang: "fill-garis", aksen: "fill-utama/40", hantu: "fill-none" };
+const ISI_RONGGA: Record<Peran, string> = {
+  netral: "fill-benda-kiri",
+  ruang: "fill-garis",
+  aksen: "fill-utama-sedang",
+  hantu: "fill-none",
+};
 const ISI_LUBANG: Record<Peran, string> = { netral: "fill-tinta", ruang: "fill-tinta", aksen: "fill-utama", hantu: "fill-none" };
 const LUBANG: readonly (readonly [number, number])[] = [
   [0, 0],
@@ -93,6 +98,8 @@ function Bentuk({ s, penanda, m, w, t }: { s: Primitif; penanda: string; m: numb
           points={kePoin(s.titik)}
           className={`${ISI[s.peran][s.muka]} ${s.muka === "pita" || s.tanpaGaris ? "stroke-none" : GARIS[s.peran]}`}
           strokeDasharray={hantu ? "5 4" : undefined}
+          // Sisi melengkung tanpa garis: tepi tajam supaya sambungan antar-segmen tidak tampak sebagai garis tipis.
+          shapeRendering={s.tanpaGaris ? "crispEdges" : undefined}
           strokeWidth={hantu ? 1.8 * m : s.garisTipis ? 0.45 * w : undefined}
         />
       );

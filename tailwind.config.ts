@@ -8,7 +8,7 @@ export default {
     extend: {
       colors: {
         tinta: "#183F37", // teks utama, hijau tua kontras tinggi
-        utama: { DEFAULT: "#245C4C", gelap: "#183F37", muda: "#E9F0EA", redup: "#C7DBD0" }, // hijau tenang: tombol dan penanda langkah
+        utama: { DEFAULT: "#245C4C", gelap: "#183F37", muda: "#E9F0EA", redup: "#C7DBD0", sedang: "#A7BEB7" }, // hijau tenang: tombol dan penanda langkah
         limau: "#DDEBAF", // aksen muda
         kertas: "#FAFBF7", // latar halaman
         putih: "#FFFFFF",

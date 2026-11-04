@@ -4,7 +4,47 @@
 // Ukuran hanya untuk proporsi (`UKURAN`, perkiraan, tidak ditulis di gambar, dilaporkan ke peneliti). Gambar tidak pernah memuat angka.
 import { bukaanDinding, gambarBenda } from "./gambarBenda";
 import { tuas } from "./gambarRuang";
-import { ekstrusi, footprintOval, kotak, poligon, titik, type Kerangka, type Peran, type Primitif } from "./gambarShower";
+import { ekstrusi, footprintOval, keRuang, kotak, poligon, titik, type Kerangka, type Peran, type Primitif } from "./gambarShower";
+
+/** Bagian benda dengan titik pusatnya (a, n, u) di ruang lokal, untuk diurutkan menurut kedalaman. */
+export interface Bagian {
+  readonly pusat: readonly [number, number, number];
+  readonly daftar: Primitif[];
+}
+
+/** Bagian berupa kotak; pusatnya titik tengah kotak. */
+export function bagKotak(k: Kerangka, a0: number, a1: number, n0: number, n1: number, u0: number, u1: number, peran: Peran): Bagian {
+  return { pusat: [(a0 + a1) / 2, (n0 + n1) / 2, (u0 + u1) / 2], daftar: kotak(k, a0, a1, n0, n1, u0, u1, peran) };
+}
+
+/** Garis di antara dua titik lokal, sebagai bagian yang diurutkan menurut titik tengahnya. */
+export function bagGaris(
+  k: Kerangka,
+  dari: readonly [number, number, number],
+  ke: readonly [number, number, number],
+  peran: Peran,
+): Bagian {
+  return {
+    pusat: [(dari[0] + ke[0]) / 2, (dari[1] + ke[1]) / 2, (dari[2] + ke[2]) / 2],
+    daftar: [{ jenis: "garis", dari: titik(k, ...dari), ke: titik(k, ...ke), gaya: "tegas", peran }],
+  };
+}
+
+/**
+ * Urutan gambar (algoritma pelukis): bagian yang lebih jauh dari kamera digambar lebih dulu, yang lebih dekat sesudahnya,
+ * sehingga kaki dan panel sisi dekat kamera menutupi isi di belakangnya, bukan sebaliknya. Sama jauh: yang lebih rendah dulu.
+ */
+export function urutkanKedalaman(k: Kerangka, bagian: readonly Bagian[]): Primitif[] {
+  const lihat = k.lihat ?? { x: 1, y: 1 };
+  const kunci = (b: Bagian): [number, number] => {
+    const [x, y] = keRuang(k, b.pusat[0] * k.skala, b.pusat[1] * k.skala);
+    return [x * lihat.x + y * lihat.y, b.pusat[2]];
+  };
+  return bagian
+    .map((b, i) => ({ b, i, k: kunci(b) }))
+    .sort((p, q) => p.k[0] - q.k[0] || p.k[1] - q.k[1] || p.i - q.i)
+    .flatMap((p) => p.b.daftar);
+}
 
 /** Ukuran ilustratif (cm). Perkiraan untuk proporsi, BUKAN dari sheet atau tabel. */
 export const UKURAN = {
@@ -185,19 +225,19 @@ export function keset(k: Kerangka, peran: Peran = "netral"): Primitif[] {
 export function mejaDorong(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const { lebar, dalam, tinggi } = UKURAN.mejaDorong;
   const [a0, a1] = [-lebar / 2, lebar / 2];
-  const kaki = (a: number, n: number) => [
-    ...kotak(k, a, a + 3, n, n + 3, 6, tinggi, peran),
-    ...kotak(k, a - 1, a + 4, n - 1, n + 4, 0, 6, peran),
+  const kaki = (a: number, n: number): Bagian[] => [
+    bagKotak(k, a, a + 3, n, n + 3, 6, tinggi - 3, peran),
+    bagKotak(k, a - 1, a + 4, n - 1, n + 4, 0, 6, peran),
   ];
-  return [
+  return urutkanKedalaman(k, [
     ...kaki(a0 + 1, 2),
     ...kaki(a1 - 4, 2),
     ...kaki(a0 + 1, dalam - 5),
     ...kaki(a1 - 4, dalam - 5),
-    ...kotak(k, a0, a1, 0, dalam, tinggi - 3, tinggi, peran),
-    ...kotak(k, a0, a1, 0, dalam, 24, 27, peran),
-    ...kotak(k, a0 - 6, a0 + 1, 4, dalam - 4, tinggi, tinggi + 3, peran),
-  ];
+    bagKotak(k, a0, a1, 0, dalam, tinggi - 3, tinggi, peran),
+    bagKotak(k, a0, a1, 0, dalam, 24, 27, peran),
+    bagKotak(k, a0 - 6, a0 + 1, 4, dalam - 4, tinggi, tinggi + 3, peran),
+  ]);
 }
 
 /** Pegboard di dinding: papan dengan titik lubang dan tiga pengait. */
@@ -454,10 +494,11 @@ export function ranjangMedis(k: Kerangka, peran: Peran = "netral"): Primitif[] {
 /** Pemanas air (water heater) di dinding: tangki silinder dengan dua pipa ke bawah. */
 export function waterHeater(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const { jari, tinggi, dasar } = UKURAN.waterHeater;
+  // Pipa digambar lebih dulu: ujung atasnya masuk ke dasar tangki, jadi tangki yang menutupinya.
   return [
-    ...ekstrusi(k, footprintOval(0, jari + 2, jari, jari, 28), dasar, dasar + tinggi, peran, true),
     ...kotak(k, -8, -5, jari - 2, jari + 1, dasar - 30, dasar, peran),
     ...kotak(k, 5, 8, jari - 2, jari + 1, dasar - 30, dasar, peran),
+    ...ekstrusi(k, footprintOval(0, jari + 2, jari, jari, 28), dasar, dasar + tinggi, peran, true),
   ];
 }
 
@@ -625,81 +666,87 @@ export function baskom(k: Kerangka, peran: Peran = "netral", u0 = 0): Primitif[]
 
 /** Rak tarik turun: kabinet dinding dengan rak yang ditarik turun ke depan lewat dua lengan (K-05). */
 export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  const lengan = [-34, 34].map((a): Primitif => ({
-    jenis: "garis",
-    dari: titik(k, a, 2, 192),
-    ke: titik(k, a, 30, 124),
-    gaya: "tegas",
-    peran,
-  }));
-  const isi = [-18, 4, 20].flatMap((a) => kotak(k, a, a + 10, 18, 28, 124, 134, peran));
   return [
-    ...kotak(k, -40, 40, 0, 2, 120, 200, "netral"),
-    ...kotak(k, -40, -37, 0, 32, 120, 200, "netral"),
-    ...kotak(k, 37, 40, 0, 32, 120, 200, "netral"),
-    ...kotak(k, -40, 40, 0, 32, 197, 200, "netral"),
-    ...lengan,
-    ...kotak(k, -36, 36, 12, 38, 121, 124, peran),
-    ...isi,
+    ...urutkanKedalaman(k, [
+      bagKotak(k, -40, 40, 0, 2, 120, 200, "netral"),
+      bagKotak(k, -40, -37, 0, 32, 120, 200, "netral"),
+      bagKotak(k, 37, 40, 0, 32, 120, 200, "netral"),
+      bagKotak(k, -40, 40, 0, 32, 197, 200, "netral"),
+    ]),
+    // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
+    ...urutkanKedalaman(k, [
+      ...[-34, 34].map((a) => bagGaris(k, [a, 2, 192], [a, 30, 124], peran)),
+      bagKotak(k, -36, 36, 12, 38, 121, 124, peran),
+      ...[-18, 4, 20].map((a) => bagKotak(k, a, a + 10, 18, 28, 124, 134, peran)),
+    ]),
   ];
 }
 
 /** Keranjang tarik di dalam lemari bawah: keranjang kawat yang ditarik penuh ke depan di atas rel (K-05). */
 export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
-    ...kotak(k, -35, -32, 0, 55, 0, 80, "netral"),
-    ...kotak(k, 32, 35, 0, 55, 0, 80, "netral"),
-    ...kotak(k, -35, 35, 0, 58, 80, 84, "netral"),
-    ...kotak(k, -31, -29, 0, 80, 26, 28, peran),
-    ...kotak(k, 29, 31, 0, 80, 26, 28, peran),
-    ...kotak(k, -28, 28, 30, 80, 28, 30, peran),
-    ...kotak(k, -28, -26, 30, 80, 30, 50, peran),
-    ...kotak(k, 26, 28, 30, 80, 30, 50, peran),
-    ...kotak(k, -28, 28, 78, 80, 30, 50, peran),
+    ...urutkanKedalaman(k, [
+      bagKotak(k, -35, -32, 0, 55, 0, 80, "netral"),
+      bagKotak(k, 32, 35, 0, 55, 0, 80, "netral"),
+      bagKotak(k, -35, 35, 0, 58, 80, 84, "netral"),
+    ]),
+    // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
+    ...urutkanKedalaman(k, [
+      bagKotak(k, -31, -29, 0, 80, 26, 28, peran),
+      bagKotak(k, 29, 31, 0, 80, 26, 28, peran),
+      bagKotak(k, -28, 28, 30, 80, 28, 30, peran),
+      bagKotak(k, -28, -26, 30, 80, 30, 50, peran),
+      bagKotak(k, 26, 28, 30, 80, 30, 50, peran),
+      bagKotak(k, -28, 28, 78, 80, 30, 50, peran),
+    ]),
   ];
 }
 
 /** Rak putar (lazy susan): dua piringan bertingkat pada satu tiang, dengan beberapa stoples (K-05). */
 export function rakPutar(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const stoples = [-12, 10].flatMap((a) => ekstrusi(k, footprintOval(a, 27, 6, 6, 14), 12, 26, peran, true));
+  // Tiang dipecah: bagian bawah di balik piringan atas, bagian atas digambar sesudah piringan supaya tampak berdiri di atasnya.
   return [
-    ...kotak(k, -2, 2, 25, 29, 0, 72, peran),
+    ...kotak(k, -2, 2, 25, 29, 0, 44, peran),
     ...ekstrusi(k, footprintOval(0, 27, 24, 24, 28), 10, 13, peran, true),
-    ...ekstrusi(k, footprintOval(0, 27, 24, 24, 28), 44, 47, peran, true),
     ...stoples,
+    ...ekstrusi(k, footprintOval(0, 27, 24, 24, 28), 44, 47, peran, true),
+    ...kotak(k, -2, 2, 25, 29, 47, 72, peran),
   ];
 }
 
 /** Gantungan tarik turun: batang gantungan baju yang ditarik turun ke jangkauan duduk lewat dua lengan (alternatif B-06). */
 export function gantunganTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  const lengan = [-36, 36].map((a): Primitif => ({
-    jenis: "garis",
-    dari: titik(k, a, 4, 190),
-    ke: titik(k, a, 38, 118),
-    gaya: "tegas",
-    peran,
-  }));
-  const baju = [-24, -12, 0, 12, 24].flatMap((a) => kotak(k, a - 2, a + 2, 28, 46, 60, 120, peran));
   return [
-    ...kotak(k, -40, 40, 0, 2, 100, 200, "netral"),
-    ...kotak(k, -40, -37, 0, 55, 100, 200, "netral"),
-    ...kotak(k, 37, 40, 0, 55, 100, 200, "netral"),
-    ...kotak(k, -40, 40, 0, 55, 197, 200, "netral"),
-    ...lengan,
-    ...kotak(k, -38, 38, 36, 39, 118, 121, peran),
-    ...baju,
+    ...urutkanKedalaman(k, [
+      bagKotak(k, -40, 40, 0, 2, 100, 200, "netral"),
+      bagKotak(k, -40, -37, 0, 55, 100, 200, "netral"),
+      bagKotak(k, 37, 40, 0, 55, 100, 200, "netral"),
+      bagKotak(k, -40, 40, 0, 55, 197, 200, "netral"),
+    ]),
+    // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
+    ...urutkanKedalaman(k, [
+      ...[-36, 36].map((a) => bagGaris(k, [a, 4, 190], [a, 38, 118], peran)),
+      bagKotak(k, -38, 38, 36, 39, 118, 121, peran),
+      ...[-24, -12, 0, 12, 24].map((a) => bagKotak(k, a - 2, a + 2, 28, 46, 60, 120, peran)),
+    ]),
   ];
 }
 
 /** Papan tarik di bawah meja: papan kerja yang ditarik keluar dari bawah papan meja (alternatif K-02). */
 export function papanTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
-    ...kotak(k, -45, -42, 0, 60, 0, 86, "netral"),
-    ...kotak(k, 42, 45, 0, 60, 0, 86, "netral"),
-    ...kotak(k, -45, 45, 0, 60, 86, 90, "netral"),
-    ...kotak(k, -42, -40, 0, 80, 70, 72, peran),
-    ...kotak(k, 40, 42, 0, 80, 70, 72, peran),
-    ...kotak(k, -38, 38, 20, 80, 72, 75, peran),
+    ...urutkanKedalaman(k, [
+      bagKotak(k, -45, -42, 0, 60, 0, 86, "netral"),
+      bagKotak(k, 42, 45, 0, 60, 0, 86, "netral"),
+      bagKotak(k, -45, 45, 0, 60, 86, 90, "netral"),
+    ]),
+    // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
+    ...urutkanKedalaman(k, [
+      bagKotak(k, -42, -40, 0, 80, 70, 72, peran),
+      bagKotak(k, 40, 42, 0, 80, 70, 72, peran),
+      bagKotak(k, -38, 38, 20, 80, 72, 75, peran),
+    ]),
   ];
 }
 

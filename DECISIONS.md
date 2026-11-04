@@ -266,3 +266,8 @@ Atas permintaan pemilik: oval kloset duduk hijau harus polos. Penyebabnya warna 
 
 ## Bak cuci dapur tanpa lemari bawah: kaki papan tidak lagi memotong bak
 - Keluhan pemilik: penyangga kiri memotong bak. Penyebab: dua kaki papan digambar setelah papan, sehingga kaki sisi dekat kamera menimpa papan dan bak. Perbaikan: kaki digambar lebih dulu, papan dan bak di atasnya. Bentuk dan ukuran tidak berubah.
+
+## Urutan gambar benda (masalah yang sama dengan bak cuci): bagian dekat kamera menimpa bagian di belakangnya
+- Pemilik melaporkan meja dorong, rak tarik turun, keranjang tarik, rak putar, papan tarik, gantungan tarik turun, tempat tidur, lemari tanpa pintu (gantungan), dan pemanas air bermasalah seperti bak cuci. Penyebabnya sama: bagian digambar dalam urutan penulisan, bukan urutan jarak dari kamera.
+- Perbaikan: pembantu `urutkanKedalaman` (di `perabotUmum.ts`) mengurutkan bagian dari yang terjauh ke terdekat memakai titik tengah tiap bagian. Dipakai di meja dorong, tempat tidur, lemari terbuka, dan rangka kabinet pada rak tarik turun, keranjang tarik, gantungan tarik turun, papan tarik; bagian yang ditarik keluar digambar sesudah rangka. Rak putar: tiang dipecah (bawah di balik piringan atas, atas sesudah piringan) dan stoples digambar sebelum piringan atas. Pemanas air: pipa digambar sebelum tangki. Kaki meja dorong dipendekkan 3 satuan supaya tidak menonjol di atas papan. Bentuk dan ukuran lain tidak berubah.
+- Belum diperiksa: benda lain yang disusun dengan pola serupa (daftar urutan tertulis) mungkin punya gejala sama; dibenahi bila ditemukan.

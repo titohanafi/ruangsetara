@@ -20,7 +20,19 @@ import {
   type PeranBenda as Peran,
 } from "./gambarRuang";
 import { lemari } from "./perabotRuang";
-import { gantunganTarikTurun, kipas, keset, kursi, kursiRoda, lampuMeja, lampuSensor, mejaBelajar, ranjangMedis } from "./perabotUmum";
+import {
+  bagKotak,
+  gantunganTarikTurun,
+  kipas,
+  keset,
+  kursi,
+  kursiRoda,
+  lampuMeja,
+  lampuSensor,
+  mejaBelajar,
+  ranjangMedis,
+  urutkanKedalaman,
+} from "./perabotUmum";
 import { footprintOval, kotak, poligon, titik, type Kerangka, type Primitif } from "./gambarShower";
 
 /** Ukuran ilustratif kamar tidur (cm). Perkiraan untuk proporsi, BUKAN acuan dan tidak ditulis di gambar; dilaporkan ke peneliti. */
@@ -61,16 +73,16 @@ const DIGANTI: Record<string, "pintu" | "tempatTidur" | "lemari" | "saklar"> = {
 
 export function tempatTidur(k: Kerangka, a0: number, a1: number, tinggi: number, peran: Peran): Primitif[] {
   const { panjang } = KAMAR_TIDUR.tempatTidur;
-  const kaki = (a: number, n: number) => kotak(k, a, a + 5, n, n + 5, 0, tinggi - 22, peran);
-  return [
-    ...kaki(a0 + 2, panjang - 7),
-    ...kaki(a1 - 7, panjang - 7),
-    ...kotak(k, a0, a1, 0, panjang, tinggi - 22, tinggi - 18, peran),
-    ...kotak(k, a0, a0 + 4, 0, panjang, 0, tinggi - 22, peran),
-    ...kotak(k, a0 + 1, a1 - 1, 0, panjang - 1, tinggi - 18, tinggi, peran),
-    ...kotak(k, a0, a1, 0, 5, 0, tinggi + 35, peran),
-    ...kotak(k, a0 + 10, a1 - 10, 10, 40, tinggi, tinggi + 8, peran),
-  ];
+  const kaki = (a: number, n: number) => bagKotak(k, a, a + 5, n, n + 5, 0, tinggi - 22, peran);
+  return urutkanKedalaman(k, [
+    kaki(a0 + 2, panjang - 7),
+    kaki(a1 - 7, panjang - 7),
+    bagKotak(k, a0, a1, 0, panjang, tinggi - 22, tinggi - 18, peran),
+    bagKotak(k, a0, a0 + 4, 0, panjang, 0, tinggi - 22, peran),
+    bagKotak(k, a0 + 1, a1 - 1, 0, panjang - 1, tinggi - 18, tinggi, peran),
+    bagKotak(k, a0, a1, 0, 5, 0, tinggi + 35, peran),
+    bagKotak(k, a0 + 10, a1 - 10, 10, 40, tinggi, tinggi + 8, peran),
+  ]);
 }
 
 export function nakas(k: Kerangka, a0: number, a1: number, peran: Peran): Primitif[] {

@@ -1,6 +1,7 @@
 // Perabot yang dipakai lebih dari satu ruang, digambar sekali di sini (ruang hanya menentukan ukuran dan posisinya).
 import { kotak, titik, type Kerangka, type Primitif } from "./gambarShower";
 import type { PeranBenda } from "./gambarRuang";
+import { bagKotak, urutkanKedalaman, type Bagian } from "./perabotUmum";
 
 export interface UkuranLemari {
   dalam: number;
@@ -29,20 +30,21 @@ export function lemari(
       ...kotak(k, tengah + 6, tengah + 9, dalam, dalam + 2, 95, 115, peran),
     ];
   }
-  const hasil: Primitif[] = [
-    ...kotak(k, a0, a1, 0, 2, 0, tinggi, peran),
-    ...kotak(k, a0, a0 + 3, 0, dalam, 0, tinggi, peran),
-    ...kotak(k, a1 - 3, a1, 0, dalam, 0, tinggi, peran),
-    ...kotak(k, a0, a1, 0, dalam, tinggi - 3, tinggi, peran),
-    ...kotak(k, a0, a1, 0, dalam, 0, 3, peran),
-    ...kotak(k, a0 + 3, a1 - 3, dalam / 2 - 1.5, dalam / 2 + 1.5, gantungan, gantungan + 3, peran),
+  const bagian: Bagian[] = [
+    bagKotak(k, a0, a1, 0, 2, 0, tinggi, peran),
+    bagKotak(k, a0, a0 + 3, 0, dalam, 0, tinggi, peran),
+    bagKotak(k, a1 - 3, a1, 0, dalam, 0, tinggi, peran),
+    bagKotak(k, a0, a1, 0, dalam, tinggi - 3, tinggi, peran),
+    bagKotak(k, a0, a1, 0, dalam, 0, 3, peran),
+    bagKotak(k, a0 + 3, a1 - 3, dalam / 2 - 1.5, dalam / 2 + 1.5, gantungan, gantungan + 3, peran),
   ];
   const jarak = (a1 - a0 - 16) / 5;
   for (let i = 0; i < 6; i++) {
     const a = a0 + 8 + i * jarak;
-    hasil.push(...kotak(k, a - 2, a + 2, dalam / 2 - 9, dalam / 2 + 9, gantungan - 62, gantungan, peran));
+    bagian.push(bagKotak(k, a - 2, a + 2, dalam / 2 - 9, dalam / 2 + 9, gantungan - 62, gantungan, peran));
   }
-  return hasil;
+  // Panel sisi yang dekat kamera digambar sesudah isinya, supaya pakaian tidak tampak menembus panel.
+  return urutkanKedalaman(k, bagian);
 }
 
 /** Meja lipat yang menempel di dinding kanan (ramping, tidak memakan lantai) dengan dua siku penopang, dan rak gantung di atasnya. */

@@ -703,20 +703,33 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
 }
 
 /**
- * Keranjang tarik (K-05): unit keranjang kawat pada dua rel geser, dipasang pada pelat di dinding (bukan lemari). Posisi semula
- * keranjang (rapat ke dinding) digambar putus-putus; keranjang yang ditarik penuh ke depan digambar penuh di atas rel.
+ * Keranjang tarik (K-05), mengikuti foto acuan pemilik: kabinet bawah yang isinya bisa ditarik keluar penuh. Satu bagian
+ * kabinet terbuka; unit isi (muka bergagang, keranjang, dan barang) ditarik keluar bersama mukanya. Bagian lain kabinet
+ * tertutup. Barang hanya balok polos.
  */
 export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+  const maju = 38;
+  const f = 56 + maju;
   return [
-    ...kotak(k, -33, 33, 0, 2, 18, 58, "netral"),
-    ...kotak(k, -28, 28, 4, 54, 30, 50, "hantu"),
     ...urutkanKedalaman(k, [
-      bagKotak(k, -31, -29, 2, 90, 26, 28, peran),
-      bagKotak(k, 29, 31, 2, 90, 26, 28, peran),
-      bagKotak(k, -28, 28, 40, 90, 28, 30, peran),
-      bagKotak(k, -28, -26, 40, 90, 30, 50, peran),
-      bagKotak(k, 26, 28, 40, 90, 30, 50, peran),
-      bagKotak(k, -28, 28, 88, 90, 30, 50, peran),
+      bagKotak(k, -35, -3, 0, 55, 0, 80, "netral"),
+      bagKotak(k, -3, 35, 0, 2, 0, 80, "netral"),
+      bagKotak(k, 32, 35, 0, 55, 0, 80, "netral"),
+      bagKotak(k, -3, 32, 0, 55, 0, 3, "netral"),
+      bagKotak(k, -35, 35, 0, 58, 80, 84, "netral"),
+    ]),
+    // Garis sambungan dan gagang pada muka kabinet yang tertutup.
+    ...kotak(k, -25, -13, 55, 58, 62, 65, "netral"),
+    // Unit isi yang ditarik keluar: keranjang terbuka di belakang muka bergagang.
+    ...urutkanKedalaman(k, [
+      bagKotak(k, 0, 30, f - 52, f - 2, 8, 10, peran),
+      bagKotak(k, 0, 2, f - 52, f - 2, 10, 46, peran),
+      bagKotak(k, 28, 30, f - 52, f - 2, 10, 46, peran),
+      bagKotak(k, 0, 30, f - 52, f - 50, 10, 46, peran),
+      bagKotak(k, 4, 14, f - 40, f - 28, 10, 26, peran),
+      bagKotak(k, 16, 26, f - 24, f - 12, 10, 22, peran),
+      bagKotak(k, -1, 31, f - 2, f, 6, 70, peran),
+      bagKotak(k, 9, 21, f, f + 3, 58, 61, peran),
     ]),
   ];
 }

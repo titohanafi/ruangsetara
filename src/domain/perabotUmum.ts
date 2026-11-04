@@ -188,16 +188,18 @@ export function sofa(k: Kerangka, peran: Peran = "netral"): Primitif[] {
 export function rakSepatu(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const { lebar, dalam, tinggi } = UKURAN.rakSepatu;
   const [a0, a1] = [-lebar / 2, lebar / 2];
-  const papan = [3, tinggi / 3, (2 * tinggi) / 3].flatMap((u) => kotak(k, a0, a1, 0, dalam, u, u + 3, peran));
-  const sepatu = [a0 + 12, a0 + 38, a0 + 60].flatMap((a) =>
-    [3, tinggi / 3, (2 * tinggi) / 3].flatMap((u) => kotak(k, a, a + 14, 6, 24, u + 3, u + 11, peran)),
-  );
+  const tingkat = [3, tinggi / 3, (2 * tinggi) / 3];
+  const papan = tingkat.map((u) => bagKotak(k, a0, a1, 0, dalam, u, u + 3, peran));
+  const sepatu = [a0 + 12, a0 + 38, a0 + 60].flatMap((a) => tingkat.map((u) => bagKotak(k, a, a + 14, 6, 24, u + 3, u + 11, peran)));
+  // Papan belakang paling jauh dari kamera, jadi digambar paling dulu; sisi, papan, dan sepatu diurutkan menurut kedalaman.
   return [
-    ...kotak(k, a0, a0 + 3, 0, dalam, 0, tinggi, peran),
-    ...kotak(k, a1 - 3, a1, 0, dalam, 0, tinggi, peran),
-    ...papan,
-    ...sepatu,
-    ...kotak(k, a0, a1, 0, 2, 0, tinggi, peran),
+    ...bagKotak(k, a0, a1, 0, 2, 0, tinggi, peran).daftar,
+    ...urutkanKedalaman(k, [
+      bagKotak(k, a0, a0 + 3, 0, dalam, 0, tinggi, peran),
+      bagKotak(k, a1 - 3, a1, 0, dalam, 0, tinggi, peran),
+      ...papan,
+      ...sepatu,
+    ]),
   ];
 }
 

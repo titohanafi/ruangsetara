@@ -105,7 +105,7 @@ export function HasilScreen() {
       : [],
   );
 
-  const aktifModifikasi = pilihanModifikasi && digambar.has(pilihanModifikasi) ? pilihanModifikasi : [...digambar][0];
+  const aktifModifikasi = pilihanModifikasi && perlu.some((b) => b.pertanyaan.id === pilihanModifikasi) ? pilihanModifikasi : perlu[0]?.pertanyaan.id;
   const mati = new Set([...digambar].filter((id) => id !== aktifModifikasi));
   const gantiModifikasi = (id: string) => setPilihanModifikasi(id);
 
@@ -145,8 +145,25 @@ export function HasilScreen() {
 
       {area.id === "kamar-mandi" && state.denah?.kamarMandi && digambar.size > 0 && (
         <Suspense fallback={null}>
-          <RingkasanModifikasi jawaban={state.jawaban} denah={state.denah} mati={mati} onToggle={gantiModifikasi} />
+          <RingkasanModifikasi jawaban={state.jawaban} denah={state.denah} mati={mati} />
         </Suspense>
+      )}
+
+      {perlu.length > 0 && (
+        <fieldset className="mt-6">
+          <legend className="label-mikro">{T.pilihRekomendasi}</legend>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {perlu.map((b, i) => (
+              <label key={b.pertanyaan.id} className={`relative flex min-h-sentuh min-w-[44px] cursor-pointer items-center justify-center rounded-tombol border px-3 text-kecil font-semibold focus-within:ring-2 focus-within:ring-utama ${b.pertanyaan.id === aktifModifikasi ? "border-utama bg-utama text-putih" : "border-garis bg-putih text-tinta"}`}>
+                <input type="radio" name="rekomendasi" className="sr-only"
+                  aria-label={`${i + 1}. ${b.pertanyaan.elemen}`}
+                  checked={b.pertanyaan.id === aktifModifikasi}
+                  onChange={() => gantiModifikasi(b.pertanyaan.id)} />
+                <span aria-hidden="true">{i + 1}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
       )}
 
       {perlu.length === 0 ? (
@@ -156,7 +173,7 @@ export function HasilScreen() {
         </div>
       ) : (
         <ol className="mt-6 space-y-4">
-          {perlu.map((b, i) => (digambar.size === 0 || (digambar.has(b.pertanyaan.id) && !mati.has(b.pertanyaan.id))) && (
+          {perlu.map((b, i) => (b.pertanyaan.id === aktifModifikasi) && (
             <KartuButir
               key={b.pertanyaan.id}
               b={b}

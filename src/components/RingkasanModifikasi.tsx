@@ -10,7 +10,7 @@ const T = UI.ruang;
 type Sudut = "kiri" | "kanan";
 
 /** Gambar semua modifikasi dalam satu ruangan, di akhir halaman hasil: bernomor sama dengan kartu, tiap nomor bisa dimatikan. */
-export function RingkasanModifikasi({ jawaban, denah, mati, onToggle }: { jawaban: PetaJawaban; denah: HasilDenah; mati: ReadonlySet<string>; onToggle: (id: string) => void }) {
+export function RingkasanModifikasi({ jawaban, denah, mati }: { jawaban: PetaJawaban; denah: HasilDenah; mati: ReadonlySet<string> }) {
   const letak = letakDariDenah(denah.objek);
   const tidakTerlihat = tidakTerlihatDariDenah(denah.objek);
   const daftar = PERTANYAAN["kamar-mandi"].pertanyaan;
@@ -66,27 +66,6 @@ export function RingkasanModifikasi({ jawaban, denah, mati, onToggle }: { jawaba
         </div>
       </div>
 
-      <fieldset className="mt-3">
-        <legend className="label-mikro">{T.nomorJudul}</legend>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {ringkas.digambar.map((p) => {
-            const nyala = !mati.has(p.id);
-            return (
-              <button
-                key={p.id}
-                type="button"
-                aria-pressed={nyala}
-                aria-label={`${nomor[p.id]}. ${p.elemen ?? p.id}`}
-                title={p.elemen ?? p.id}
-                onClick={() => onToggle(p.id)}
-                className={`min-h-sentuh min-w-[44px] rounded-tombol border px-3 text-kecil font-semibold ${nyala ? "border-utama bg-utama text-putih" : "border-garis bg-putih text-tinta"}`}
-              >
-                {nomor[p.id]}
-              </button>
-            );
-          })}
-        </div>
-      </fieldset>
     </section>
   );
 }

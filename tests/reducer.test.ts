@@ -4,7 +4,7 @@ import { AWAL, reducer, type State } from "../src/state/reducer";
 const foto = (id: string) => ({ id, url: `data:image/jpeg;base64,${id}` });
 
 describe("reducer", () => {
-  it("ganti area membuang jawaban, prioritas, dan hasil baca, tetapi memelihara foto dan profil", () => {
+  it("ganti area membuang jawaban, prioritas, dan hasil baca, termasuk foto, tetapi memelihara profil", () => {
     let s: State = reducer(AWAL, { jenis: "pilih_area", areaId: "kamar-mandi" });
     s = reducer(s, { jenis: "tambah_foto", foto: foto("a") });
     s = reducer(s, { jenis: "isi_profil", id: "kursi_roda", nilai: "Manual" });
@@ -13,7 +13,7 @@ describe("reducer", () => {
     s = reducer(s, { jenis: "pilih_area", areaId: "dapur" });
     expect(s.jawaban).toEqual({});
     expect(s.aktivitas).toBeNull();
-    expect(s.fotos).toHaveLength(1);
+    expect(s.fotos).toHaveLength(0);
     expect(s.profil.kursi_roda).toBe("Manual");
   });
 

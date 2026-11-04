@@ -5,7 +5,18 @@
 import { DIM } from "./dimensiGambar";
 import { bukaanDinding, gambarBenda } from "./gambarBenda";
 import { tuas } from "./gambarRuang";
-import { ekstrusi, footprintOval, keRuang, kotak, poligon, titik, type Kerangka, type Peran, type Primitif } from "./gambarShower";
+import {
+  ekstrusi,
+  footprintOval,
+  keRuang,
+  kotak,
+  poligon,
+  titik,
+  type Kerangka,
+  type Peran,
+  type Primitif,
+  type Titik,
+} from "./gambarShower";
 
 /** Bagian benda dengan titik pusatnya (a, n, u) di ruang lokal, untuk diurutkan menurut kedalaman. */
 export interface Bagian {
@@ -446,13 +457,40 @@ export function tangga(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return Array.from({ length: jumlah }, (_, i) => kotak(k, a0, a1, i * dalam, (i + 1) * dalam, 0, (jumlah - i) * tinggiAnak, peran)).flat();
 }
 
-/** Tanaman dalam pot: pot silinder dan tajuk daun. */
+/** Tanaman dalam pot: pot meruncing dengan bibir, batang pendek, dan sepuluh helai daun lonjong yang menyebar ke segala arah. */
 export function tanamanPot(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const { jariPot, tinggiPot, jariDaun, tinggiDaun } = UKURAN.tanamanPot;
+  const c = jariDaun; // pusat n (lebar tajuk menentukan jarak dari dinding)
+  const dasarDaun = tinggiPot + 8;
+  const daun: Bagian[] = Array.from({ length: 10 }, (_, i) => {
+    const th = (i / 10) * Math.PI * 2;
+    const [dx, dy] = [Math.cos(th), Math.sin(th)];
+    // Panjang dan tinggi daun berselang-seling supaya tajuk tidak seragam.
+    const panjang = jariDaun * (i % 2 === 0 ? 0.95 : 0.7);
+    const naik = tinggiDaun * (i % 2 === 0 ? 0.75 : 1);
+    const lebar = 5;
+    const titikDaun = (r: number, h: number, sisi: number): Titik => titik(k, dx * r - dy * sisi, c + dy * r + dx * sisi, dasarDaun + h);
+    return {
+      pusat: [dx * panjang * 0.5, c + dy * panjang * 0.5, dasarDaun + naik * 0.5],
+      daftar: [
+        poligon(
+          "atas",
+          [
+            titikDaun(0, 0, 0),
+            titikDaun(panjang * 0.4, naik * 0.5, lebar),
+            titikDaun(panjang, naik, 0),
+            titikDaun(panjang * 0.4, naik * 0.5, -lebar),
+          ],
+          peran,
+        ),
+      ],
+    };
+  });
   return [
-    ...ekstrusi(k, footprintOval(0, jariDaun, jariPot, jariPot, 24), 0, tinggiPot, peran, true),
-    ...kotak(k, -2, 2, jariDaun - 2, jariDaun + 2, tinggiPot, tinggiPot + 14, peran),
-    ...ekstrusi(k, footprintOval(0, jariDaun, jariDaun, jariDaun, 24), tinggiPot + 14, tinggiPot + 14 + tinggiDaun, peran, true),
+    ...ekstrusi(k, footprintOval(0, c, jariPot - 3, jariPot - 3, 24), 0, tinggiPot - 5, peran, true),
+    ...ekstrusi(k, footprintOval(0, c, jariPot, jariPot, 24), tinggiPot - 5, tinggiPot, peran, true),
+    ...kotak(k, -2, 2, c - 2, c + 2, tinggiPot, dasarDaun, peran),
+    ...urutkanKedalaman(k, daun),
   ];
 }
 

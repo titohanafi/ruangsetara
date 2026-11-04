@@ -18,12 +18,17 @@ describe("katalog objek perabot", () => {
     }
   });
 
-  it("setiap objek disebut di teks sheet peneliti (tidak mengarang objek)", () => {
-    for (const o of KATALOG_OBJEK)
-      expect(
-        teksSheet.some((t) => o.kata.test(t)),
-        o.id,
-      ).toBe(true);
+  it("objek bersumber sheet memang disebut di teks sheet; objek umum tidak mengaku dari sheet", () => {
+    for (const o of KATALOG_OBJEK) {
+      if (o.sumber === "sheet") expect(o.kata && teksSheet.some((t) => o.kata?.test(t)), o.id).toBeTruthy();
+      else expect(o.kata, o.id).toBeUndefined();
+    }
+  });
+
+  it("semua ruang yang ada punya objek", () => {
+    for (const ruang of ["kamar-mandi", "dapur", "kamar-tidur", "mobilitas"] as const) {
+      expect(KATALOG_OBJEK.filter((o) => o.ruang.includes(ruang)).length, ruang).toBeGreaterThan(3);
+    }
   });
 
   it("gambar objek tidak memuat teks atau angka", () => {

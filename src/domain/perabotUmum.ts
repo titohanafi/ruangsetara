@@ -30,6 +30,15 @@ export function bagGaris(
   };
 }
 
+/** Lengan penarik berupa pita tebal 3 satuan (bukan garis), dari titik atas (n, u) ke titik bawah (n, u) pada sisi `a`. */
+export function bagLengan(k: Kerangka, a: number, dari: readonly [number, number], ke: readonly [number, number], peran: Peran): Bagian {
+  const t = (da: number, [n, u]: readonly [number, number]) => titik(k, a + da, n, u);
+  return {
+    pusat: [a, (dari[0] + ke[0]) / 2, (dari[1] + ke[1]) / 2],
+    daftar: [poligon("kiri", [t(-1.5, dari), t(1.5, dari), t(1.5, ke), t(-1.5, ke)], peran)],
+  };
+}
+
 /**
  * Urutan gambar (algoritma pelukis): bagian yang lebih jauh dari kamera digambar lebih dulu, yang lebih dekat sesudahnya,
  * sehingga kaki dan panel sisi dekat kamera menutupi isi di belakangnya, bukan sebaliknya. Sama jauh: yang lebih rendah dulu.
@@ -668,14 +677,15 @@ export function baskom(k: Kerangka, peran: Peran = "netral", u0 = 0): Primitif[]
 export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
     ...urutkanKedalaman(k, [
-      bagKotak(k, -40, 40, 0, 2, 120, 200, "netral"),
-      bagKotak(k, -40, -37, 0, 32, 120, 200, "netral"),
-      bagKotak(k, 37, 40, 0, 32, 120, 200, "netral"),
+      bagKotak(k, -40, 40, 0, 2, 140, 200, "netral"),
+      bagKotak(k, -40, -37, 0, 32, 140, 200, "netral"),
+      bagKotak(k, 37, 40, 0, 32, 140, 200, "netral"),
       bagKotak(k, -40, 40, 0, 32, 197, 200, "netral"),
+      bagKotak(k, -37, 37, 0, 32, 140, 143, "netral"),
     ]),
     // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
     ...urutkanKedalaman(k, [
-      ...[-34, 34].map((a) => bagGaris(k, [a, 2, 192], [a, 30, 124], peran)),
+      ...[-34, 34].map((a) => bagLengan(k, a, [4, 140], [30, 124], peran)),
       bagKotak(k, -36, 36, 12, 38, 121, 124, peran),
       ...[-18, 4, 20].map((a) => bagKotak(k, a, a + 10, 18, 28, 124, 134, peran)),
     ]),
@@ -686,9 +696,11 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
 export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
     ...urutkanKedalaman(k, [
+      bagKotak(k, -35, 35, 0, 2, 0, 80, "netral"),
       bagKotak(k, -35, -32, 0, 55, 0, 80, "netral"),
       bagKotak(k, 32, 35, 0, 55, 0, 80, "netral"),
       bagKotak(k, -35, 35, 0, 58, 80, 84, "netral"),
+      bagKotak(k, -32, 32, 0, 55, 0, 3, "netral"),
     ]),
     // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
     ...urutkanKedalaman(k, [
@@ -719,14 +731,15 @@ export function rakPutar(k: Kerangka, peran: Peran = "netral"): Primitif[] {
 export function gantunganTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
     ...urutkanKedalaman(k, [
-      bagKotak(k, -40, 40, 0, 2, 100, 200, "netral"),
-      bagKotak(k, -40, -37, 0, 55, 100, 200, "netral"),
-      bagKotak(k, 37, 40, 0, 55, 100, 200, "netral"),
+      bagKotak(k, -40, 40, 0, 2, 140, 200, "netral"),
+      bagKotak(k, -40, -37, 0, 55, 140, 200, "netral"),
+      bagKotak(k, 37, 40, 0, 55, 140, 200, "netral"),
       bagKotak(k, -40, 40, 0, 55, 197, 200, "netral"),
+      bagKotak(k, -37, 37, 0, 55, 140, 143, "netral"),
     ]),
     // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
     ...urutkanKedalaman(k, [
-      ...[-36, 36].map((a) => bagGaris(k, [a, 4, 190], [a, 38, 118], peran)),
+      ...[-36, 36].map((a) => bagLengan(k, a, [6, 140], [38, 118], peran)),
       bagKotak(k, -38, 38, 36, 39, 118, 121, peran),
       ...[-24, -12, 0, 12, 24].map((a) => bagKotak(k, a - 2, a + 2, 28, 46, 60, 120, peran)),
     ]),
@@ -737,6 +750,7 @@ export function gantunganTarikTurun(k: Kerangka, peran: Peran = "netral"): Primi
 export function papanTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
     ...urutkanKedalaman(k, [
+      bagKotak(k, -45, 45, 0, 2, 40, 86, "netral"),
       bagKotak(k, -45, -42, 0, 60, 0, 86, "netral"),
       bagKotak(k, 42, 45, 0, 60, 0, 86, "netral"),
       bagKotak(k, -45, 45, 0, 60, 86, 90, "netral"),

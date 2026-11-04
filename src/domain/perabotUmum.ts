@@ -703,24 +703,16 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
 }
 
 /**
- * Keranjang tarik (K-05): lemari bawah tanpa pintu. Posisi semula keranjang di dalam lemari digambar putus-putus; keranjang
- * kawat yang ditarik penuh ke depan di atas dua rel digambar penuh di depan lemari.
+ * Keranjang tarik (K-05): unit keranjang kawat pada dua rel geser, dipasang pada pelat di dinding (bukan lemari). Posisi semula
+ * keranjang (rapat ke dinding) digambar putus-putus; keranjang yang ditarik penuh ke depan digambar penuh di atas rel.
  */
 export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
-    ...urutkanKedalaman(k, [
-      bagKotak(k, -35, 35, 0, 2, 0, 80, "netral"),
-      bagKotak(k, -35, -32, 0, 55, 0, 80, "netral"),
-      bagKotak(k, 32, 35, 0, 55, 0, 80, "netral"),
-      bagKotak(k, -35, 35, 0, 58, 80, 84, "netral"),
-      bagKotak(k, -32, 32, 0, 55, 0, 3, "netral"),
-    ]),
-    // Posisi semula keranjang di dalam lemari, putus-putus.
+    ...kotak(k, -33, 33, 0, 2, 18, 58, "netral"),
     ...kotak(k, -28, 28, 4, 54, 30, 50, "hantu"),
-    // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
     ...urutkanKedalaman(k, [
-      bagKotak(k, -31, -29, 0, 90, 26, 28, peran),
-      bagKotak(k, 29, 31, 0, 90, 26, 28, peran),
+      bagKotak(k, -31, -29, 2, 90, 26, 28, peran),
+      bagKotak(k, 29, 31, 2, 90, 26, 28, peran),
       bagKotak(k, -28, 28, 40, 90, 28, 30, peran),
       bagKotak(k, -28, -26, 40, 90, 30, 50, peran),
       bagKotak(k, 26, 28, 40, 90, 30, 50, peran),

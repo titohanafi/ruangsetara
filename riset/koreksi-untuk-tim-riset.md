@@ -58,3 +58,5 @@ Angka di teks Modifikasi dapur yang perlu dicek peneliti. Gambar tidak menulis a
 ## Catatan umum
 
 PerMen No. 14/2017 mengatur toilet dan pancuran **umum** di bangunan gedung, bukan kamar mandi rumah tinggal. Sebaiknya tiap angka diberi label "acuan bangunan gedung" supaya tidak terbaca sebagai syarat untuk rumah.
+
+- **K-05, "keranjang tarik"**: sheet hanya menyebut nama ini di kolom hack tanpa bentuk. Kami menggambarnya sebagai unit keranjang kawat pada rel geser (tanpa lemari). Mohon konfirmasi apakah maksudnya keranjang di lemari bawah, keranjang gantung, atau yang lain.

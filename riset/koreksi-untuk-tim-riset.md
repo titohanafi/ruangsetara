@@ -32,6 +32,18 @@ Angka dicocokkan dengan teks Permen PUPR No. 14/PRT/M/2017 (PDF resmi) dan teks 
 - M-06: tepi bawah cermin di atas wastafel maksimal 101,5 cm (ADA §603.3, 1015 mm). Catatan: PerMen Gambar 3.13 memuat label cermin 90 - 180 cm di atas lantai; mohon ditinjau mana yang dipakai.
 - M-10: tinggi kursi shower 43 - 48,5 cm (ADA §610.3). PerMen butir 6 bagian Pancuran: lebar dan ketinggian tempat duduk setidaknya 45 cm.
 
+## Dapur (ilustrasi modifikasi)
+
+Angka di teks Modifikasi dapur yang perlu dicek peneliti. Gambar tidak menulis angka yang meragukan.
+
+| Pertanyaan | Angka di sheet | Catatan |
+|---|---|---|
+| K-04 | Tombol dalam jangkauan "38 - 12,2 cm" | Kemungkinan salah ketik (12,2 mestinya 122?). **Tidak ditulis di gambar.** Mohon dikoreksi di sheet. |
+| K-08 | Stopkontak dan saklar 38 - 122 cm | Sama dengan M-07 dan M-11 (ADA §308 belum dicocokkan penuh). Di gambar diberi tanda * dan keterangan "masih ditinjau". |
+| K-02 | Tinggi meja 71 - 86,5 cm, ruang lutut 68,5 cm tinggi dan 43 cm dalam | Belum dicocokkan dengan ADA §902.3 dan §306. Ditulis apa adanya dari sheet. |
+| K-06 | Freezer: setengah ruang di bawah 137 cm | Ditulis apa adanya dari sheet. |
+| Semua | Ukuran ruang dan benda dapur pada gambar (ruang 360 x 300 cm, meja 90 cm, kulkas 70 x 68 x 170 cm, dll.) | **Perkiraan saya untuk proporsi gambar**, bukan dari sheet dan tidak ditulis di gambar. Daftar di `DAPUR` (`src/domain/gambarDapur.ts`). |
+
 ## Catatan umum
 
 PerMen No. 14/2017 mengatur toilet dan pancuran **umum** di bangunan gedung, bukan kamar mandi rumah tinggal. Sebaiknya tiap angka diberi label "acuan bangunan gedung" supaya tidak terbaca sebagai syarat untuk rumah.

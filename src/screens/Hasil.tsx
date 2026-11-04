@@ -2,6 +2,7 @@ import { lazy, Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
 import { butirHasil, ringkas, type Butir } from "../domain/asesmen";
+import { BERGAMBAR_DAPUR } from "../domain/bergambarDapur";
 import type { HasilDenah } from "../domain/denahPindai";
 import { ringkasModifikasi } from "../domain/modifikasi";
 import { cariArea, HASIL, isi, PERTANYAAN, UI } from "../domain/konten";
@@ -10,6 +11,7 @@ import { useStore } from "../state/store";
 const T = UI.hasil;
 // Dimuat hanya bila ada hasil baca denah: gambar dan tabel ukurannya tidak ikut dimuat di halaman lain.
 const GambarModifikasiKartu = lazy(() => import("../components/GambarModifikasiKartu").then((m) => ({ default: m.GambarModifikasiKartu })));
+const GambarDapurKartu = lazy(() => import("../components/GambarDapurKartu").then((m) => ({ default: m.GambarDapurKartu })));
 const RingkasanModifikasi = lazy(() => import("../components/RingkasanModifikasi").then((m) => ({ default: m.RingkasanModifikasi })));
 const KATEGORI_D = HASIL.kategori.find((k) => k.nilai === "D");
 
@@ -29,12 +31,15 @@ function KartuButir({
   catatan,
   temuan,
   denah,
+  gambarDapur,
 }: {
   b: Butir;
   nomor: number;
   catatan?: string;
   temuan?: string;
   denah?: HasilDenah;
+  /** Dapur: gambar contoh tata letak tetap (tanpa baca denah). */
+  gambarDapur?: boolean;
 }) {
   const { pertanyaan: p } = b;
   const belum = b.status === "belum";
@@ -81,7 +86,11 @@ function KartuButir({
               <GambarModifikasiKartu id={p.id} denah={denah} />
             </Suspense>
           )}
-
+          {gambarDapur && (
+            <Suspense fallback={null}>
+              <GambarDapurKartu id={p.id} />
+            </Suspense>
+          )}
         </>
       )}
     </li>
@@ -105,7 +114,8 @@ export function HasilScreen() {
       : [],
   );
 
-  const aktifModifikasi = pilihanModifikasi && perlu.some((b) => b.pertanyaan.id === pilihanModifikasi) ? pilihanModifikasi : perlu[0]?.pertanyaan.id;
+  const aktifModifikasi =
+    pilihanModifikasi && perlu.some((b) => b.pertanyaan.id === pilihanModifikasi) ? pilihanModifikasi : perlu[0]?.pertanyaan.id;
   const mati = new Set([...digambar].filter((id) => id !== aktifModifikasi));
   const gantiModifikasi = (id: string) => setPilihanModifikasi(id);
 
@@ -142,7 +152,6 @@ export function HasilScreen() {
         </section>
       )}
 
-
       {area.id === "kamar-mandi" && state.denah?.kamarMandi && digambar.size > 0 && (
         <Suspense fallback={null}>
           <RingkasanModifikasi jawaban={state.jawaban} denah={state.denah} mati={mati} />
@@ -154,11 +163,18 @@ export function HasilScreen() {
           <legend className="label-mikro">{T.pilihRekomendasi}</legend>
           <div className="mt-2 flex flex-wrap gap-2">
             {perlu.map((b, i) => (
-              <label key={b.pertanyaan.id} className={`relative flex min-h-sentuh min-w-[44px] cursor-pointer items-center justify-center rounded-tombol border px-3 text-kecil font-semibold focus-within:ring-2 focus-within:ring-utama ${b.pertanyaan.id === aktifModifikasi ? "border-utama bg-utama text-putih" : "border-garis bg-putih text-tinta"}`}>
-                <input type="radio" name="rekomendasi" className="sr-only"
+              <label
+                key={b.pertanyaan.id}
+                className={`relative flex min-h-sentuh min-w-[44px] cursor-pointer items-center justify-center rounded-tombol border px-3 text-kecil font-semibold focus-within:ring-2 focus-within:ring-utama ${b.pertanyaan.id === aktifModifikasi ? "border-utama bg-utama text-putih" : "border-garis bg-putih text-tinta"}`}
+              >
+                <input
+                  type="radio"
+                  name="rekomendasi"
+                  className="sr-only"
                   aria-label={`${i + 1}. ${b.pertanyaan.elemen}`}
                   checked={b.pertanyaan.id === aktifModifikasi}
-                  onChange={() => gantiModifikasi(b.pertanyaan.id)} />
+                  onChange={() => gantiModifikasi(b.pertanyaan.id)}
+                />
                 <span aria-hidden="true">{i + 1}</span>
               </label>
             ))}
@@ -173,19 +189,22 @@ export function HasilScreen() {
         </div>
       ) : (
         <ol className="mt-6 space-y-4">
-          {perlu.map((b, i) => (b.pertanyaan.id === aktifModifikasi) && (
-            <KartuButir
-              key={b.pertanyaan.id}
-              b={b}
-              nomor={i + 1}
-              catatan={state.catatanFoto[b.pertanyaan.id]}
-              temuan={state.temuan[b.pertanyaan.id]}
-              denah={digambar.has(b.pertanyaan.id) ? (state.denah ?? undefined) : undefined}
-            />
-          ))}
+          {perlu.map(
+            (b, i) =>
+              b.pertanyaan.id === aktifModifikasi && (
+                <KartuButir
+                  key={b.pertanyaan.id}
+                  b={b}
+                  nomor={i + 1}
+                  catatan={state.catatanFoto[b.pertanyaan.id]}
+                  temuan={state.temuan[b.pertanyaan.id]}
+                  denah={digambar.has(b.pertanyaan.id) ? (state.denah ?? undefined) : undefined}
+                  gambarDapur={area.id === "dapur" && BERGAMBAR_DAPUR.has(b.pertanyaan.id)}
+                />
+              ),
+          )}
         </ol>
       )}
-
 
       <details className="mt-6 rounded-kartu border border-garis bg-putih p-4">
         <summary className="font-semibold">{isi(T.tinjau, { n: daftar.length })}</summary>

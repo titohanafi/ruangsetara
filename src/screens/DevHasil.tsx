@@ -1,7 +1,7 @@
-// Jalan pintas pengembangan (#/dev/hasil): langsung ke halaman hasil kamar mandi dengan foto contoh dan jawaban tiruan.
+// Jalan pintas pengembangan (#/dev/hasil): langsung ke halaman hasil (kamar mandi, atau ?area=dapur) dengan foto contoh dan jawaban tiruan.
 // Hanya terpasang saat `npm run dev` dengan VITE_PINDAI_MOCK=true (lihat App.tsx), jadi tidak ada di situs live.
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Layout } from "../components/Layout";
 import { DENAH_TIRUAN } from "../domain/denahPindai";
 import { aturanFoto, cariArea, PERTANYAAN, UI } from "../domain/konten";
@@ -11,13 +11,16 @@ import { kecilkanFoto } from "../lib/foto";
 import { useStore } from "../state/store";
 
 const T = UI.dev;
-const AREA = "kamar-mandi";
+const AREA_BAWAAN = "kamar-mandi";
 
 export function DevHasilScreen() {
   const { kirim } = useStore();
   const pindah = useNavigate();
   const [pesan, setPesan] = useState<string | null>(null);
   const jalan = useRef(false);
+  // Area dari alamat: #/dev/hasil?area=dapur (bawaan kamar mandi).
+  const [params] = useSearchParams();
+  const AREA = params.get("area") ?? AREA_BAWAAN;
 
   useEffect(() => {
     // StrictMode menjalankan efek dua kali; cukup sekali supaya foto tidak ganda.
@@ -38,11 +41,11 @@ export function DevHasilScreen() {
       const semuaTidak = Object.fromEntries(daftar.map((p) => [p.id, { nilai: "tidak" as const, sumber: "pengguna" as const }]));
       const { jawaban, terisi } = isiDariFoto(daftar, aturanFoto(AREA), hasil, semuaTidak);
       kirim({ jenis: "selesai_baca", jawaban, terisi, total: daftar.length, bukanRuangan: !hasil.ruang_sesuai });
-      kirim({ jenis: "selesai_denah", denah: DENAH_TIRUAN });
+      if (AREA === AREA_BAWAAN) kirim({ jenis: "selesai_denah", denah: DENAH_TIRUAN });
       kirim({ jenis: "pilih_aktivitas", aktivitas: area.aktivitas[0] });
       pindah("/hasil", { replace: true });
     })().catch(() => setPesan(T.gagal));
-  }, [kirim, pindah]);
+  }, [AREA, kirim, pindah]);
 
   return (
     <Layout langkah={4} label="Dev">

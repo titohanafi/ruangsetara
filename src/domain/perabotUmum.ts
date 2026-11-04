@@ -43,12 +43,15 @@ export function bagLengan(k: Kerangka, a: number, dari: readonly [number, number
  * Urutan gambar (algoritma pelukis): bagian yang lebih jauh dari kamera digambar lebih dulu, yang lebih dekat sesudahnya,
  * sehingga kaki dan panel sisi dekat kamera menutupi isi di belakangnya, bukan sebaliknya. Sama jauh: yang lebih rendah dulu.
  */
-export function urutkanKedalaman(k: Kerangka, bagian: readonly Bagian[]): Primitif[] {
+/** Jarak ke kamera suatu bagian (makin besar makin dekat). */
+export function kedalamanBagian(k: Kerangka, b: Bagian): number {
   const lihat = k.lihat ?? { x: 1, y: 1 };
-  const kunci = (b: Bagian): [number, number] => {
-    const [x, y] = keRuang(k, b.pusat[0] * k.skala, b.pusat[1] * k.skala);
-    return [x * lihat.x + y * lihat.y, b.pusat[2]];
-  };
+  const [x, y] = keRuang(k, b.pusat[0] * k.skala, b.pusat[1] * k.skala);
+  return x * lihat.x + y * lihat.y;
+}
+
+export function urutkanKedalaman(k: Kerangka, bagian: readonly Bagian[]): Primitif[] {
+  const kunci = (b: Bagian): [number, number] => [kedalamanBagian(k, b), b.pusat[2]];
   return bagian
     .map((b, i) => ({ b, i, k: kunci(b) }))
     .sort((p, q) => p.k[0] - q.k[0] || p.k[1] - q.k[1] || p.i - q.i)
@@ -710,39 +713,35 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
 export function keranjangTarik(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const depan = 55;
   const f = 96;
-  type Kotak = [number, number, number, number, number, number];
-  const rak: Kotak[] = [
-    [0, 30, 6, f - 2, 8, 10],
-    [0, 2, 6, f - 2, 10, 46],
-    [28, 30, 6, f - 2, 10, 46],
-    [0, 30, 6, 8, 10, 46],
+  // Bagian rak yang masih di dalam kabinet (n < 55) diurutkan bersama rangka kabinet supaya tertutup panel sisi dekat kamera.
+  const dalamRak: Bagian[] = [
+    bagKotak(k, 0, 30, 6, depan, 8, 10, peran),
+    bagKotak(k, 0, 2, 6, depan, 10, 46, peran),
+    bagKotak(k, 28, 30, 6, depan, 10, 46, peran),
+    bagKotak(k, 0, 30, 6, 8, 10, 46, peran),
   ];
-  const dalam = rak
-    .filter((b) => b[2] < depan)
-    .map(([a0, a1, n0, n1, u0, u1]) => bagKotak(k, a0, a1, n0, Math.min(n1, depan), u0, u1, peran));
-  const luar = rak
-    .filter((b) => b[3] > depan)
-    .map(([a0, a1, n0, n1, u0, u1]) => bagKotak(k, a0, a1, Math.max(n0, depan), n1, u0, u1, peran));
+  // Bagian di luar kabinet: dinding sisi yang jauh dari kamera dulu, lalu dasar dan barang, lalu dinding sisi yang dekat
+  // (menutupi barang dari samping), lalu muka bergagang.
+  const kiri = bagKotak(k, 0, 2, depan, f - 2, 10, 46, peran);
+  const kanan = bagKotak(k, 28, 30, depan, f - 2, 10, 46, peran);
+  const [jauh, dekat] = kedalamanBagian(k, kiri) <= kedalamanBagian(k, kanan) ? [kiri, kanan] : [kanan, kiri];
   return [
     ...urutkanKedalaman(k, [
       bagKotak(k, -35, -3, 0, 55, 0, 80, "netral"),
       bagKotak(k, -3, 35, 0, 2, 0, 80, "netral"),
       bagKotak(k, 32, 35, 0, 55, 0, 80, "netral"),
       bagKotak(k, -3, 32, 0, 55, 0, 3, "netral"),
-      ...dalam,
+      ...dalamRak,
     ]),
     // Papan atas digambar sesudah isi di dalam kabinet.
     ...bagKotak(k, -35, 35, 0, 58, 80, 84, "netral").daftar,
     ...kotak(k, -25, -13, 55, 58, 62, 65, "netral"),
-    // Bagian rak di luar kabinet, dengan muka bergagang di ujungnya.
-    ...urutkanKedalaman(k, [
-      ...luar,
-      // Dua balok polos sebagai barang di dalam rak (hanya yang berada di luar kabinet).
-      bagKotak(k, 4, 14, 62, 74, 10, 40, peran),
-      bagKotak(k, 16, 26, 78, 88, 10, 30, peran),
-      bagKotak(k, -1, 31, f - 2, f, 6, 56, peran),
-      bagKotak(k, 9, 21, f, f + 3, 44, 47, peran),
-    ]),
+    ...jauh.daftar,
+    ...bagKotak(k, 0, 30, depan, f - 2, 8, 10, peran).daftar,
+    ...urutkanKedalaman(k, [bagKotak(k, 4, 14, 62, 74, 10, 40, peran), bagKotak(k, 16, 26, 78, 88, 10, 54, peran)]),
+    ...dekat.daftar,
+    ...bagKotak(k, -1, 31, f - 2, f, 6, 56, peran).daftar,
+    ...bagKotak(k, 9, 21, f, f + 3, 44, 47, peran).daftar,
   ];
 }
 

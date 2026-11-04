@@ -39,6 +39,7 @@ const oval = (k: Kerangka, a: number, n: number, ra: number, rn: number, u: numb
 // Mangkuk lurus di depan tangki (sumbu sama, tanpa geseran ke samping) dan pusatnya dimajukan ke 26 cm dari dinding,
 // sehingga bagian belakang mangkuk masuk ke bawah tangki dan keduanya menempel.
 const PUSAT_MANGKUK_N = 26;
+const GESER_KIRI = 10;
 
 /** Sumbu lokal `a` dan `n` di layar (vektor per satu satuan lokal, sudah termasuk skala kerangka). */
 function sumbuLayar(k: Kerangka): { a: Titik; n: Titik } {
@@ -49,7 +50,9 @@ function sumbuLayar(k: Kerangka): { a: Titik; n: Titik } {
 }
 
 function klosetDuduk(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  const a = 0;
+  // Geser ke KIRI layar sejauh GESER_KIRI satuan layar (permintaan pemilik), lewat sumbu lebar `a` pada kerangka ini.
+  const lebarLayar = sumbuLayar(k).a[0];
+  const a = Math.abs(lebarLayar) < 1e-6 ? 0 : -GESER_KIRI / lebarLayar;
   const pusatN = PUSAT_MANGKUK_N;
   const setengah = DIM.kloset.lebar / 2;
   const tinggiDudukan = DIM.kloset.tinggiDudukan;

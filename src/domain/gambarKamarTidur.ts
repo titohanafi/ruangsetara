@@ -78,11 +78,9 @@ export function tempatTidur(k: Kerangka, a0: number, a1: number, tinggi: number,
   // yang lebih rendah dari kasur, kasur masuk di dalam rel, papan kepala tinggi, dan satu bantal.
   const kaki = (a: number, n: number) => bagKotak(k, a, a + 8, n, n + 8, 0, alas, peran);
   return [
+    // Kaki digambar lebih dulu: bidang atas kaki berimpit dengan dasar rel, jadi rel harus menutupinya.
+    ...urutkanKedalaman(k, [kaki(a0, panjang - 8), kaki(a1 - 8, panjang - 8), kaki(a0, 0), kaki(a1 - 8, 0)]),
     ...urutkanKedalaman(k, [
-      kaki(a0, panjang - 8),
-      kaki(a1 - 8, panjang - 8),
-      kaki(a0, 0),
-      kaki(a1 - 8, 0),
       bagKotak(k, a0, a0 + 3, 0, panjang, alas, tinggi - 14, peran),
       bagKotak(k, a1 - 3, a1, 0, panjang, alas, tinggi - 14, peran),
       bagKotak(k, a0, a1, panjang - 3, panjang, alas, tinggi - 14, peran),

@@ -23,6 +23,8 @@ import {
   rampPortable,
   riceCooker,
   tempatSampah,
+  bagKotak,
+  urutkanKedalaman,
 } from "./perabotUmum";
 import { mejaLipatDinding } from "./perabotRuang";
 import { footprintOval, kotak, poligon, titik, type Kerangka, type Primitif, type Titik } from "./gambarShower";
@@ -367,7 +369,20 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
       tambah("laci-mod", daftar, (mA0 + mA1) / 2, by, true);
       // Satu laci ditarik penuh ke depan.
       const tengah = (mA0 + mA1) / 2;
-      const tarik = kotak(kB, mA0 + 4, mA1 - 4, DAPUR.meja.dalam, DAPUR.meja.dalam + 40, 34, 56, "aksen");
+      // Laci terbuka selebar muka laci (mA0 sampai mA1): dasar, dinding sisi, dinding depan bergagang, dan beberapa barang.
+      const d0 = DAPUR.meja.dalam;
+      const d1 = d0 + 40;
+      const tarik = urutkanKedalaman(kB, [
+        bagKotak(kB, mA0, mA1, d0, d1, 34, 37, "aksen"),
+        bagKotak(kB, mA0, mA0 + 3, d0, d1, 37, 54, "aksen"),
+        bagKotak(kB, mA1 - 3, mA1, d0, d1, 37, 54, "aksen"),
+        bagKotak(kB, mA0 + 3, mA1 - 3, d0, d0 + 3, 37, 54, "aksen"),
+        bagKotak(kB, mA0 + 8, mA0 + 24, d0 + 6, d0 + 20, 37, 52, "aksen"),
+        bagKotak(kB, mA0 + 30, mA0 + 48, d0 + 14, d0 + 30, 37, 47, "aksen"),
+        bagKotak(kB, mA1 - 26, mA1 - 10, d0 + 4, d0 + 18, 37, 58, "aksen"),
+        bagKotak(kB, mA0 + 3, mA1 - 3, d1 - 3, d1, 34, 54, "aksen"),
+        bagKotak(kB, (mA0 + mA1) / 2 - 7, (mA0 + mA1) / 2 + 7, d1, d1 + 3, 44, 47, "aksen"),
+      ]);
       tambah("laci-tarik", tarik, tengah, by + DAPUR.meja.dalam + 40, true);
       if (T) {
         anotasi.push(label(titik(kB, tengah, DAPUR.meja.dalam + 44, 62), "Laci tarik penuh"));

@@ -685,7 +685,9 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
     ...[-18, 0, 18].map((a) => bagKotak(k, a - 4, a + 4, 24, 36, u + 2, u + 10, peran)),
   ]);
   return [
+    // Lengan diurutkan bersama rangka: panel sisi yang dekat kamera menutupi lengan yang ada di dalam kabinet.
     ...urutkanKedalaman(k, [
+      ...lengan,
       bagKotak(k, -40, 40, 0, 2, 140, 200, "netral"),
       bagKotak(k, -40, -37, 0, 32, 140, 200, "netral"),
       bagKotak(k, 37, 40, 0, 32, 140, 200, "netral"),
@@ -696,12 +698,7 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
     // Posisi semula rak di dalam kabinet, putus-putus.
     ...kotak(k, -30, 30, 4, 28, 152, 194, "hantu"),
     // Bagian yang ditarik turun, digambar sesudah rangka.
-    ...urutkanKedalaman(k, [
-      ...lengan,
-      bagKotak(k, -36, -33, 16, 46, 70, 108, peran),
-      bagKotak(k, 33, 36, 16, 46, 70, 108, peran),
-      ...tingkat,
-    ]),
+    ...urutkanKedalaman(k, [bagKotak(k, -36, -33, 16, 46, 70, 108, peran), bagKotak(k, 33, 36, 16, 46, 70, 108, peran), ...tingkat]),
   ];
 }
 
@@ -752,7 +749,9 @@ export function rakPutar(k: Kerangka, peran: Peran = "netral"): Primitif[] {
 export function gantunganTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const lengan = [-35.5, 35.5].flatMap((a) => [bagLengan(k, a, [8, 168], [40, 108], peran), bagLengan(k, a, [8, 148], [40, 88], peran)]);
   return [
+    // Lengan diurutkan bersama rangka: panel sisi yang dekat kamera menutupi lengan yang ada di dalam kabinet.
     ...urutkanKedalaman(k, [
+      ...lengan,
       bagKotak(k, -40, 40, 0, 2, 140, 200, "netral"),
       bagKotak(k, -40, -37, 0, 55, 140, 200, "netral"),
       bagKotak(k, 37, 40, 0, 55, 140, 200, "netral"),
@@ -761,7 +760,6 @@ export function gantunganTarikTurun(k: Kerangka, peran: Peran = "netral"): Primi
     // Posisi semula batang di dalam lemari, putus-putus.
     ...kotak(k, -33, 33, 26, 29, 150, 153, "hantu"),
     ...urutkanKedalaman(k, [
-      ...lengan,
       bagKotak(k, -36, -33, 34, 46, 80, 110, peran),
       bagKotak(k, 33, 36, 34, 46, 80, 110, peran),
       bagKotak(k, -33, 33, 38, 41, 103, 106, peran),

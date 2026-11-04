@@ -673,7 +673,10 @@ export function baskom(k: Kerangka, peran: Peran = "netral", u0 = 0): Primitif[]
   ];
 }
 
-/** Rak tarik turun: kabinet dinding dengan rak yang ditarik turun ke depan lewat dua lengan (K-05). */
+/**
+ * Rak tarik turun (K-05): kabinet dinding terbuka di bawah. Rak yang semula di dalam kabinet (garis putus) ditarik turun ke
+ * depan lewat dua lengan sampai setinggi jangkauan duduk, dengan beberapa barang di atasnya.
+ */
 export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
     ...urutkanKedalaman(k, [
@@ -681,13 +684,14 @@ export function rakTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] 
       bagKotak(k, -40, -37, 0, 32, 140, 200, "netral"),
       bagKotak(k, 37, 40, 0, 32, 140, 200, "netral"),
       bagKotak(k, -40, 40, 0, 32, 197, 200, "netral"),
-      bagKotak(k, -37, 37, 0, 32, 140, 143, "netral"),
     ]),
-    // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
+    // Posisi semula rak di dalam kabinet, putus-putus.
+    ...kotak(k, -36, 36, 4, 30, 150, 153, "hantu"),
+    // Bagian yang ditarik turun, digambar sesudah rangka.
     ...urutkanKedalaman(k, [
-      ...[-34, 34].map((a) => bagLengan(k, a, [4, 140], [30, 124], peran)),
-      bagKotak(k, -36, 36, 12, 38, 121, 124, peran),
-      ...[-18, 4, 20].map((a) => bagKotak(k, a, a + 10, 18, 28, 124, 134, peran)),
+      ...[-34, 34].map((a) => bagLengan(k, a, [8, 142], [22, 103], peran)),
+      bagKotak(k, -36, 36, 16, 46, 100, 103, peran),
+      ...[-18, 4, 20].map((a) => bagKotak(k, a, a + 10, 24, 34, 103, 113, peran)),
     ]),
   ];
 }
@@ -727,7 +731,10 @@ export function rakPutar(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   ];
 }
 
-/** Gantungan tarik turun: batang gantungan baju yang ditarik turun ke jangkauan duduk lewat dua lengan (alternatif B-06). */
+/**
+ * Gantungan tarik turun (alternatif B-06): batang gantungan di dalam lemari (garis putus, setinggi gantungan standar) ditarik
+ * turun ke depan lewat dua lengan sampai setinggi jangkauan duduk, dengan pakaian tergantung di bawahnya.
+ */
 export function gantunganTarikTurun(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   return [
     ...urutkanKedalaman(k, [
@@ -735,13 +742,13 @@ export function gantunganTarikTurun(k: Kerangka, peran: Peran = "netral"): Primi
       bagKotak(k, -40, -37, 0, 55, 140, 200, "netral"),
       bagKotak(k, 37, 40, 0, 55, 140, 200, "netral"),
       bagKotak(k, -40, 40, 0, 55, 197, 200, "netral"),
-      bagKotak(k, -37, 37, 0, 55, 140, 143, "netral"),
     ]),
-    // Bagian yang ditarik keluar digambar sesudah rangka: berada di depan dan di dalam rangka.
+    // Posisi semula batang di dalam lemari, putus-putus.
+    ...kotak(k, -38, 38, 26, 29, 150, 153, "hantu"),
     ...urutkanKedalaman(k, [
-      ...[-36, 36].map((a) => bagLengan(k, a, [6, 140], [38, 118], peran)),
-      bagKotak(k, -38, 38, 36, 39, 118, 121, peran),
-      ...[-24, -12, 0, 12, 24].map((a) => bagKotak(k, a - 2, a + 2, 28, 46, 60, 120, peran)),
+      ...[-36, 36].map((a) => bagLengan(k, a, [8, 142], [40, 103], peran)),
+      bagKotak(k, -38, 38, 38, 41, 103, 106, peran),
+      ...[-24, -12, 0, 12, 24].map((a) => bagKotak(k, a - 2, a + 2, 32, 48, 48, 106, peran)),
     ]),
   ];
 }

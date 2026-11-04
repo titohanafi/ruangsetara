@@ -538,19 +538,21 @@ export function mejaBelajar(k: Kerangka, peran: Peran = "netral"): Primitif[] {
 export function ranjangMedis(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const { lebar, panjang, tinggiKasur } = UKURAN.ranjangMedis;
   const [a0, a1] = [-lebar / 2, lebar / 2];
-  const roda = (a: number, n: number) => kotak(k, a, a + 5, n, n + 5, 0, 8, peran);
-  return [
-    ...roda(a0 + 2, 4),
-    ...roda(a1 - 7, 4),
-    ...roda(a0 + 2, panjang - 9),
-    ...roda(a1 - 7, panjang - 9),
-    ...kotak(k, a0 + 8, a1 - 8, 10, panjang - 10, 8, tinggiKasur - 14, peran),
-    ...kotak(k, a0, a1, 0, panjang, tinggiKasur - 14, tinggiKasur, peran),
-    ...kotak(k, a0, a1, 0, 5, tinggiKasur, tinggiKasur + 45, peran),
-    ...kotak(k, a0, a1, panjang - 5, panjang, tinggiKasur, tinggiKasur + 25, peran),
-    ...kotak(k, a1 - 2, a1, 20, 110, tinggiKasur, tinggiKasur + 24, peran),
-    ...kotak(k, a1 + 2, a1 + 10, panjang - 30, panjang - 18, tinggiKasur - 24, tinggiKasur - 14, peran),
-  ];
+  const roda = (a: number, n: number) => bagKotak(k, a, a + 8, n, n + 8, 0, 8, peran);
+  // Rangka bawah (alas dan kolom penyangga) bertumpu pada empat roda; kasur, papan kepala, papan kaki, dan pagar sisi di atasnya.
+  // Semua bagian diurutkan menurut kedalaman supaya roda dan rangka sisi dekat kamera tidak tertimpa kasur.
+  return urutkanKedalaman(k, [
+    roda(a0 + 4, 6),
+    roda(a1 - 12, 6),
+    roda(a0 + 4, panjang - 14),
+    roda(a1 - 12, panjang - 14),
+    bagKotak(k, a0 + 6, a1 - 6, 10, panjang - 10, 8, 16, peran),
+    bagKotak(k, a0 + 24, a1 - 24, 40, panjang - 40, 16, tinggiKasur - 14, peran),
+    bagKotak(k, a0, a1, 0, panjang, tinggiKasur - 14, tinggiKasur, peran),
+    bagKotak(k, a0, a1, 0, 5, 8, tinggiKasur + 45, peran),
+    bagKotak(k, a0, a1, panjang - 5, panjang, 8, tinggiKasur + 25, peran),
+    bagKotak(k, a1 - 2, a1, 20, 110, tinggiKasur, tinggiKasur + 24, peran),
+  ]);
 }
 
 /** Pemanas air (water heater) di dinding: tangki silinder dengan dua pipa ke bawah. */

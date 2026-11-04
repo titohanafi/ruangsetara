@@ -20,7 +20,7 @@ import {
   type PeranBenda as Peran,
 } from "./gambarRuang";
 import { lemari } from "./perabotRuang";
-import { gantunganTarikTurun, ranjangMedis } from "./perabotUmum";
+import { gantunganTarikTurun, lampuSensor, ranjangMedis } from "./perabotUmum";
 import { footprintOval, kotak, poligon, titik, type Kerangka, type Primitif } from "./gambarShower";
 
 /** Ukuran ilustratif kamar tidur (cm). Perkiraan untuk proporsi, BUKAN acuan dan tidak ditulis di gambar; dilaporkan ke peneliti. */
@@ -140,7 +140,7 @@ export function susunKamarTidur(id: string | null, c: KonteksRuang): HasilRuang 
   const kK = c.kerangka("kanan");
   // Id bisa memuat alternatif dari sheet, mis. "B-01~tirai".
   const [kode = null, varian] = id ? id.split("~") : [];
-  const diganti = kode ? DIGANTI[kode] : undefined;
+  const diganti = kode && varian !== "sensor" ? DIGANTI[kode] : undefined;
   const lapisan: Lapisan[] = [];
   const anotasi: Primitif[] = [];
   const tambah = (nama: string, daftar: Primitif[], x: number, y: number, aksen = false) =>
@@ -273,6 +273,13 @@ export function susunKamarTidur(id: string | null, c: KonteksRuang): HasilRuang 
       break;
     }
     case "B-10": {
+      if (varian === "sensor") {
+        // Hack sheet: lampu malam dengan sensor gerak yang menerangi jalur ke pintu.
+        const lampuK = { ...kK, sepanjang: 40 };
+        tambah("sensor-hack", lampuSensor(lampuK, "aksen"), L / 2, 40, true);
+        if (T) anotasi.push(label(titik(lampuK, 0, 30, 60), "Lampu malam sensor gerak"));
+        break;
+      }
       const lampuDinding = [28, 45].flatMap((y) => lampu(kK, y, 28, "aksen"));
       tambah("lampu-mod", lampuDinding, L / 2, 36, true);
       tambah("saklar-tidur-mod", pelat(kB, tA1 + 25, 95, "aksen"), tA1 + 25, yBelakang, true);

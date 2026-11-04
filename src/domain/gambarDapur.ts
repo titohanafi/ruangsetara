@@ -3,7 +3,18 @@
 // Ukuran benda hanya untuk proporsi (`DAPUR`, perkiraan). Angka yang TERTULIS di gambar hanya dari teks Modifikasi di sheet
 // peneliti (K-01..K-08); angka yang tampak keliru atau masih ditinjau tidak ditulis (lihat `ANGKA_DAPUR_DITINJAU`).
 import { DIM } from "./dimensiGambar";
-import { keranSemprot, keranTuas, papanTarik, rakTarikTurun } from "./perabotUmum";
+import {
+  apar,
+  baskom,
+  keranSemprot,
+  keranTuas,
+  komporInduksi,
+  mejaDorong,
+  papanTarik,
+  pegboard,
+  rakTarikTurun,
+  rampPortable,
+} from "./perabotUmum";
 import { mejaLipatDinding } from "./perabotRuang";
 import { footprintOval, kotak, poligon, titik, type Kerangka, type Primitif, type Titik } from "./gambarShower";
 import {
@@ -63,6 +74,9 @@ const SHEET = {
   sakelarMin: 38,
   sakelarMaks: 122,
 } as const;
+
+/** Alternatif "cara praktis" (hack) di sheet yang digambar pada kondisi dasar: tidak ada benda yang diganti. */
+const HACK_DAPUR: ReadonlySet<string> = new Set(["portable", "dorong", "baskom", "induksi", "pegboard", "apar"]);
 
 /** Benda dasar yang diganti oleh gambar modifikasi pertanyaan itu (tidak digambar ganda). */
 const DIGANTI: Record<string, "pintu" | "meja" | "wastafel" | "kompor" | "kulkas"> = {
@@ -164,7 +178,9 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
   const kB = belakang(c);
   // Id bisa memuat alternatif dari sheet, mis. "K-02~lipat".
   const [kode = null, varian] = id ? id.split("~") : [];
-  const keluar = kode === "K-02" && varian === "lipat";
+  // Hack dari sheet menambah benda tanpa mengganti benda dasar.
+  const hack = varian !== undefined && HACK_DAPUR.has(varian);
+  const keluar = (kode === "K-02" && varian === "lipat") || hack;
   const diganti = kode && !keluar && !(kode === "K-05" && varian === "rak") ? DIGANTI[kode] : undefined;
   const lapisan: Lapisan[] = [];
   const anotasi: Primitif[] = [];
@@ -188,6 +204,13 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
 
   switch (kode) {
     case "K-01": {
+      if (varian === "portable") {
+        // Hack sheet: ramp ambang karet portable di dasar pintu.
+        const kPintu = { ...kanan(c), sepanjang: DAPUR.pintuKanan.pusat };
+        tambah("ramp-hack", rampPortable(kPintu, "aksen"), DAPUR.ruang.lebar / 2, DAPUR.pintuKanan.pusat + 30, true);
+        if (T) anotasi.push(label(titik(kPintu, 0, 70, 20), "Ramp ambang portable"));
+        break;
+      }
       const kK = kanan(c);
       const { pusat } = DAPUR.pintuKanan;
       const lebar = DIM.pintu.bukaanBersih;
@@ -214,6 +237,13 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
       break;
     }
     case "K-02": {
+      if (varian === "dorong") {
+        // Hack sheet: meja dorong setinggi kursi roda.
+        const geser = { ...kB, sepanjang: -110, bidang: kB.bidang + 90 };
+        tambah("dorong-hack", mejaDorong(geser, "aksen"), -110, by + 130, true);
+        if (T) anotasi.push(label(titik(geser, 0, 20, 100), "Meja dorong"));
+        break;
+      }
       if (varian === "lipat") {
         // Alternatif sheet: permukaan lipat di dinding.
         const kKanan = kanan(c);
@@ -251,6 +281,13 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
       break;
     }
     case "K-03": {
+      if (varian === "baskom") {
+        // Hack sheet: cuci di baskom di meja rendah.
+        const alas = { ...kB, sepanjang: (mA0 + mA1) / 2 };
+        tambah("baskom-hack", baskom(alas, "aksen", tMeja), (mA0 + mA1) / 2, by + 30, true);
+        if (T) anotasi.push(label(titik(alas, 0, 24, tMeja + 36), "Baskom di meja rendah"));
+        break;
+      }
       const atas = 84;
       const tengah = (wA0 + wA1) / 2;
       tambah("wastafel-mod", wastafel(kB, "aksen", true, atas, true), tengah, by, true);
@@ -281,6 +318,13 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
       break;
     }
     case "K-04": {
+      if (varian === "induksi") {
+        // Hack sheet: kompor induksi portable dengan tombol di depan, di meja rendah.
+        const alas = { ...kB, sepanjang: (mA0 + mA1) / 2 };
+        tambah("induksi-hack", komporInduksi(alas, "aksen", tMeja), (mA0 + mA1) / 2, by + 30, true);
+        if (T) anotasi.push(label(titik(alas, 0, 20, tMeja + 24), "Kompor induksi portable"));
+        break;
+      }
       const atas = 79;
       tambah("kompor-mod", kompor(kB, "aksen", atas), (pA0 + pA1) / 2, by, true);
       const tengah = (pA0 + pA1) / 2;
@@ -295,6 +339,13 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
       break;
     }
     case "K-05": {
+      if (varian === "pegboard") {
+        // Hack sheet: pegboard setinggi pinggang.
+        const alas = { ...kB, sepanjang: (mA0 + mA1) / 2 };
+        tambah("pegboard-hack", pegboard(alas, "aksen"), (mA0 + mA1) / 2, by, true);
+        if (T) anotasi.push(label(titik(alas, 0, 20, 175), "Pegboard"));
+        break;
+      }
       if (varian === "rak") {
         // Alternatif sheet: rak tarik turun.
         tambah("rak-mod", rakTarikTurun({ ...kB, sepanjang: (mA0 + mA1) / 2 }, "aksen"), (mA0 + mA1) / 2, by + 40, true);
@@ -339,6 +390,13 @@ export function susunDapur(id: string | null, c: KonteksRuang): HasilRuang {
       break;
     }
     case "K-08": {
+      if (varian === "apar") {
+        // Hack sheet: siapkan APAR kecil.
+        const celah = { ...kB, sepanjang: 80 };
+        tambah("apar-hack", apar(celah, "aksen"), 80, by + 10, true);
+        if (T) anotasi.push(label(titik(celah, 0, 20, 65), "APAR kecil"));
+        break;
+      }
       const sisi: Primitif[] = [...pelat(kB, 72, 100, "aksen"), ...pelat(kB, 86, 100, "aksen")];
       tambah("stopkontak-mod", sisi, 79, by, true);
       const detektor = poligon(

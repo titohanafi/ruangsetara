@@ -609,12 +609,12 @@ export function bangku(k: Kerangka, peran: Peran = "netral"): Primitif[] {
 }
 
 /** Baskom plastik: silinder dangkal berongga, dipakai mencuci bila wastafel tidak bisa diakses (hack M-06, K-03). */
-export function baskom(k: Kerangka, peran: Peran = "netral"): Primitif[] {
+export function baskom(k: Kerangka, peran: Peran = "netral", u0 = 0): Primitif[] {
   return [
-    ...ekstrusi(k, footprintOval(0, 24, 22, 22, 28), 0, 14, peran, true),
+    ...ekstrusi(k, footprintOval(0, 24, 22, 22, 28), u0, u0 + 14, peran, true),
     poligon(
       "rongga",
-      footprintOval(0, 24, 18, 18, 28).map(([a, n]) => titik(k, a, n, 14)),
+      footprintOval(0, 24, 18, 18, 28).map(([a, n]) => titik(k, a, n, u0 + 14)),
       peran,
     ),
   ];

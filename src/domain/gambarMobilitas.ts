@@ -20,6 +20,7 @@ import {
   type PeranBenda as Peran,
 } from "./gambarRuang";
 import { lemari, mejaLipatDinding } from "./perabotRuang";
+import { rampPortable } from "./perabotUmum";
 import { kotak, poligon, titik, type Kerangka, type Primitif } from "./gambarShower";
 
 /** Ukuran ilustratif ruang depan (cm). Perkiraan untuk proporsi, BUKAN acuan dan tidak ditulis di gambar; dilaporkan ke peneliti. */
@@ -226,6 +227,13 @@ export function susunMobilitas(id: string | null, c: KonteksRuang): HasilRuang {
       break;
     }
     case "G-04": {
+      if (varian === "portable") {
+        // Hack sheet: ramp ambang portable dari karet atau aluminium menggantikan undakan rendah.
+        const alas = { ...kB, sepanjang: xPintu };
+        tambah("ramp-hack", rampPortable(alas, "aksen"), xPintu, yB + 40, true);
+        if (T) anotasi.push(label(titik(alas, 0, 50, 30), "Ramp portable (karet atau aluminium)"));
+        break;
+      }
       tambah("ramp-mod", ramp(c, xPintu, SHEET.rampLebar, SHEET.rampDatar, "aksen"), xPintu, yB + SHEET.rampDatar + 200, true);
       if (T) {
         const x1 = xPintu + SHEET.rampLebar / 2;

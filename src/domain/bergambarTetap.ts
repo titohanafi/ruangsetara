@@ -7,13 +7,18 @@ export const BERGAMBAR_TETAP: Readonly<Record<string, ReadonlySet<string>>> = {
   mobilitas: new Set(["G-01", "G-02", "G-03", "G-04", "G-05", "G-06", "G-07", "G-08", "G-09"]),
 };
 
-/** Alternatif dari teks Modifikasi sheet yang digambar sebagai gambar tambahan di kartu (kunci = id pertanyaan, nilai = id gambar "ID~alternatif"). */
+/** Alternatif dari teks Modifikasi sheet yang digambar sebagai gambar tambahan di kartu (kunci = id pertanyaan, nilai = id gambar "ID~alternatif"); termasuk hack (cara praktis tanpa bongkar) yang menambah benda pada kondisi dasar. */
 export const VARIAN_TETAP: Readonly<Record<string, readonly string[]>> = {
   "B-01": ["B-01~tirai"],
+  "B-10": ["B-10~sensor"],
+  "G-04": ["G-04~portable"],
+  "K-01": ["K-01~portable"],
+  "K-04": ["K-04~induksi"],
+  "K-08": ["K-08~apar"],
   "B-04": ["B-04~atur"],
   "B-06": ["B-06~tarik"],
-  "K-02": ["K-02~lipat", "K-02~papan"],
-  "K-03": ["K-03~semprot"],
-  "K-05": ["K-05~rak"],
+  "K-02": ["K-02~lipat", "K-02~papan", "K-02~dorong"],
+  "K-03": ["K-03~semprot", "K-03~baskom"],
+  "K-05": ["K-05~rak", "K-05~pegboard"],
   "G-03": ["G-03~geser"],
 };

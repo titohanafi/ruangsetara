@@ -226,3 +226,6 @@ Semua benda yang disebut di teks Hack dan Modifikasi sheet kini punya gambar. Di
 Hack G-09 (adaptor tuas, pegangan tarik dan tali) digambar pada **pintu tertutup** (`pintu-tertutup`) dan hack G-03 (pengganjal) pada pintu terbuka kondisi dasar, sehingga tidak melayang di daun miring.
 Ruang tetap punya gambar `LENGKAP` (id "LENGKAP", belum dipakai di aplikasi): kondisi dasar ditambah perabot umum (bukan dari sheet) dan kursi roda sebagai acuan skala. Kamar mandi belum punya versi lengkap.
 **Tidak digambar:** sabun dan bahan pembersih (barang habis pakai), tombol darurat (M-12 sudah dihapus), alat bantu jalan lain yang tidak disebut di sheet.
+
+## 2026-11-04 — Kamar mandi terisi lengkap
+`PratinjauRuangIso3D` menerima `lengkap`: menambah pemanas air (water heater, disebut di M-07), tempat sampah dan keranjang cucian (perabot umum, bukan dari sheet), dan kursi roda manual sebagai acuan skala; semua netral dan tanpa teks. Belum dipakai di aplikasi (gambar contoh untuk ditinjau). Dengan ini keempat ruang punya versi terisi lengkap. Sisi gambar saja; pembacaan foto tidak disentuh.

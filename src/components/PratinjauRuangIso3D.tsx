@@ -17,7 +17,7 @@ import {
   type Primitif,
   type Titik,
 } from "../domain/gambarShower";
-import { bangku, baskom, kursiCommode, pintuPocket } from "../domain/perabotUmum";
+import { bangku, baskom, keranjangCucian, kursiCommode, kursiRoda, pintuPocket, tempatSampah, waterHeater } from "../domain/perabotUmum";
 import { posisiSepanjang, type UkuranRuang } from "../domain/tataLetak";
 import {
   OBJEK_DENAH,
@@ -112,6 +112,7 @@ export function PratinjauRuangIso3D({
   kelas = "h-96 w-full",
   ukuranAwal = null,
   varian,
+  lengkap = false,
 }: {
   letak: (id: ObjekDenah) => LetakDenah;
   sudutAktif: { x: "kiri" | "kanan" };
@@ -145,6 +146,11 @@ export function PratinjauRuangIso3D({
    * masuk dinding (M-01), kursi shower-commode beroda (M-10), bangku rendah (hack M-08), baskom (hack M-06).
    */
   varian?: "pocket" | "commode" | "bangku" | "baskom";
+  /**
+   * Kamar mandi terisi lengkap: ditambah pemanas air (disebut di sheet M-07), tempat sampah dan keranjang cucian (umum, bukan dari
+   * sheet), dan kursi roda manual sebagai acuan skala. Semua netral (tanpa bagian hijau); bukan hasil baca foto.
+   */
+  lengkap?: boolean;
 }) {
   const LEBAR = ruang.lebar;
   const DALAM = ruang.dalam;
@@ -308,6 +314,17 @@ export function PratinjauRuangIso3D({
       const kPintu: Kerangka = { ...kerangkaDinding(dindingPintu), sepanjang: posisi.pintu };
       const [lx, ly] = titik(kPintu, 20, 12, 110);
       labelTambahan.push({ jenis: "label", x: lx, y: ly, teks: "Pintu geser masuk dinding (pocket door)" });
+    }
+    if (lengkap) {
+      // Benda lantai: kerangka dinding belakang digeser ke (x, y) ruangan, supaya bentuk berpusat di titik itu.
+      const lantai = (nama: string, x: number, y: number, bentuk: (k: Kerangka) => Primitif[]) => {
+        const k: Kerangka = { ...kerangkaDinding("belakang"), sepanjang: x, bidang: y };
+        tambahan.push({ id: nama, daftar: bentuk(k), kedalaman: proyeksi(x, y, 0)[1] });
+      };
+      taruh("pemanas-air", "area_mandi", 55, (k) => waterHeater(k, "netral"), "");
+      lantai("kursi-roda", -10, 20, (k) => kursiRoda(k, "netral"));
+      lantai("tempat-sampah", 0, -DALAM / 2 + 4, (k) => tempatSampah(k, "netral"));
+      lantai("keranjang-cucian", -LEBAR / 2 + 30, 10, (k) => keranjangCucian(k, "netral"));
     }
     const susunMod = [...susunBagian, ...tambahan];
     const susunan = [...susunBenda, ...susunMod].sort((a, b) => a.kedalaman - b.kedalaman);

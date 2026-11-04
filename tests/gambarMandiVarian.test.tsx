@@ -9,12 +9,13 @@ import { sudutAwal } from "../src/domain/ruang";
 const letak = letakDariDenah(DENAH_TIRUAN.objek);
 const sudut = sudutAwal(letak, []);
 
-const gambar = (varian?: "pocket" | "commode" | "bangku" | "baskom") =>
+const gambar = (varian?: "pocket" | "commode" | "bangku" | "baskom", lengkap = false) =>
   renderToStaticMarkup(
     <PratinjauRuangIso3D
       letak={letak}
       sudutAktif={{ x: sudut }}
       varian={varian}
+      lengkap={lengkap}
       tampilkanSemua
       tampilkanUkuran
       ukuranAwal={{ lebar: 560, tinggi: 400 }}
@@ -44,5 +45,15 @@ describe("alternatif dan hack di gambar kamar mandi", () => {
     for (const daftar of Object.values(VARIAN_MANDI)) {
       for (const v of daftar) expect(gambar(v).match(/>\d[^<]*</g), v).toBeNull();
     }
+  });
+});
+
+describe("kamar mandi terisi lengkap", () => {
+  it("menambah benda tanpa bagian hijau dan tanpa angka", () => {
+    const dasar = gambar();
+    const lengkap = gambar(undefined, true);
+    expect(lengkap.length).toBeGreaterThan(dasar.length);
+    expect(hijau(lengkap)).toBe(0);
+    expect(lengkap.match(/>\d[^<]*</g)).toBeNull();
   });
 });

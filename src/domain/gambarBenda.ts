@@ -36,8 +36,9 @@ export type JenisBenda = (typeof JENIS_BENDA)[number];
 const oval = (k: Kerangka, a: number, n: number, ra: number, rn: number, u: number, segmen = 32): Titik[] =>
   footprintOval(a, n, ra, rn, segmen).map(([x, y]) => titik(k, x, y, u));
 
-// Mangkuk digeser sepanjang lebar (sumbu `a`) sampai pusatnya tepat di bawah pusat tangki di LAYAR (sejajar tegak), pada
-// dinding dan sudut kamera mana pun. Kedalaman mangkuk (n) tidak berubah, jadi mangkuk tetap menempel di depan tangki.
+// Mangkuk lurus di depan tangki (sumbu sama, tanpa geseran ke samping) dan pusatnya dimajukan ke 26 cm dari dinding,
+// sehingga bagian belakang mangkuk masuk ke bawah tangki dan keduanya menempel.
+const PUSAT_MANGKUK_N = 26;
 
 /** Sumbu lokal `a` dan `n` di layar (vektor per satu satuan lokal, sudah termasuk skala kerangka). */
 function sumbuLayar(k: Kerangka): { a: Titik; n: Titik } {
@@ -47,19 +48,9 @@ function sumbuLayar(k: Kerangka): { a: Titik; n: Titik } {
   return { a: [a[0] - o[0], a[1] - o[1]], n: [n[0] - o[0], n[1] - o[1]] };
 }
 
-const PUSAT_TANGKI_N = 9;
-const PUSAT_MANGKUK_N = 31;
-
-/** Geseran lebar (a) yang membuat pusat mangkuk dan pusat tangki berimpit secara horizontal di layar. */
-function geseranMangkuk(k: Kerangka): { a: number; n: number } {
-  const { a: A, n: N } = sumbuLayar(k);
-  const a = Math.abs(A[0]) < 1e-6 ? 0 : (-(PUSAT_MANGKUK_N - PUSAT_TANGKI_N) * N[0]) / A[0];
-  return { a, n: 0 };
-}
-
 function klosetDuduk(k: Kerangka, peran: Peran = "netral"): Primitif[] {
-  const { a, n } = geseranMangkuk(k);
-  const pusatN = 31 + n;
+  const a = 0;
+  const pusatN = PUSAT_MANGKUK_N;
   const setengah = DIM.kloset.lebar / 2;
   const tinggiDudukan = DIM.kloset.tinggiDudukan;
   return [

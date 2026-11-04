@@ -250,3 +250,8 @@ Kusen sebelumnya digambar menonjol 8 cm ke dalam ruangan, padahal kusen terpasan
 
 ## 2026-11-04 — Benda hijau padat (tidak tembus pandang)
 Atas permintaan pemilik: oval kloset duduk hijau harus polos. Penyebabnya warna sisi benda hijau (`fill-utama/40`) semi-transparan, sehingga garis keramik dinding dan garis kaki kloset di belakangnya tampak di dalam badan benda. Kini sisi, pita, dan rongga benda hijau memakai warna padat `utama-sedang` (#A7BEB7, hasil campur 40% hijau di atas putih, sama tampilannya) di `LapisPrimitif` dan `tailwind.config.ts`. Zona lantai (`fill-utama/10`) sengaja tetap semi-transparan karena memang menutup lantai. Poligon tanpa garis (sisi melengkung) memakai `shapeRendering="crispEdges"` supaya sambungan antar-segmen tidak tampak sebagai garis tipis. Berlaku untuk semua gambar hijau.
+
+## Kloset duduk: tangki diberi kaki sampai lantai
+- Keluhan pemilik: di beberapa tampilan tangki air dan dudukan kloset tampak tidak menyatu. Penyebab: tangki melayang di ketinggian 38 cm dengan ruang kosong di bawahnya, hanya disambung satu garis tipis ke mangkuk.
+- Perbaikan: balok kaki tangki (60% lebar tangki) dari lantai sampai dasar tangki, menyentuh kaki mangkuk. Garis penyambung dihapus karena tidak diperlukan lagi. Tidak ada angka baru yang ditulis di gambar; ukuran kaki hanya turunan visual dari lebar tangki.
+- Mangkuk tetap pada posisi "Versi E" yang disetujui.

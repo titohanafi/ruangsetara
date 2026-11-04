@@ -127,13 +127,13 @@ export function FotoScreen() {
         {membaca && <p className="kartu">{T.membaca}</p>}
         {state.baca.status === "sering" && <p className="rounded-kartu bg-perhatian-muda p-4 text-perhatian">{T.terlaluSering}</p>}
         {state.baca.status === "gagal" && <p className="rounded-kartu bg-perhatian-muda p-4 text-perhatian">{T.gagalAnalisis}</p>}
-        {selesai && state.baca.bukanRuangan && (
-          <p className="kartu">{isi(T.bukanRuangan, { area: area?.nama.toLowerCase() ?? "" })}</p>
-        )}
+        {selesai && state.baca.bukanRuangan && <p className="kartu">{isi(T.bukanRuangan, { area: area?.nama.toLowerCase() ?? "" })}</p>}
       </div>
 
       <div className="tanpa-cetak mt-8 flex flex-wrap items-center gap-3 border-t border-garis pt-5">
-        <button type="button" className="tombol-tipis" disabled={membaca} onClick={() => pindah("/prioritas")}>{UI.tombol.kembali}</button>
+        <button type="button" className="tombol-tipis" disabled={membaca} onClick={() => pindah("/prioritas")}>
+          {UI.tombol.kembali}
+        </button>
         {bisaDibaca && state.fotos.length > 0 && !selesai ? (
           <>
             <button type="button" className="tombol-utama" disabled={membaca} onClick={baca}>

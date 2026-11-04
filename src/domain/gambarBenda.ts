@@ -37,13 +37,11 @@ const oval = (k: Kerangka, a: number, n: number, ra: number, rn: number, u: numb
   footprintOval(a, n, ra, rn, segmen).map(([x, y]) => titik(k, x, y, u));
 
 // Versi E (disetujui pemilik di papan Claude Design): mangkuk, kaki, dan cekungan digeser dari sumbu tangki supaya
-// pusatnya tampak sejajar dengan pusat tangki di layar, dan satu garis menyambungkan dasar tangki ke badan mangkuk.
+// pusatnya tampak sejajar dengan pusat tangki di layar, dan tangki diberi kaki sampai lantai supaya menyatu dengan mangkuk (menggantikan garis penyambung).
 // Geseran ditetapkan di LAYAR (6 satuan ke arah sisi mangkuk dan 6 ke atas pada panel), lalu diubah ke koordinat lokal
 // (a, n) menurut sumbu dinding dan kamera yang dipakai, supaya hasilnya sama di semua dinding dan sudut pandang. Pada
 // panel dinding belakang hasilnya (-9,464; -2,536).
 const GESER_LAYAR = 6;
-// Panjang garis penyambung (satuan lokal) dari sudut bawah muka tangki menerus ke arah n sampai badan mangkuk.
-const PANJANG_PENYAMBUNG = 14.56;
 
 /** Sumbu lokal `a` dan `n` di layar (vektor per satu satuan lokal, sudah termasuk skala kerangka). */
 function sumbuLayar(k: Kerangka): { a: Titik; n: Titik } {
@@ -63,34 +61,20 @@ function geseranMangkuk(k: Kerangka): { a: number; n: number } {
   return { a: (sx * N[1] - N[0] * sy) / det, n: (A[0] * sy - sx * A[1]) / det };
 }
 
-/** Sisi tangki (+1 atau -1 sepanjang `a`) yang menghadap kamera: di situ garis penyambung digambar. */
-function sisiTerlihat(k: Kerangka): 1 | -1 {
-  const lihat = k.lihat ?? { x: 1, y: 1 };
-  const [x0, y0] = keRuang(k, 0, 0);
-  const [x1, y1] = keRuang(k, 1, 0);
-  return (x1 - x0) * lihat.x + (y1 - y0) * lihat.y >= 0 ? 1 : -1;
-}
-
 function klosetDuduk(k: Kerangka, peran: Peran = "netral"): Primitif[] {
   const { a, n } = geseranMangkuk(k);
-  const sisi = sisiTerlihat(k);
   const pusatN = 31 + n;
   const setengah = DIM.kloset.lebar / 2;
   const tinggiDudukan = DIM.kloset.tinggiDudukan;
   return [
     ...kotak(k, -setengah, setengah, 0, 18, 38, 80, peran),
+    // Kaki tangki: tangki tidak melayang, turun ke lantai dan bertemu kaki mangkuk (n 18 sampai 22 menimpa kaki).
+    ...kotak(k, -setengah * 0.6, setengah * 0.6, 0, 22, 0, 38, peran),
     ...kotak(k, -setengah - 2, setengah + 2, -1, 19.5, 80, 85, peran),
     ...ekstrusi(k, footprintOval(0, 9.25, 3.5, 3.5, 12), 85, 88, peran, true),
     ...ekstrusi(k, footprintOval(a, pusatN, 11, 17, 24), 0, 28, peran, true),
     ...ekstrusi(k, footprintOval(a, pusatN, 18, 26, 32), 28, tinggiDudukan, peran, true),
     poligon("rongga", oval(k, a, pusatN, 12, 19, tinggiDudukan), peran),
-    {
-      jenis: "garis",
-      dari: titik(k, sisi * setengah, 18, 38),
-      ke: titik(k, sisi * setengah, 18 + PANJANG_PENYAMBUNG, 38),
-      gaya: "tegas",
-      peran: peran,
-    },
   ];
 }
 

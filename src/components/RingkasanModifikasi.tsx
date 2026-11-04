@@ -55,17 +55,11 @@ export function RingkasanModifikasi({ jawaban, denah, mati }: { jawaban: PetaJaw
         </div>
         <div className="mt-2 flex flex-wrap gap-2">
           <label className="flex min-h-sentuh cursor-pointer items-center gap-3 font-semibold">
-            <input
-              type="checkbox"
-              checked={semua}
-              onChange={(event) => setSemua(event.target.checked)}
-              className="h-5 w-5 accent-utama"
-            />
+            <input type="checkbox" checked={semua} onChange={(event) => setSemua(event.target.checked)} className="h-5 w-5 accent-utama" />
             {T.tampilkanSemua}
           </label>
         </div>
       </div>
-
     </section>
   );
 }

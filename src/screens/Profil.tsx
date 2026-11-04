@@ -21,8 +21,18 @@ export function ProfilScreen() {
             <legend className="text-lg font-semibold">{p.pertanyaan}</legend>
             <div className="mt-3 grid gap-2">
               {p.pilihan.map((o) => (
-                <label key={o} className={`flex min-h-sentuh cursor-pointer items-center gap-3 rounded-tombol p-3 ${state.profil[p.id] === o ? "bg-utama-muda" : "bg-transparent"}`}>
-                  <input type="radio" name={`profil-${p.id}`} value={o} checked={state.profil[p.id] === o} onChange={() => kirim({ jenis: "isi_profil", id: p.id, nilai: o })} className="h-4 w-4 shrink-0 accent-utama" />
+                <label
+                  key={o}
+                  className={`flex min-h-sentuh cursor-pointer items-center gap-3 rounded-tombol p-3 ${state.profil[p.id] === o ? "bg-utama-muda" : "bg-transparent"}`}
+                >
+                  <input
+                    type="radio"
+                    name={`profil-${p.id}`}
+                    value={o}
+                    checked={state.profil[p.id] === o}
+                    onChange={() => kirim({ jenis: "isi_profil", id: p.id, nilai: o })}
+                    className="h-4 w-4 shrink-0 accent-utama"
+                  />
                   <span>{o}</span>
                 </label>
               ))}
@@ -37,7 +47,9 @@ export function ProfilScreen() {
             <label htmlFor={p.id} className="block text-lg font-semibold">
               {p.pertanyaan} <span className="text-kecil font-normal text-redup">({T.ukuranOpsional})</span>
             </label>
-            <p id={`${p.id}-petunjuk`} className="mt-2 text-kecil text-redup">{p.petunjuk}</p>
+            <p id={`${p.id}-petunjuk`} className="mt-2 text-kecil text-redup">
+              {p.petunjuk}
+            </p>
             <div className="mt-3 flex items-center gap-3">
               <input
                 id={p.id}
@@ -56,7 +68,6 @@ export function ProfilScreen() {
       </div>
 
       <div className="tanpa-cetak mt-8 flex flex-wrap items-center gap-3 border-t border-garis pt-5">
-
         <button type="button" className="tombol-utama" disabled={!lengkap} onClick={() => pindah("/prioritas")}>
           {T.lanjut}
         </button>

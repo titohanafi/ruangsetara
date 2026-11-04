@@ -69,9 +69,7 @@ export function PertanyaanScreen() {
         </h2>
 
         {pilihan}
-        {!perluTinjau && j?.sumber === "foto" && (
-          <p className="mt-4 text-kecil text-info">✦ {T.dariFoto}</p>
-        )}
+        {!perluTinjau && j?.sumber === "foto" && <p className="mt-4 text-kecil text-info">✦ {T.dariFoto}</p>}
 
         <div className="mt-5 space-y-2">
           <details className="rounded-tombol border border-garis p-3">
@@ -82,7 +80,6 @@ export function PertanyaanScreen() {
             <summary className="font-semibold">{T.kondisi}</summary>
             <p className="mt-2 text-redup">{p.indikator}</p>
           </details>
-
         </div>
       </section>
 

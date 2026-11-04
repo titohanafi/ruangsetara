@@ -87,7 +87,10 @@ export function Layout({ langkah, label, children }: { langkah: number; label: s
           {children}
         </main>
       </div>
-      <footer className="site-footer tanpa-cetak"><span>{UI.footer.nama}</span><span>{UI.footer.isi}</span></footer>
+      <footer className="site-footer tanpa-cetak">
+        <span>{UI.footer.nama}</span>
+        <span>{UI.footer.isi}</span>
+      </footer>
     </div>
   );
 }
